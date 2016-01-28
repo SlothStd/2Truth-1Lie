@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bckg_text">
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:id="@+id/Onephone"
+        android:textColor="#fff"
+        android:text="1 Phone"
+        android:textSize="28sp"
+        android:background="@drawable/round_button"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/Settings"
+        android:layout_alignStart="@+id/Settings"
+        android:layout_marginBottom="20dp" />
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:id="@+id/Twophones"
+        android:textColor="#fff"
+        android:text="2 Phones"
+        android:textSize="28sp"
+        android:background="@drawable/round_button"
+        android:layout_below="@+id/Onephone"
+        android:layout_alignLeft="@+id/Onephone"
+        android:layout_alignStart="@+id/Onephone"
+        android:layout_marginBottom="20dp" />
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:id="@+id/Settings"
+        android:textColor="#fff"
+        android:text="Settings"
+        android:textSize="28sp"
+        android:background="@drawable/round_button"
+        android:layout_below="@+id/Twophones"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>
