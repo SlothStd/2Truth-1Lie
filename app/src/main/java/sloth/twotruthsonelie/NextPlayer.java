@@ -5,10 +5,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -54,7 +52,7 @@ public class NextPlayer extends Activity {
             @Override
             public void onClick(View v) {
 
-               areYouSureDialogF();
+                areYouSureDialogF();
 
             }
         });
@@ -132,13 +130,12 @@ public class NextPlayer extends Activity {
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        builder.setTitle("Are you sure?")
-                .setMessage("I am 100% sure this is a lie");
+        builder.setMessage("Are you sure?");
 
         setTitleColor(getResources().getColor(R.color.truth));
 
 
-        builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
@@ -165,12 +162,12 @@ public class NextPlayer extends Activity {
                     }
 
                     current_round = currentR.getInt("currentR", 0);
-                    if ( (current_round % 2) == 0) {
-                        player1++;
-                        editor.putInt("player1", player1).apply();
-                    } else {
+                    if ((current_round % 2) == 0) {
                         player2++;
                         editor.putInt("player2", player2).apply();
+                    } else {
+                        player1++;
+                        editor.putInt("player1", player1).apply();
                     }
 
                     Toast.makeText(NextPlayer.this, "CORRECT!", Toast.LENGTH_SHORT).show();
@@ -222,13 +219,12 @@ public class NextPlayer extends Activity {
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        builder.setTitle("Are you sure?")
-                .setMessage("I am 100% sure this is a lie");
+        builder.setMessage("Are you sure?");
 
         setTitleColor(getResources().getColor(R.color.truth));
 
 
-        builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
@@ -258,12 +254,12 @@ public class NextPlayer extends Activity {
                     }
 
                     current_round = currentR.getInt("currentR", 0);
-                    if ( (current_round % 2) == 0) {
-                        player1++;
-                        editor.putInt("player1", player1).apply();
-                    } else {
+                    if ((current_round % 2) == 0) {
                         player2++;
                         editor.putInt("player2", player2).apply();
+                    } else {
+                        player1++;
+                        editor.putInt("player1", player1).apply();
                     }
 
                     Toast.makeText(NextPlayer.this, "CORRECT!", Toast.LENGTH_SHORT).show();
@@ -310,17 +306,15 @@ public class NextPlayer extends Activity {
     }
 
 
-
     public void areYouSureDialogT() {
 
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        builder.setTitle("Are you sure?")
-                .setMessage("Imma sure, you pleb");
+        builder.setMessage("Are you sure?");
         setTitleColor(getResources().getColor(R.color.truth));
 
-        builder.setPositiveButton("CONTINUE", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
@@ -331,12 +325,10 @@ public class NextPlayer extends Activity {
 
 
                 if (!thirdLie) {
-                    SharedPreferences rounds = getSharedPreferences("totalRounds", MODE_PRIVATE);
                     SharedPreferences points = getSharedPreferences("playerPoints", MODE_PRIVATE);
                     SharedPreferences.Editor editor = points.edit();
 
                     SharedPreferences currentR = getSharedPreferences("currentR", MODE_PRIVATE);
-                    SharedPreferences.Editor currentEditor = currentR.edit();
 
                     try {
                         player1 = points.getInt("player1", 0);
@@ -350,12 +342,12 @@ public class NextPlayer extends Activity {
                     }
 
                     current_round = currentR.getInt("currentR", 0);
-                    if ( (current_round % 2) == 0) {
-                        player1++;
-                        editor.putInt("player1", player1).apply();
-                    } else {
+                    if ((current_round % 2) == 0) {
                         player2++;
                         editor.putInt("player2", player2).apply();
+                    } else {
+                        player1++;
+                        editor.putInt("player1", player1).apply();
                     }
 
                     Toast.makeText(NextPlayer.this, "CORRECT!", Toast.LENGTH_SHORT).show();
@@ -409,7 +401,7 @@ public class NextPlayer extends Activity {
     public void exitSession() {
 
         AlertDialog.Builder exit = new AlertDialog.Builder(this);
-            exit.setMessage("You are about to leave your current session");
+        exit.setMessage("You are about to leave your current session");
 
         exit.setPositiveButton("EXIT", new DialogInterface.OnClickListener() {
             @Override

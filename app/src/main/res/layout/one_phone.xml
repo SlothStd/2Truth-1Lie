@@ -35,11 +35,10 @@
                     android:text="PROCEED"
                     android:textColor="#fff"
                     android:textSize="20sp"
-                    android:layout_centerVertical="true"
-                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="25dp"
+                    android:id="@+id/proceed"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="40dp"
-                    android:id="@+id/proceed" />
+                    android:layout_centerHorizontal="true" />
 
                 <CheckBox
                     android:layout_width="wrap_content"
@@ -113,15 +112,16 @@
                     android:textColor="#ffffff"
                     android:textSize="20sp"
                     android:gravity="center_horizontal|top"
-                    android:background="@color/truth"
+                    android:background="@drawable/custom_edittext"
                     android:id="@+id/firstS"
                     android:autoText="false"
                     android:paddingTop="5dp"
+                    android:layout_marginTop="61dp"
                     android:layout_below="@+id/thirdTruth"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginLeft="10dp" />
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="15dp" />
 
                 <EditText
                     android:layout_width="240dp"
@@ -129,13 +129,14 @@
                     android:textColor="#ffffff"
                     android:textSize="20sp"
                     android:gravity="center_horizontal|top"
-                    android:background="@color/truth"
+                    android:background="@drawable/custom_edittext"
                     android:id="@+id/secondS"
                     android:paddingTop="5dp"
+                    android:layout_alignParentStart="true"
                     android:layout_below="@+id/firstS"
                     android:layout_alignParentLeft="true"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginLeft="10dp" />
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="15dp" />
 
                 <EditText
                     android:layout_width="240dp"
@@ -143,13 +144,49 @@
                     android:textColor="#ffffff"
                     android:textSize="20sp"
                     android:gravity="center_horizontal|top"
-                    android:background="@color/truth"
+                    android:background="@drawable/custom_edittext"
                     android:id="@+id/thirdS"
                     android:paddingTop="5dp"
                     android:layout_below="@+id/secondS"
                     android:layout_alignParentLeft="true"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginLeft="10dp" />
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="15dp" />
+
+                <EditText
+                    android:layout_width="90dp"
+                    android:layout_height="33dp"
+                    android:id="@+id/player2"
+                    android:textColor="#ffffff"
+                    android:background="@drawable/player_indicator"
+                    android:text="player 2"
+                    android:textSize="12sp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="-8dp"
+                    android:visibility="gone" />
+
+                <EditText
+                    android:layout_width="90dp"
+                    android:layout_height="33dp"
+                    android:id="@+id/player1"
+                    android:layout_toLeftOf="@+id/proceed"
+                    android:layout_toRightOf="@+id/secondTruth"
+                    android:layout_toEndOf="@+id/secondTruth"
+                    android:textColor="#ffffff"
+                    android:background="@drawable/player_indicator"
+                    android:text="player 1"
+                    android:textSize="12sp"
+                    android:layout_below="@+id/thirdTruth"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="-8dp"
+                    android:layout_alignParentEnd="false"
+                    android:layout_alignParentLeft="false"
+                    android:layout_alignParentBottom="false"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:visibility="gone" />
 
             </RelativeLayout>
 

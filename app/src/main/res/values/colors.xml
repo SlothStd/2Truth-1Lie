@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="black_overlay">#66000000</color>
+    <color name="white">#ffffff</color>
 
     <color name="purple_ish">#2d3b5e</color>
     <color name="truth">#30d695</color>

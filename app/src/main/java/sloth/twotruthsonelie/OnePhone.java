@@ -6,14 +6,22 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 public class OnePhone extends Activity {
 
     EditText firstS, secondS, thirdS;
-    Snackbar snackbar;
+    String fString, sString, tString;
+    Snackbar snackbarplayer, snackbarEmpty;
+    TextView player1TW, player2TW;
+    Animation fade_in;
     Button proceed;
     Integer current_round, player1, player2;
     CheckBox firstTruth, firstLie;
@@ -29,20 +37,21 @@ public class OnePhone extends Activity {
         secondS = (EditText) findViewById(R.id.secondS);
         thirdS = (EditText) findViewById(R.id.thirdS);
 
+        fade_in = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
+        player1TW = (TextView) findViewById(R.id.player1);
+        player2TW = (TextView) findViewById(R.id.player2);
+
         proceed = (Button) findViewById(R.id.proceed);
 
         SharedPreferences currentR = getSharedPreferences("currentR", MODE_PRIVATE);
-        SharedPreferences.Editor currentEditor = currentR.edit();
 
         current_round = currentR.getInt("currentR", 0);
-        if ( (current_round % 2) == 0) {
-            snackbar = Snackbar.make(findViewById(android.R.id.content), "player1", Snackbar.LENGTH_INDEFINITE);
-            snackbar.setDuration(Snackbar.LENGTH_SHORT);
-            snackbar.show();
+        if ((current_round % 2) == 0) {
+            player1TW.setVisibility(View.VISIBLE);
+            player1TW.setAnimation(fade_in);
         } else {
-            snackbar = Snackbar.make(findViewById(android.R.id.content), "player2", Snackbar.LENGTH_INDEFINITE);
-            snackbar.setDuration(Snackbar.LENGTH_SHORT);
-            snackbar.show();
+            player2TW.setVisibility(View.VISIBLE);
+            player2TW.setAnimation(fade_in);
         }
 
         /////////////////////////FIRST////////////////////////////
@@ -159,15 +168,26 @@ public class OnePhone extends Activity {
             @Override
             public void onClick(View v) {
 
+                snackbarEmpty = Snackbar.make(findViewById(android.R.id.content), "Don't leave the spaces empty", Snackbar.LENGTH_INDEFINITE);
+
+                fString = firstS.getText().toString();
+                sString = secondS.getText().toString();
+                tString = thirdS.getText().toString();
+
                 Intent nextPlayer = new Intent(OnePhone.this, NextPlayer.class);
+
+                if (fString.matches("") | sString.matches("") | tString.matches("")) {
+                    snackbarEmpty.setActionTextColor(getResources().getColor(R.color.purple_ish));
+                    snackbarEmpty.setDuration(Snackbar.LENGTH_SHORT);
+                    snackbarEmpty.show();
+                } else {
                     nextPlayer.putExtra("firstS", firstS.getText().toString());
                     nextPlayer.putExtra("secondS", secondS.getText().toString());
                     nextPlayer.putExtra("thirdS", thirdS.getText().toString());
-                startActivity(nextPlayer);
-                finish();
+                    startActivity(nextPlayer);
+                    finish();
+                }
             }
         });
-
     }
-
 }
