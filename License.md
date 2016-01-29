@@ -1,4 +1,6 @@
 2Truths 1Lie - Terms and conditions
+
+
 1.	Preamble: This Agreement, signed on Jan 29, 2016 (hereinafter: Effective Date) governs the relationship between User,
     a Business Entity, (hereinafter: Licensee) and SlothStd, a partnership under the laws of whose principal place of business
     is {location} (hereinafter: Licensor). This Agreement sets the terms, rights, restrictions and obligations on using
