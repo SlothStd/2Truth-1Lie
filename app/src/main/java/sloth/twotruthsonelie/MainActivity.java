@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import com.google.android.gms.*;
 import com.google.example.games.basegameutils.BaseGameUtils;
@@ -16,6 +18,10 @@ public class MainActivity extends Activity {
     Button onePhone, twoPhones, settings, wifi, bt;
     boolean is2PhoneOpen = false;
 
+    Animation fadeIn;
+    Animation fadeInSlower;
+    Animation fadeInSlowest;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +33,13 @@ public class MainActivity extends Activity {
         wifi = (Button) findViewById(R.id.WiFi);
         bt = (Button) findViewById(R.id.BT);
 
+        fadeIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
+        fadeInSlower = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_slower);
+        fadeInSlowest = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_slowest);
+
+
+        onePhone.setVisibility(View.VISIBLE);
+        onePhone.startAnimation(fadeIn);
         onePhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -37,6 +50,8 @@ public class MainActivity extends Activity {
             }
         });
 
+        twoPhones.setVisibility(View.VISIBLE);
+        twoPhones.startAnimation(fadeInSlower);
         twoPhones.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,6 +67,8 @@ public class MainActivity extends Activity {
             }
         });
 
+        settings.setVisibility(View.VISIBLE);
+        settings.startAnimation(fadeInSlowest);
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

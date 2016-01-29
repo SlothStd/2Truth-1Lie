@@ -4,17 +4,27 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 public class OnePhone extends Activity {
 
     EditText firstS, secondS, thirdS;
-
+    String fString, sString, tString;
+    Snackbar snackbarplayer, snackbarEmpty;
+    Boolean first, second, third;
+    TextView player1TW, player2TW;
+    Animation fade_in;
     Button proceed;
-
+    Integer current_round, player1, player2;
     CheckBox firstTruth, firstLie;
     CheckBox secondTruth, secondLie;
     CheckBox thirdTruth, thirdLie;
@@ -28,7 +38,22 @@ public class OnePhone extends Activity {
         secondS = (EditText) findViewById(R.id.secondS);
         thirdS = (EditText) findViewById(R.id.thirdS);
 
+        fade_in = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
+        player1TW = (TextView) findViewById(R.id.player1);
+        player2TW = (TextView) findViewById(R.id.player2);
+
         proceed = (Button) findViewById(R.id.proceed);
+
+        SharedPreferences currentR = getSharedPreferences("currentR", MODE_PRIVATE);
+
+        current_round = currentR.getInt("currentR", 0);
+        if ((current_round % 2) == 0) {
+            player1TW.setVisibility(View.VISIBLE);
+            player1TW.setAnimation(fade_in);
+        } else {
+            player2TW.setVisibility(View.VISIBLE);
+            player2TW.setAnimation(fade_in);
+        }
 
         /////////////////////////FIRST////////////////////////////
 
@@ -41,16 +66,18 @@ public class OnePhone extends Activity {
                 SharedPreferences.Editor editor = preferences.edit();
 
                 secondLie.setChecked(false);
-                secondS.setBackgroundColor(getResources().getColor(R.color.truth));
+                secondS.setBackgroundResource(R.drawable.custom_edittext_truth);
 
                 thirdLie.setChecked(false);
-                thirdS.setBackgroundColor(getResources().getColor(R.color.truth));
+                thirdS.setBackgroundResource(R.drawable.custom_edittext_truth);
 
                 firstLie.setChecked(true);
-                firstS.setBackgroundColor(getResources().getColor(R.color.lie));
+                firstS.setBackgroundResource(R.drawable.custom_edittex_lie);
                 firstTruth.setChecked(false);
 
-                editor.putBoolean("firstLie", firstLie.isChecked()).apply();
+                editor.putBoolean("firstLie", false).apply();
+                editor.putBoolean("secondLie", true).apply();
+                editor.putBoolean("thirdLie", true).apply();
             }
         });
 
@@ -59,7 +86,7 @@ public class OnePhone extends Activity {
             @Override
             public void onClick(View v) {
                 firstTruth.setChecked(true);
-                firstS.setBackgroundColor(getResources().getColor(R.color.truth));
+                firstS.setBackgroundResource(R.drawable.custom_edittext_truth);
                 firstLie.setChecked(false);
             }
         });
@@ -75,16 +102,18 @@ public class OnePhone extends Activity {
                 SharedPreferences.Editor editor = preferences.edit();
 
                 firstLie.setChecked(false);
-                firstS.setBackgroundColor(getResources().getColor(R.color.truth));
+                firstS.setBackgroundResource(R.drawable.custom_edittext_truth);
 
                 thirdLie.setChecked(false);
-                thirdS.setBackgroundColor(getResources().getColor(R.color.truth));
+                thirdS.setBackgroundResource(R.drawable.custom_edittext_truth);
 
                 secondLie.setChecked(true);
-                secondS.setBackgroundColor(getResources().getColor(R.color.lie));
+                secondS.setBackgroundResource(R.drawable.custom_edittex_lie);
                 secondTruth.setChecked(false);
 
-                editor.putBoolean("secondLie", secondLie.isChecked()).apply();
+                editor.putBoolean("secondLie", false).apply();
+                editor.putBoolean("firstLie", true).apply();
+                editor.putBoolean("thirdLie", true).apply();
             }
         });
 
@@ -93,7 +122,7 @@ public class OnePhone extends Activity {
             @Override
             public void onClick(View v) {
                 secondTruth.setChecked(true);
-                secondS.setBackgroundColor(getResources().getColor(R.color.truth));
+                secondS.setBackgroundResource(R.drawable.custom_edittext_truth);
                 secondLie.setChecked(false);
             }
         });
@@ -109,16 +138,18 @@ public class OnePhone extends Activity {
                 SharedPreferences.Editor editor = preferences.edit();
 
                 firstLie.setChecked(false);
-                firstS.setBackgroundColor(getResources().getColor(R.color.truth));
+                firstS.setBackgroundResource(R.drawable.custom_edittext_truth);
 
                 secondLie.setChecked(false);
-                secondS.setBackgroundColor(getResources().getColor(R.color.truth));
+                secondS.setBackgroundResource(R.drawable.custom_edittext_truth);
 
                 thirdLie.setChecked(true);
-                thirdS.setBackgroundColor(getResources().getColor(R.color.lie));
+                thirdS.setBackgroundResource(R.drawable.custom_edittex_lie);
                 thirdTruth.setChecked(false);
 
-                editor.putBoolean("thirdLie", thirdLie.isChecked()).apply();
+                editor.putBoolean("thirdLie", false).apply();
+                editor.putBoolean("secondLie", true).apply();
+                editor.putBoolean("firstLie", true).apply();
             }
         });
 
@@ -137,15 +168,34 @@ public class OnePhone extends Activity {
         proceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
+
+                snackbarEmpty = Snackbar.make(findViewById(android.R.id.content), "Choose a lie", Snackbar.LENGTH_INDEFINITE);
+
+                first = preferences.getBoolean("fristLie", false);
+                second = preferences.getBoolean("secondLie", false);
+                third = preferences.getBoolean("thirdLie", false);
+
+                fString = firstS.getText().toString();
+                sString = secondS.getText().toString();
+                tString = thirdS.getText().toString();
+
                 Intent nextPlayer = new Intent(OnePhone.this, NextPlayer.class);
-                    nextPlayer.putExtra("firstS", firstS.getText().toString());
-                    nextPlayer.putExtra("secondS", secondS.getText().toString());
-                    nextPlayer.putExtra("thirdS", thirdS.getText().toString());
-                startActivity(nextPlayer);
-                finish();
+                if (fString.matches("") | sString.matches("") | tString.matches("")) {
+                    snackbarEmpty.setActionTextColor(getResources().getColor(R.color.purple_ish));
+                    snackbarEmpty.setDuration(Snackbar.LENGTH_SHORT);
+                    snackbarEmpty.show();
+                } else if (!first && !second && !third){
+                    snackbarEmpty.setDuration(Snackbar.LENGTH_SHORT);
+                    snackbarEmpty.show();
+                } else {
+                        nextPlayer.putExtra("firstS", firstS.getText().toString());
+                        nextPlayer.putExtra("secondS", secondS.getText().toString());
+                        nextPlayer.putExtra("thirdS", thirdS.getText().toString());
+                        startActivity(nextPlayer);
+                        finish();
+                    }
             }
         });
-
     }
-
 }
