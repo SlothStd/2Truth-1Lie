@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -12,9 +13,9 @@ import android.widget.EditText;
 public class OnePhone extends Activity {
 
     EditText firstS, secondS, thirdS;
-
+    Snackbar snackbar;
     Button proceed;
-
+    Integer current_round, player1, player2;
     CheckBox firstTruth, firstLie;
     CheckBox secondTruth, secondLie;
     CheckBox thirdTruth, thirdLie;
@@ -29,6 +30,20 @@ public class OnePhone extends Activity {
         thirdS = (EditText) findViewById(R.id.thirdS);
 
         proceed = (Button) findViewById(R.id.proceed);
+
+        SharedPreferences currentR = getSharedPreferences("currentR", MODE_PRIVATE);
+        SharedPreferences.Editor currentEditor = currentR.edit();
+
+        current_round = currentR.getInt("currentR", 0);
+        if ( (current_round % 2) == 0) {
+            snackbar = Snackbar.make(findViewById(android.R.id.content), "player1", Snackbar.LENGTH_INDEFINITE);
+            snackbar.setDuration(Snackbar.LENGTH_SHORT);
+            snackbar.show();
+        } else {
+            snackbar = Snackbar.make(findViewById(android.R.id.content), "player2", Snackbar.LENGTH_INDEFINITE);
+            snackbar.setDuration(Snackbar.LENGTH_SHORT);
+            snackbar.show();
+        }
 
         /////////////////////////FIRST////////////////////////////
 
@@ -50,7 +65,9 @@ public class OnePhone extends Activity {
                 firstS.setBackgroundColor(getResources().getColor(R.color.lie));
                 firstTruth.setChecked(false);
 
-                editor.putBoolean("firstLie", firstLie.isChecked()).apply();
+                editor.putBoolean("firstLie", false).apply();
+                editor.putBoolean("secondLie", true).apply();
+                editor.putBoolean("thirdLie", true).apply();
             }
         });
 
@@ -84,7 +101,9 @@ public class OnePhone extends Activity {
                 secondS.setBackgroundColor(getResources().getColor(R.color.lie));
                 secondTruth.setChecked(false);
 
-                editor.putBoolean("secondLie", secondLie.isChecked()).apply();
+                editor.putBoolean("secondLie", false).apply();
+                editor.putBoolean("firstLie", true).apply();
+                editor.putBoolean("thirdLie", true).apply();
             }
         });
 
@@ -118,7 +137,9 @@ public class OnePhone extends Activity {
                 thirdS.setBackgroundColor(getResources().getColor(R.color.lie));
                 thirdTruth.setChecked(false);
 
-                editor.putBoolean("thirdLie", thirdLie.isChecked()).apply();
+                editor.putBoolean("thirdLie", false).apply();
+                editor.putBoolean("secondLie", true).apply();
+                editor.putBoolean("firstLie", true).apply();
             }
         });
 
@@ -137,6 +158,7 @@ public class OnePhone extends Activity {
         proceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent nextPlayer = new Intent(OnePhone.this, NextPlayer.class);
                     nextPlayer.putExtra("firstS", firstS.getText().toString());
                     nextPlayer.putExtra("secondS", secondS.getText().toString());

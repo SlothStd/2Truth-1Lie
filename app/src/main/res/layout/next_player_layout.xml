@@ -64,15 +64,26 @@
         android:gravity="center_horizontal" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="220dp"
+        android:layout_height="60dp"
         android:text="Switch Players"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
         android:visibility="gone"
         android:background="@drawable/round_button"
         android:id="@+id/switch_player"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="37dp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cross"
+        android:background="@drawable/cross"
+        android:visibility="gone"
+        android:layout_below="@+id/firstTW"
+        android:layout_centerHorizontal="true" />
 
 
 </RelativeLayout>

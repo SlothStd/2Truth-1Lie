@@ -1,15 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/purple_ish">
+    android:background="@drawable/scoreboard"
+    android:weightSum="1">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="50sp"
-        android:textColor="#ffffff"
-        android:text="THE FOCKEN SCOREBOARD MATE"/>
+        android:layout_width="190dp"
+        android:layout_height="140dp"
+        android:text="5"
+        android:textColor="#03eff7"
+        android:id="@+id/player1"
+        android:gravity="center_vertical|center_horizontal"
+        android:numeric="integer"
+        android:textSize="110dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
-</LinearLayout>
+    <TextView
+        android:layout_width="190dp"
+        android:layout_height="140dp"
+        android:text="5"
+        android:id="@+id/player2"
+        android:textColor="#03eff7"
+        android:layout_alignTop="@+id/player1"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:gravity="center_vertical|center_horizontal"
+        android:numeric="integer"
+        android:textSize="110dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Player 1 Won !"
+        android:id="@+id/winner"
+        android:textSize="45dp"
+        android:gravity="center_horizontal"
+        android:textColor="#00ff62"
+        android:layout_above="@+id/toMenu"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="44dp" />
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:text="To Menu"
+        android:id="@+id/toMenu"
+        android:textColor="#ffffff"
+        android:background="@drawable/round_button"
+        android:textSize="20sp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="41dp" />
+</RelativeLayout>
