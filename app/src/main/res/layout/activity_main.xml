@@ -42,4 +42,29 @@
         android:layout_below="@+id/Twophones"
         android:layout_centerHorizontal="true" />
 
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:id="@+id/WiFi"
+        android:textColor="#fff"
+        android:text="Wifi"
+        android:textSize="28sp"
+        android:background="@drawable/round_button"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:visibility="gone"/>
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:id="@+id/BT"
+        android:textColor="#fff"
+        android:text="Bluetooth"
+        android:textSize="28sp"
+        android:background="@drawable/round_button"
+        android:layout_below="@+id/WiFi"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"/>
+
 </RelativeLayout>
