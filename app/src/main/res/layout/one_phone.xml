@@ -10,48 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <EditText
-        android:layout_width="220dp"
-        android:layout_height="130dp"
-        android:textColor="#ffffff"
-        android:textSize="20sp"
-        android:gravity="center_horizontal|top"
-        android:background="@color/truth"
-        android:layout_marginTop="50dp"
-        android:id="@+id/firstS"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:autoText="false"
-        android:paddingTop="5dp" />
-
-        <EditText
-            android:layout_width="220dp"
-            android:layout_height="130dp"
-            android:textColor="#ffffff"
-            android:textSize="20sp"
-            android:gravity="center_horizontal|top"
-            android:background="@color/truth"
-            android:id="@+id/secondS"
-            android:layout_below="@+id/firstS"
-            android:layout_alignLeft="@+id/firstS"
-            android:layout_alignStart="@+id/firstS"
-            android:layout_marginTop="20dp"
-            android:paddingTop="5dp" />
-
-        <EditText
-            android:layout_width="220dp"
-            android:layout_height="130dp"
-            android:textColor="#ffffff"
-            android:textSize="20sp"
-            android:gravity="center_horizontal|top"
-            android:background="@color/truth"
-            android:id="@+id/thirdS"
-            android:layout_below="@+id/secondS"
-            android:layout_alignLeft="@+id/secondS"
-            android:layout_alignStart="@+id/secondS"
-            android:layout_marginTop="20dp"
-            android:paddingTop="5dp" />
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -60,31 +18,6 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/truth"
-                android:text="TRUTH"
-                android:textSize="18sp"
-                android:id="@+id/textView2"
-                android:layout_alignTop="@+id/textView"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginLeft="8dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/lie"
-                android:textSize="18sp"
-                android:text="LIE"
-                android:id="@+id/textView"
-                android:layout_marginTop="17dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginRight="25dp" />
 
             <RelativeLayout
                 android:layout_width="fill_parent"
@@ -112,6 +45,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@color/truth"
+                    android:visibility="gone"
                     android:id="@+id/thirdTruth"
                     android:layout_marginRight="22dp"
                     android:layout_marginEnd="22dp"
@@ -123,6 +57,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@color/truth"
+                    android:visibility="gone"
                     android:id="@+id/secondTruth"
                     android:layout_below="@+id/firstTruth"
                     android:layout_alignLeft="@+id/thirdTruth"
@@ -132,6 +67,7 @@
                 <CheckBox
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:background="@color/truth"
                     android:id="@+id/firstTruth"
                     android:layout_marginTop="103dp"
@@ -142,32 +78,78 @@
                 <CheckBox
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@color/lie"
+                    android:button="@drawable/custom_checkbox"
                     android:id="@+id/thirdLie"
-                    android:layout_below="@+id/secondTruth"
+                    android:layout_marginBottom="82dp"
+                    android:layout_above="@+id/proceed"
+                    android:layout_alignLeft="@+id/secondLie"
+                    android:layout_alignStart="@+id/secondLie" />
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@drawable/custom_checkbox"
+                    android:id="@+id/firstLie"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginEnd="18dp"
+                    android:layout_marginBottom="28dp"
+                    android:layout_alignBottom="@+id/firstS"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@drawable/custom_checkbox"
+                    android:id="@+id/secondLie"
+                    android:layout_alignBottom="@+id/secondS"
                     android:layout_alignLeft="@+id/firstLie"
                     android:layout_alignStart="@+id/firstLie"
-                    android:layout_marginTop="115dp" />
+                    android:layout_marginBottom="26dp" />
 
-                <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@color/lie"
-                    android:id="@+id/firstLie"
-                    android:layout_alignTop="@+id/firstTruth"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginRight="22dp"
-                    android:layout_marginEnd="22dp" />
+                <EditText
+                    android:layout_width="240dp"
+                    android:layout_height="130dp"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp"
+                    android:gravity="center_horizontal|top"
+                    android:background="@color/truth"
+                    android:id="@+id/firstS"
+                    android:autoText="false"
+                    android:paddingTop="5dp"
+                    android:layout_below="@+id/thirdTruth"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="10dp" />
 
-                <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@color/lie"
-                    android:id="@+id/secondLie"
-                    android:layout_above="@+id/thirdLie"
-                    android:layout_alignLeft="@+id/firstLie"
-                    android:layout_alignStart="@+id/firstLie" />
+                <EditText
+                    android:layout_width="240dp"
+                    android:layout_height="130dp"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp"
+                    android:gravity="center_horizontal|top"
+                    android:background="@color/truth"
+                    android:id="@+id/secondS"
+                    android:paddingTop="5dp"
+                    android:layout_below="@+id/firstS"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="10dp" />
+
+                <EditText
+                    android:layout_width="240dp"
+                    android:layout_height="130dp"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp"
+                    android:gravity="center_horizontal|top"
+                    android:background="@color/truth"
+                    android:id="@+id/thirdS"
+                    android:paddingTop="5dp"
+                    android:layout_below="@+id/secondS"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="10dp" />
 
             </RelativeLayout>
 
