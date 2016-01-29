@@ -18,7 +18,6 @@ public class ScoreActivity extends Activity {
     Integer player1, player2;
     Button toMenu;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -20,6 +20,7 @@ public class OnePhone extends Activity {
     EditText firstS, secondS, thirdS;
     String fString, sString, tString;
     Snackbar snackbarplayer, snackbarEmpty;
+    Boolean first, second, third;
     TextView player1TW, player2TW;
     Animation fade_in;
     Button proceed;
@@ -65,13 +66,13 @@ public class OnePhone extends Activity {
                 SharedPreferences.Editor editor = preferences.edit();
 
                 secondLie.setChecked(false);
-                secondS.setBackgroundColor(getResources().getColor(R.color.truth));
+                secondS.setBackgroundResource(R.drawable.custom_edittext_truth);
 
                 thirdLie.setChecked(false);
-                thirdS.setBackgroundColor(getResources().getColor(R.color.truth));
+                thirdS.setBackgroundResource(R.drawable.custom_edittext_truth);
 
                 firstLie.setChecked(true);
-                firstS.setBackgroundColor(getResources().getColor(R.color.lie));
+                firstS.setBackgroundResource(R.drawable.custom_edittex_lie);
                 firstTruth.setChecked(false);
 
                 editor.putBoolean("firstLie", false).apply();
@@ -85,7 +86,7 @@ public class OnePhone extends Activity {
             @Override
             public void onClick(View v) {
                 firstTruth.setChecked(true);
-                firstS.setBackgroundColor(getResources().getColor(R.color.truth));
+                firstS.setBackgroundResource(R.drawable.custom_edittext_truth);
                 firstLie.setChecked(false);
             }
         });
@@ -101,13 +102,13 @@ public class OnePhone extends Activity {
                 SharedPreferences.Editor editor = preferences.edit();
 
                 firstLie.setChecked(false);
-                firstS.setBackgroundColor(getResources().getColor(R.color.truth));
+                firstS.setBackgroundResource(R.drawable.custom_edittext_truth);
 
                 thirdLie.setChecked(false);
-                thirdS.setBackgroundColor(getResources().getColor(R.color.truth));
+                thirdS.setBackgroundResource(R.drawable.custom_edittext_truth);
 
                 secondLie.setChecked(true);
-                secondS.setBackgroundColor(getResources().getColor(R.color.lie));
+                secondS.setBackgroundResource(R.drawable.custom_edittex_lie);
                 secondTruth.setChecked(false);
 
                 editor.putBoolean("secondLie", false).apply();
@@ -121,7 +122,7 @@ public class OnePhone extends Activity {
             @Override
             public void onClick(View v) {
                 secondTruth.setChecked(true);
-                secondS.setBackgroundColor(getResources().getColor(R.color.truth));
+                secondS.setBackgroundResource(R.drawable.custom_edittext_truth);
                 secondLie.setChecked(false);
             }
         });
@@ -137,13 +138,13 @@ public class OnePhone extends Activity {
                 SharedPreferences.Editor editor = preferences.edit();
 
                 firstLie.setChecked(false);
-                firstS.setBackgroundColor(getResources().getColor(R.color.truth));
+                firstS.setBackgroundResource(R.drawable.custom_edittext_truth);
 
                 secondLie.setChecked(false);
-                secondS.setBackgroundColor(getResources().getColor(R.color.truth));
+                secondS.setBackgroundResource(R.drawable.custom_edittext_truth);
 
                 thirdLie.setChecked(true);
-                thirdS.setBackgroundColor(getResources().getColor(R.color.lie));
+                thirdS.setBackgroundResource(R.drawable.custom_edittex_lie);
                 thirdTruth.setChecked(false);
 
                 editor.putBoolean("thirdLie", false).apply();
@@ -167,26 +168,33 @@ public class OnePhone extends Activity {
         proceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
 
-                snackbarEmpty = Snackbar.make(findViewById(android.R.id.content), "Don't leave the spaces empty", Snackbar.LENGTH_INDEFINITE);
+                snackbarEmpty = Snackbar.make(findViewById(android.R.id.content), "Choose a lie", Snackbar.LENGTH_INDEFINITE);
+
+                first = preferences.getBoolean("fristLie", false);
+                second = preferences.getBoolean("secondLie", false);
+                third = preferences.getBoolean("thirdLie", false);
 
                 fString = firstS.getText().toString();
                 sString = secondS.getText().toString();
                 tString = thirdS.getText().toString();
 
                 Intent nextPlayer = new Intent(OnePhone.this, NextPlayer.class);
-
                 if (fString.matches("") | sString.matches("") | tString.matches("")) {
                     snackbarEmpty.setActionTextColor(getResources().getColor(R.color.purple_ish));
                     snackbarEmpty.setDuration(Snackbar.LENGTH_SHORT);
                     snackbarEmpty.show();
+                } else if (!first && !second && !third){
+                    snackbarEmpty.setDuration(Snackbar.LENGTH_SHORT);
+                    snackbarEmpty.show();
                 } else {
-                    nextPlayer.putExtra("firstS", firstS.getText().toString());
-                    nextPlayer.putExtra("secondS", secondS.getText().toString());
-                    nextPlayer.putExtra("thirdS", thirdS.getText().toString());
-                    startActivity(nextPlayer);
-                    finish();
-                }
+                        nextPlayer.putExtra("firstS", firstS.getText().toString());
+                        nextPlayer.putExtra("secondS", secondS.getText().toString());
+                        nextPlayer.putExtra("thirdS", thirdS.getText().toString());
+                        startActivity(nextPlayer);
+                        finish();
+                    }
             }
         });
     }
