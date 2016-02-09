@@ -1,17 +1,22 @@
 package sloth.twotruthsonelie;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -43,6 +48,7 @@ public class OnePhone extends Activity {
         player2TW = (TextView) findViewById(R.id.player2);
 
         proceed = (Button) findViewById(R.id.proceed);
+
 
         SharedPreferences currentR = getSharedPreferences("currentR", MODE_PRIVATE);
 
@@ -168,33 +174,36 @@ public class OnePhone extends Activity {
         proceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
 
-                snackbarEmpty = Snackbar.make(findViewById(android.R.id.content), "Choose a lie", Snackbar.LENGTH_INDEFINITE);
 
-                first = preferences.getBoolean("fristLie", false);
-                second = preferences.getBoolean("secondLie", false);
-                third = preferences.getBoolean("thirdLie", false);
+                        SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
 
-                fString = firstS.getText().toString();
-                sString = secondS.getText().toString();
-                tString = thirdS.getText().toString();
+                        snackbarEmpty = Snackbar.make(findViewById(android.R.id.content), "Choose a lie", Snackbar.LENGTH_INDEFINITE);
 
-                Intent nextPlayer = new Intent(OnePhone.this, NextPlayer.class);
-                if (fString.matches("") | sString.matches("") | tString.matches("")) {
-                    snackbarEmpty.setActionTextColor(getResources().getColor(R.color.purple_ish));
-                    snackbarEmpty.setDuration(Snackbar.LENGTH_SHORT);
-                    snackbarEmpty.show();
-                } else if (!first && !second && !third){
-                    snackbarEmpty.setDuration(Snackbar.LENGTH_SHORT);
-                    snackbarEmpty.show();
-                } else {
-                        nextPlayer.putExtra("firstS", firstS.getText().toString());
-                        nextPlayer.putExtra("secondS", secondS.getText().toString());
-                        nextPlayer.putExtra("thirdS", thirdS.getText().toString());
-                        startActivity(nextPlayer);
-                        finish();
-                    }
+                        first = preferences.getBoolean("fristLie", false);
+                        second = preferences.getBoolean("secondLie", false);
+                        third = preferences.getBoolean("thirdLie", false);
+
+                        fString = firstS.getText().toString();
+                        sString = secondS.getText().toString();
+                        tString = thirdS.getText().toString();
+
+                        Intent nextPlayer = new Intent(OnePhone.this, NextPlayer.class);
+                        if (fString.matches("") | sString.matches("") | tString.matches("")) {
+                            snackbarEmpty.setActionTextColor(getResources().getColor(R.color.purple_ish));
+                            snackbarEmpty.setDuration(Snackbar.LENGTH_SHORT);
+                            snackbarEmpty.show();
+                        } else if (!first && !second && !third){
+                            snackbarEmpty.setDuration(Snackbar.LENGTH_SHORT);
+                            snackbarEmpty.show();
+                        } else {
+                            nextPlayer.putExtra("firstS", firstS.getText().toString());
+                            nextPlayer.putExtra("secondS", secondS.getText().toString());
+                            nextPlayer.putExtra("thirdS", thirdS.getText().toString());
+                            startActivity(nextPlayer);
+                            finish();
+                        }
+
             }
         });
     }
