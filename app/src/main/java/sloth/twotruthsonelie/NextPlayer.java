@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -40,13 +41,17 @@ public class NextPlayer extends Activity {
         thirdTW = (TextView) findViewById(R.id.thirdTW);
         switchPlayer = (Button) findViewById(R.id.switch_player);
 
-        firstS = getIntent().getExtras().getString("firstS", null);
-        secondS = getIntent().getExtras().getString("secondS", null);
-        thirdS = getIntent().getExtras().getString("thirdS", null);
+        try {
+            firstS = getIntent().getExtras().getString("firstS", null);
+            secondS = getIntent().getExtras().getString("secondS", null);
+            thirdS = getIntent().getExtras().getString("thirdS", null);
+        } catch (NullPointerException e) {}
 
-        firstTW.setText(firstS.toString());
-        secondTW.setText(secondS.toString());
-        thirdTW.setText(thirdS.toString());
+        try {
+            firstTW.setText(firstS.toString());
+            secondTW.setText(secondS.toString());
+            thirdTW.setText(thirdS.toString());
+        } catch (NullPointerException e) {}
 
         firstTW.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,6 +120,7 @@ public class NextPlayer extends Activity {
                 } else {
                     Intent scoreboard = new Intent(NextPlayer.this, ScoreActivity.class);
                     startActivity(scoreboard);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out_slower);
                     finish();
                     editor.putInt("currentR", 0).apply();
                 }
@@ -172,33 +178,53 @@ public class NextPlayer extends Activity {
 
                     Toast.makeText(NextPlayer.this, "CORRECT!", Toast.LENGTH_SHORT).show();
                     switchPlayer.setVisibility(View.VISIBLE);
-                    firstTW.setBackgroundColor(getResources().getColor(R.color.lie));
+                    firstTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
 
                     firstTW.setClickable(false);
                     secondTW.setClickable(false);
                     thirdTW.setClickable(false);
 
                 } else if (!secondLie) {
-                    cross.setVisibility(View.VISIBLE);
-                    cross.startAnimation(animFadeIn);
+                    new CountDownTimer(2000, 1000) {
+
+                        public void onTick(long millisUntilFinished) {
+                            cross.setVisibility(View.VISIBLE);
+                            cross.startAnimation(animFadeIn);
+                        }
+
+                        public void onFinish() {
+                            cross.clearAnimation();
+                            cross.setVisibility(View.GONE);
+                        }
+                    }.start();
 
                     switchPlayer.setVisibility(View.VISIBLE);
-                    secondTW.setBackgroundColor(getResources().getColor(R.color.lie));
+                    secondTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
 
                     firstTW.setClickable(false);
                     secondTW.setClickable(false);
                     thirdTW.setClickable(false);
 
                 } else {
-                    cross.setVisibility(View.VISIBLE);
-                    cross.startAnimation(animFadeIn);
+                    new CountDownTimer(2000, 1000) {
+
+                        public void onTick(long millisUntilFinished) {
+                            cross.setVisibility(View.VISIBLE);
+                            cross.startAnimation(animFadeIn);
+                        }
+
+                        public void onFinish() {
+                            cross.clearAnimation();
+                            cross.setVisibility(View.GONE);
+                        }
+                    }.start();
 
                     firstTW.setClickable(false);
                     secondTW.setClickable(false);
                     thirdTW.setClickable(false);
 
                     switchPlayer.setVisibility(View.VISIBLE);
-                    thirdTW.setBackgroundColor(getResources().getColor(R.color.lie));
+                    thirdTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
                 }
             }
         });
@@ -264,33 +290,53 @@ public class NextPlayer extends Activity {
 
                     Toast.makeText(NextPlayer.this, "CORRECT!", Toast.LENGTH_SHORT).show();
                     switchPlayer.setVisibility(View.VISIBLE);
-                    secondTW.setBackgroundColor(getResources().getColor(R.color.lie));
+                    secondTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
 
                     firstTW.setClickable(false);
                     secondTW.setClickable(false);
                     thirdTW.setClickable(false);
 
                 } else if (!firstLie) {
-                    cross.setVisibility(View.VISIBLE);
-                    cross.startAnimation(animFadeIn);
+                    new CountDownTimer(2000, 1000) {
+
+                        public void onTick(long millisUntilFinished) {
+                            cross.setVisibility(View.VISIBLE);
+                            cross.startAnimation(animFadeIn);
+                        }
+
+                        public void onFinish() {
+                            cross.clearAnimation();
+                            cross.setVisibility(View.GONE);
+                        }
+                    }.start();
 
                     switchPlayer.setVisibility(View.VISIBLE);
-                    firstTW.setBackgroundColor(getResources().getColor(R.color.lie));
+                    firstTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
 
                     firstTW.setClickable(false);
                     secondTW.setClickable(false);
                     thirdTW.setClickable(false);
 
                 } else {
-                    cross.setVisibility(View.VISIBLE);
-                    cross.startAnimation(animFadeIn);
+                    new CountDownTimer(2000, 1000) {
+
+                        public void onTick(long millisUntilFinished) {
+                            cross.setVisibility(View.VISIBLE);
+                            cross.startAnimation(animFadeIn);
+                        }
+
+                        public void onFinish() {
+                            cross.clearAnimation();
+                            cross.setVisibility(View.GONE);
+                        }
+                    }.start();
 
                     firstTW.setClickable(false);
                     thirdTW.setClickable(false);
                     thirdTW.setClickable(false);
 
                     switchPlayer.setVisibility(View.VISIBLE);
-                    thirdTW.setBackgroundColor(getResources().getColor(R.color.lie));
+                    thirdTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
                 }
             }
         });
@@ -314,7 +360,7 @@ public class NextPlayer extends Activity {
         builder.setMessage("Are you sure?");
         setTitleColor(getResources().getColor(R.color.truth));
 
-        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("YES",  new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
@@ -352,33 +398,54 @@ public class NextPlayer extends Activity {
 
                     Toast.makeText(NextPlayer.this, "CORRECT!", Toast.LENGTH_SHORT).show();
                     switchPlayer.setVisibility(View.VISIBLE);
-                    thirdTW.setBackgroundColor(getResources().getColor(R.color.lie));
+                    thirdTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
 
                     firstTW.setClickable(false);
                     secondTW.setClickable(false);
                     thirdTW.setClickable(false);
 
                 } else if (!firstLie) {
-                    cross.setVisibility(View.VISIBLE);
-                    cross.startAnimation(animFadeIn);
+
+                    new CountDownTimer(2000, 1000) {
+
+                        public void onTick(long millisUntilFinished) {
+                            cross.setVisibility(View.VISIBLE);
+                            cross.startAnimation(animFadeIn);
+                        }
+
+                        public void onFinish() {
+                            cross.clearAnimation();
+                            cross.setVisibility(View.GONE);
+                        }
+                    }.start();
 
                     switchPlayer.setVisibility(View.VISIBLE);
-                    firstTW.setBackgroundColor(getResources().getColor(R.color.lie));
+                    firstTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
 
                     firstTW.setClickable(false);
                     secondTW.setClickable(false);
                     thirdTW.setClickable(false);
 
                 } else {
-                    cross.setVisibility(View.VISIBLE);
-                    cross.startAnimation(animFadeIn);
+                    new CountDownTimer(2000, 1000) {
+
+                        public void onTick(long millisUntilFinished) {
+                            cross.setVisibility(View.VISIBLE);
+                            cross.startAnimation(animFadeIn);
+                        }
+
+                        public void onFinish() {
+                            cross.clearAnimation();
+                            cross.setVisibility(View.GONE);
+                        }
+                    }.start();
 
                     firstTW.setClickable(false);
                     secondTW.setClickable(false);
                     thirdTW.setClickable(false);
 
                     switchPlayer.setVisibility(View.VISIBLE);
-                    secondTW.setBackgroundColor(getResources().getColor(R.color.lie));
+                    secondTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
                 }
             }
         });
@@ -396,6 +463,7 @@ public class NextPlayer extends Activity {
     @Override
     public void onBackPressed() {
         exitSession();
+        super.onBackPressed();
     }
 
     public void exitSession() {
@@ -418,4 +486,6 @@ public class NextPlayer extends Activity {
             }
         });
     }
+
+
 }

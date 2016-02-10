@@ -1,18 +1,21 @@
 package sloth.twotruthsonelie;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
-import com.google.android.gms.*;
-import com.google.example.games.basegameutils.BaseGameUtils;
+import android.widget.ProgressBar;
 
 /**
  * Created by Daniel on 1/27/2016.
  */
+
 public class MainActivity extends Activity {
 
     Button onePhone, twoPhones, settings, wifi, bt;
@@ -37,44 +40,139 @@ public class MainActivity extends Activity {
         fadeInSlower = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_slower);
         fadeInSlowest = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_slowest);
 
+        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        final ProgressBar progressBarSett = (ProgressBar) findViewById(R.id.progressBarSett);
+        final ProgressBar progressBarMulti = (ProgressBar) findViewById(R.id.progressBarMulti);
 
+
+        progressBar.setVisibility(View.VISIBLE);
+        progressBar.startAnimation(fadeIn);
         onePhone.setVisibility(View.VISIBLE);
         onePhone.startAnimation(fadeIn);
         onePhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent singleplayer = new Intent(MainActivity.this, OnePhone.class);
-                startActivity(singleplayer);
+                final ObjectAnimator animation = ObjectAnimator.ofInt(progressBar, "progress", 0, 500);
+                animation.setDuration(1000); //in milliseconds bruv
+                animation.setInterpolator(new DecelerateInterpolator());
+
+                new CountDownTimer(1100, 1000) {
+
+                    public void onTick(long millisUntilFinished) {
+                        animation.start();
+                    }
+
+                    public void onFinish() {
+
+                        progressBar.setProgress(0);
+                        animation.cancel();
+                        progressBar.clearAnimation();
+
+
+                        Intent singleplayer = new Intent(MainActivity.this, OnePhone.class);
+                        startActivity(singleplayer);
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
+
+                    }
+                }.start();
 
             }
+
         });
 
+
+        progressBarMulti.setVisibility(View.VISIBLE);
+        progressBarMulti.setAnimation(fadeIn);
         twoPhones.setVisibility(View.VISIBLE);
-        twoPhones.startAnimation(fadeInSlower);
+        twoPhones.startAnimation(fadeIn);
         twoPhones.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                is2PhoneOpen = true;
 
-                onePhone.setVisibility(View.GONE);
-                twoPhones.setVisibility(View.GONE);
-                settings.setVisibility(View.GONE);
+                final ObjectAnimator animation = ObjectAnimator.ofInt(progressBarMulti, "progress", 0, 500);
+                animation.setDuration(1000);
+                animation.setInterpolator(new DecelerateInterpolator());
 
-                wifi.setVisibility(View.VISIBLE);
-                bt.setVisibility(View.VISIBLE);
+                new CountDownTimer(1100, 1000) {
+
+                    public void onTick(long millisUntilFinished) {
+                        animation.start();
+                    }
+
+                    public void onFinish() {
+
+                        progressBar.setProgress(0);
+                        progressBar.clearAnimation();
+                        progressBar.setVisibility(View.GONE);
+
+
+                        progressBarMulti.setProgress(0);
+                        animation.cancel();
+                        progressBarMulti.clearAnimation();
+                        progressBarMulti.setVisibility(View.GONE);
+
+
+                        is2PhoneOpen = true;
+
+                        onePhone.clearAnimation();
+                        onePhone.setVisibility(View.GONE);
+
+                        twoPhones.clearAnimation();
+                        twoPhones.setVisibility(View.GONE);
+
+                        settings.clearAnimation();
+
+                        wifi.setVisibility(View.VISIBLE);
+                        wifi.setAnimation(fadeIn);
+
+                        bt.setVisibility(View.VISIBLE);
+                        bt.setAnimation(fadeInSlower);
+
+
+                    }
+                }.start();
 
             }
         });
 
+
+        progressBarSett.setVisibility(View.VISIBLE);
+        progressBarSett.setAnimation(fadeIn);
         settings.setVisibility(View.VISIBLE);
-        settings.startAnimation(fadeInSlowest);
+        settings.startAnimation(fadeIn);
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent toSettigns = new Intent(MainActivity.this, Settings.class);
-                startActivity(toSettigns);
+                final ObjectAnimator animation = ObjectAnimator.ofInt(progressBarSett, "progress", 0, 500);
+                animation.setDuration(1000);
+                animation.setInterpolator(new DecelerateInterpolator());
+
+                new CountDownTimer(1100, 1000) {
+
+                    public void onTick(long millisUntilFinished) {
+                        animation.start();
+                    }
+
+                    public void onFinish() {
+
+                        progressBarSett.setProgress(0);
+                        progressBarSett.clearAnimation();
+                        animation.cancel();
+
+
+                        Intent toSettigns = new Intent(MainActivity.this, Settings.class);
+                        startActivity(toSettigns);
+
+                        progressBarSett.clearAnimation();
+                        animation.cancel();
+
+
+                    }
+                }.start();
+
 
             }
         });
@@ -88,9 +186,12 @@ public class MainActivity extends Activity {
         });
 
         bt.setOnClickListener(new View.OnClickListener() {
+
+
             @Override
             public void onClick(View v) {
-
+                Intent bluetooth = new Intent(MainActivity.this, Bluetooth.class);
+                startActivity(bluetooth);
             }
         });
     }
@@ -101,15 +202,10 @@ public class MainActivity extends Activity {
         if (is2PhoneOpen) {
 
             is2PhoneOpen = false;
-
-            onePhone.setVisibility(View.VISIBLE);
-            twoPhones.setVisibility(View.VISIBLE);
-            settings.setVisibility(View.VISIBLE);
-
-            wifi.setVisibility(View.GONE);
-            bt.setVisibility(View.GONE);
-        }
-        else {
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        } else {
             super.onBackPressed();
         }
     }

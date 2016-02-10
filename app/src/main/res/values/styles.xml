@@ -20,4 +20,11 @@
         <item name="android:background">@color/black_overlay</item>
     </style>
 
+    <style name="whiteText">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textColorSecondary">#ffffff</item>
+        <item name="android:divider">#ffffff</item>
+    </style>
+
+
 </resources>
