@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -18,7 +19,7 @@ import android.widget.Toast;
 
 public class NextPlayer extends Activity {
 
-    String firstS, secondS, thirdS;
+    String firstS, secondS, thirdS, roundsS;
     TextView firstTW, secondTW, thirdTW;
     Button switchPlayer;
     Integer round, current_round, player1, player2;
@@ -94,8 +95,11 @@ public class NextPlayer extends Activity {
                 SharedPreferences currentR = getSharedPreferences("currentR", MODE_PRIVATE);
                 SharedPreferences.Editor currentEditor = currentR.edit();
 
+                SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+
                 try {
-                    round = preferences.getInt("rounds", 0);
+                    roundsS = SP.getString("setRounds", "0");
+                    round = Integer.parseInt(roundsS) * 2 - 1;
                 } catch (NullPointerException e) {
                     round = 2;
                 }
@@ -107,8 +111,6 @@ public class NextPlayer extends Activity {
                 }
 
                 if (current_round < round) {
-
-                    Toast.makeText(NextPlayer.this, "Current Round is: " + current_round, Toast.LENGTH_SHORT).show();
 
                     current_round++;
 
@@ -176,7 +178,7 @@ public class NextPlayer extends Activity {
                         editor.putInt("player1", player1).apply();
                     }
 
-                    Toast.makeText(NextPlayer.this, "CORRECT!", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(NextPlayer.this, "CORRECT!", Toast.LENGTH_SHORT).show();
                     switchPlayer.setVisibility(View.VISIBLE);
                     firstTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
 
@@ -188,13 +190,13 @@ public class NextPlayer extends Activity {
                     new CountDownTimer(2000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
-                            cross.setVisibility(View.VISIBLE);
-                            cross.startAnimation(animFadeIn);
+//                            cross.setVisibility(View.VISIBLE);
+//                            cross.startAnimation(animFadeIn);
                         }
 
                         public void onFinish() {
-                            cross.clearAnimation();
-                            cross.setVisibility(View.GONE);
+//                            cross.clearAnimation();
+//                            cross.setVisibility(View.GONE);
                         }
                     }.start();
 
@@ -209,13 +211,13 @@ public class NextPlayer extends Activity {
                     new CountDownTimer(2000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
-                            cross.setVisibility(View.VISIBLE);
-                            cross.startAnimation(animFadeIn);
+//                            cross.setVisibility(View.VISIBLE);
+//                            cross.startAnimation(animFadeIn);
                         }
 
                         public void onFinish() {
-                            cross.clearAnimation();
-                            cross.setVisibility(View.GONE);
+//                            cross.clearAnimation();
+//                            cross.setVisibility(View.GONE);
                         }
                     }.start();
 
@@ -288,7 +290,7 @@ public class NextPlayer extends Activity {
                         editor.putInt("player1", player1).apply();
                     }
 
-                    Toast.makeText(NextPlayer.this, "CORRECT!", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(NextPlayer.this, "CORRECT!", Toast.LENGTH_SHORT).show();
                     switchPlayer.setVisibility(View.VISIBLE);
                     secondTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
 
@@ -300,13 +302,13 @@ public class NextPlayer extends Activity {
                     new CountDownTimer(2000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
-                            cross.setVisibility(View.VISIBLE);
-                            cross.startAnimation(animFadeIn);
+//                            cross.setVisibility(View.VISIBLE);
+//                            cross.startAnimation(animFadeIn);
                         }
 
                         public void onFinish() {
-                            cross.clearAnimation();
-                            cross.setVisibility(View.GONE);
+//                            cross.clearAnimation();
+//                            cross.setVisibility(View.GONE);
                         }
                     }.start();
 
@@ -321,13 +323,13 @@ public class NextPlayer extends Activity {
                     new CountDownTimer(2000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
-                            cross.setVisibility(View.VISIBLE);
-                            cross.startAnimation(animFadeIn);
+//                            cross.setVisibility(View.VISIBLE);
+//                            cross.startAnimation(animFadeIn);
                         }
 
                         public void onFinish() {
-                            cross.clearAnimation();
-                            cross.setVisibility(View.GONE);
+//                            cross.clearAnimation();
+//                            cross.setVisibility(View.GONE);
                         }
                     }.start();
 
@@ -396,7 +398,7 @@ public class NextPlayer extends Activity {
                         editor.putInt("player1", player1).apply();
                     }
 
-                    Toast.makeText(NextPlayer.this, "CORRECT!", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(NextPlayer.this, "CORRECT!", Toast.LENGTH_SHORT).show();
                     switchPlayer.setVisibility(View.VISIBLE);
                     thirdTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
 
@@ -409,13 +411,13 @@ public class NextPlayer extends Activity {
                     new CountDownTimer(2000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
-                            cross.setVisibility(View.VISIBLE);
-                            cross.startAnimation(animFadeIn);
+//                            cross.setVisibility(View.VISIBLE);
+//                            cross.startAnimation(animFadeIn);
                         }
 
                         public void onFinish() {
-                            cross.clearAnimation();
-                            cross.setVisibility(View.GONE);
+//                            cross.clearAnimation();
+//                            cross.setVisibility(View.GONE);
                         }
                     }.start();
 
@@ -430,13 +432,13 @@ public class NextPlayer extends Activity {
                     new CountDownTimer(2000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
-                            cross.setVisibility(View.VISIBLE);
-                            cross.startAnimation(animFadeIn);
+//                            cross.setVisibility(View.VISIBLE);
+//                            cross.startAnimation(animFadeIn);
                         }
 
                         public void onFinish() {
-                            cross.clearAnimation();
-                            cross.setVisibility(View.GONE);
+//                            cross.clearAnimation();
+//                            cross.setVisibility(View.GONE);
                         }
                     }.start();
 
@@ -464,6 +466,7 @@ public class NextPlayer extends Activity {
     public void onBackPressed() {
         exitSession();
         super.onBackPressed();
+
     }
 
     public void exitSession() {
