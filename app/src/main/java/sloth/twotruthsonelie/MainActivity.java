@@ -54,10 +54,10 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
 
                 final ObjectAnimator animation = ObjectAnimator.ofInt(progressBar, "progress", 0, 500);
-                animation.setDuration(1000); //in milliseconds bruv
+                animation.setDuration(700); //in milliseconds bruv
                 animation.setInterpolator(new DecelerateInterpolator());
 
-                new CountDownTimer(1100, 1000) {
+                new CountDownTimer(800, 700) {
 
                     public void onTick(long millisUntilFinished) {
                         animation.start();
@@ -92,10 +92,10 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
 
                 final ObjectAnimator animation = ObjectAnimator.ofInt(progressBarMulti, "progress", 0, 500);
-                animation.setDuration(1000);
+                animation.setDuration(700); //in milliseconds bruv
                 animation.setInterpolator(new DecelerateInterpolator());
 
-                new CountDownTimer(1100, 1000) {
+                new CountDownTimer(800, 700) {
 
                     public void onTick(long millisUntilFinished) {
                         animation.start();
@@ -147,10 +147,10 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
 
                 final ObjectAnimator animation = ObjectAnimator.ofInt(progressBarSett, "progress", 0, 500);
-                animation.setDuration(1000);
+                animation.setDuration(700); //in milliseconds bruv
                 animation.setInterpolator(new DecelerateInterpolator());
 
-                new CountDownTimer(1100, 1000) {
+                new CountDownTimer(800, 700) {
 
                     public void onTick(long millisUntilFinished) {
                         animation.start();
