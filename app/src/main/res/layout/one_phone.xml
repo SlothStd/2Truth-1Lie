@@ -36,10 +36,10 @@
                     android:text="PROCEED"
                     android:textColor="#fff"
                     android:textSize="20sp"
-                    android:layout_marginBottom="25dp"
                     android:id="@+id/proceed"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true" />
+                    android:layout_below="@+id/thirdS"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="35dp" />
 
                 <CheckBox
                     android:layout_width="wrap_content"
@@ -80,35 +80,37 @@
                     android:layout_height="wrap_content"
                     android:button="@drawable/custom_checkbox"
                     android:id="@+id/thirdLie"
-                    android:layout_marginBottom="82dp"
-                    android:layout_above="@+id/proceed"
-                    android:layout_alignLeft="@+id/secondLie"
-                    android:layout_alignStart="@+id/secondLie" />
+                    android:layout_alignStart="@+id/secondLie"
+                    android:layout_alignTop="@+id/thirdS"
+                    android:layout_toRightOf="@+id/thirdS"
+                    android:layout_marginTop="25dp" />
 
                 <CheckBox
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:button="@drawable/custom_checkbox"
                     android:id="@+id/firstLie"
-                    android:layout_marginRight="18dp"
-                    android:layout_marginEnd="18dp"
-                    android:layout_marginBottom="28dp"
-                    android:layout_alignBottom="@+id/firstS"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true" />
+                    android:layout_alignTop="@+id/firstS"
+                    android:layout_toEndOf="@+id/firstS"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginLeft="-85dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_toRightOf="@+id/firstS"
+                    android:checked="false" />
 
                 <CheckBox
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:button="@drawable/custom_checkbox"
                     android:id="@+id/secondLie"
-                    android:layout_alignBottom="@+id/secondS"
-                    android:layout_alignLeft="@+id/firstLie"
                     android:layout_alignStart="@+id/firstLie"
-                    android:layout_marginBottom="26dp" />
+                    android:layout_marginBottom="26dp"
+                    android:layout_alignTop="@+id/secondS"
+                    android:layout_marginTop="25dp"
+                    android:layout_toRightOf="@+id/secondS" />
 
                 <EditText
-                    android:layout_width="240dp"
+                    android:layout_width="fill_parent"
                     android:layout_height="130dp"
                     android:textColor="#ffffff"
                     android:textSize="20sp"
@@ -117,15 +119,13 @@
                     android:id="@+id/firstS"
                     android:autoText="false"
                     android:paddingTop="5dp"
-                    android:layout_marginTop="61dp"
-                    android:layout_below="@+id/thirdTruth"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginBottom="15dp"
-                    android:layout_marginLeft="15dp" />
+                    android:layout_alignStart="@+id/secondS"
+                    android:layout_marginTop="50dp"
+                    android:layout_marginRight="100dp"
+                    android:textAlignment="center" />
 
                 <EditText
-                    android:layout_width="240dp"
+                    android:layout_width="fill_parent"
                     android:layout_height="130dp"
                     android:textColor="#ffffff"
                     android:textSize="20sp"
@@ -137,10 +137,13 @@
                     android:layout_below="@+id/firstS"
                     android:layout_alignParentLeft="true"
                     android:layout_marginBottom="15dp"
-                    android:layout_marginLeft="15dp" />
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="100dp"
+                    android:textAlignment="center" />
 
                 <EditText
-                    android:layout_width="240dp"
+                    android:layout_width="fill_parent"
                     android:layout_height="130dp"
                     android:textColor="#ffffff"
                     android:textSize="20sp"
@@ -149,9 +152,10 @@
                     android:id="@+id/thirdS"
                     android:paddingTop="5dp"
                     android:layout_below="@+id/secondS"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginBottom="15dp"
-                    android:layout_marginLeft="15dp" />
+                    android:layout_marginTop="10dp"
+                    android:layout_alignLeft="@+id/secondS"
+                    android:layout_marginRight="100dp"
+                    android:textAlignment="center" />
 
                 <EditText
                     android:layout_width="90dp"

@@ -4,9 +4,13 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Point;
+import android.hardware.display.DisplayManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.design.widget.Snackbar;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -24,7 +28,7 @@ public class OnePhone extends Activity {
 
     EditText firstS, secondS, thirdS;
     String fString, sString, tString;
-    Snackbar snackbarplayer, snackbarEmpty;
+    Snackbar snackbarEmpty2, snackbarEmpty;
     Boolean first, second, third;
     TextView player1TW, player2TW;
     Animation fade_in;
@@ -33,11 +37,23 @@ public class OnePhone extends Activity {
     CheckBox firstTruth, firstLie;
     CheckBox secondTruth, secondLie;
     CheckBox thirdTruth, thirdLie;
+    Integer height;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.one_phone);
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+
+        height = size.y;
+
+//        if (height > 800) {
+            setContentView(R.layout.one_phone);
+//        } else {
+//            setContentView(R.layout.one_phone_small);
+//        }
 
         firstS = (EditText) findViewById(R.id.firstS);
         secondS = (EditText) findViewById(R.id.secondS);
@@ -62,6 +78,32 @@ public class OnePhone extends Activity {
         }
 
         /////////////////////////FIRST////////////////////////////
+
+        firstS.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+
+                secondLie.setChecked(false);
+                secondS.setBackgroundResource(R.drawable.custom_edittext_truth);
+
+                thirdLie.setChecked(false);
+                thirdS.setBackgroundResource(R.drawable.custom_edittext_truth);
+
+                firstLie.setChecked(true);
+                firstS.setBackgroundResource(R.drawable.custom_edittex_lie);
+                firstTruth.setChecked(false);
+
+                editor.putBoolean("firstLie", false).apply();
+                editor.putBoolean("secondLie", true).apply();
+                editor.putBoolean("thirdLie", true).apply();
+
+                return true;
+            }
+        });
+
 
         firstLie = (CheckBox) findViewById(R.id.firstLie);
         firstLie.setOnClickListener(new View.OnClickListener() {
@@ -99,6 +141,29 @@ public class OnePhone extends Activity {
 
         /////////////////////////SECOND//////////////////////////////
 
+        secondS.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+
+                firstLie.setChecked(false);
+                firstS.setBackgroundResource(R.drawable.custom_edittext_truth);
+
+                thirdLie.setChecked(false);
+                thirdS.setBackgroundResource(R.drawable.custom_edittext_truth);
+
+                secondLie.setChecked(true);
+                secondS.setBackgroundResource(R.drawable.custom_edittex_lie);
+                secondTruth.setChecked(false);
+
+                editor.putBoolean("secondLie", false).apply();
+                editor.putBoolean("firstLie", true).apply();
+                editor.putBoolean("thirdLie", true).apply();
+                return true;
+            }
+        });
+
         secondLie = (CheckBox) findViewById(R.id.secondLie);
         secondLie.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,6 +199,31 @@ public class OnePhone extends Activity {
         });
 
         /////////////////////////THIRD/////////////////////////////////
+
+        thirdS.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+
+                firstLie.setChecked(false);
+                firstS.setBackgroundResource(R.drawable.custom_edittext_truth);
+
+                secondLie.setChecked(false);
+                secondS.setBackgroundResource(R.drawable.custom_edittext_truth);
+
+                thirdLie.setChecked(true);
+                thirdS.setBackgroundResource(R.drawable.custom_edittex_lie);
+                thirdTruth.setChecked(false);
+
+                editor.putBoolean("thirdLie", false).apply();
+                editor.putBoolean("secondLie", true).apply();
+                editor.putBoolean("firstLie", true).apply();
+
+                return true;
+            }
+        });
 
         thirdLie = (CheckBox) findViewById(R.id.thirdLie);
         thirdLie.setOnClickListener(new View.OnClickListener() {
@@ -178,7 +268,8 @@ public class OnePhone extends Activity {
 
                         SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
 
-                        snackbarEmpty = Snackbar.make(findViewById(android.R.id.content), "Choose a lie", Snackbar.LENGTH_INDEFINITE);
+                        snackbarEmpty = Snackbar.make(findViewById(android.R.id.content), "Don't leave the spaces blank", Snackbar.LENGTH_INDEFINITE);
+                        snackbarEmpty2 = Snackbar.make(findViewById(android.R.id.content), "Choose a lie", Snackbar.LENGTH_INDEFINITE);
 
                         first = preferences.getBoolean("fristLie", false);
                         second = preferences.getBoolean("secondLie", false);
@@ -194,7 +285,7 @@ public class OnePhone extends Activity {
                             snackbarEmpty.setDuration(Snackbar.LENGTH_SHORT);
                             snackbarEmpty.show();
                         } else if (!first && !second && !third){
-                            snackbarEmpty.setDuration(Snackbar.LENGTH_SHORT);
+                            snackbarEmpty2.setDuration(Snackbar.LENGTH_SHORT);
                             snackbarEmpty.show();
                         } else {
                             nextPlayer.putExtra("firstS", firstS.getText().toString());
@@ -203,7 +294,6 @@ public class OnePhone extends Activity {
                             startActivity(nextPlayer);
                             finish();
                         }
-
             }
         });
     }

@@ -65,6 +65,7 @@
                 <Button
                     android:layout_width="220dp"
                     android:layout_height="60dp"
+                    android:background="@drawable/rounded_button"
                     android:text="PROCEED"
                     android:textColor="#fff"
                     android:textSize="20sp"
