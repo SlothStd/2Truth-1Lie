@@ -185,6 +185,16 @@ public class MainActivity extends Activity {
             }
         });
 
+        ////
+        findViewById(R.id.kappa123).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent singleplayer = new Intent(MainActivity.this, MpWifi.class);
+                startActivity(singleplayer);
+            }
+        });
+        ///
+
         bt.setOnClickListener(new View.OnClickListener() {
 
 

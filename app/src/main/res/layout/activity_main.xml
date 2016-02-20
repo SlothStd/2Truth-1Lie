@@ -5,6 +5,12 @@
     android:orientation="vertical"
     android:background="@color/purple_ish">
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MP"
+        android:id="@+id/kappa123"/>
+
     <ImageView
         android:layout_width="340dp"
         android:layout_height="200dp"
@@ -48,6 +54,7 @@
         android:textSize="28sp"
         android:background="@drawable/circle_button"
         android:layout_alignStart="@+id/progressBarSett"
+        android:layout_alignLeft="@id/progressBarSett"
         android:layout_marginTop="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginLeft="0dp" />
