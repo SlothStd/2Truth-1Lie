@@ -1,23 +1,8 @@
-/*
- * Copyright (C) 2013 Google Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package sloth.twotruthsonelie;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -87,7 +72,7 @@ public class MpWifi extends Activity implements
     private AlertDialog mAlertDialog;
 
     // For our intents
-    private static final int RC_SIGN_IN = 9001;
+    final static int RC_SIGN_IN = 9001;
     final static int RC_SELECT_PLAYERS = 10000;
     final static int RC_LOOK_AT_MATCHES = 10001;
 
@@ -104,14 +89,15 @@ public class MpWifi extends Activity implements
     public TurnBasedMatch mMatch;
 
     public byte[] mTurnData = null;
+    public ArrayList<String> mData = null;
 
     public String myID;
     public ArrayList<String> IDs;
     public int player;
 
-    public static final int winPoint = 5;
+    public static final int winPoint = 1;
 
-    public ArrayList<String> scores = new ArrayList<>();
+    public ArrayList<String> scores = new ArrayList<>(Arrays.asList(new String[]{"0", "0"}));
 
     public EditText firstS, secondS, thirdS;
     public CheckBox firstTruth, firstLie;
@@ -233,7 +219,7 @@ public class MpWifi extends Activity implements
     // and figure out what to do.
     public void onStartMatchClicked(View view) {
         Intent intent = Games.TurnBasedMultiplayer.getSelectOpponentsIntent(mGoogleApiClient,
-                1, 7, true);
+                1, 2, true);
         startActivityForResult(intent, RC_SELECT_PLAYERS);
     }
 
@@ -332,6 +318,7 @@ public class MpWifi extends Activity implements
         if (!isSignedIn) {
             findViewById(R.id.buttons).setVisibility(View.VISIBLE);
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
+            findViewById(R.id.sign_out_button).setVisibility(View.GONE);
             findViewById(R.id.setTexts).setVisibility(View.GONE);
             findViewById(R.id.chooseTexts).setVisibility(View.GONE);
 
@@ -345,15 +332,26 @@ public class MpWifi extends Activity implements
                 mGoogleApiClient).getDisplayName());*/
         findViewById(R.id.buttons).setVisibility(View.GONE);
 
-        if (isDoingTurn && isGuessing) {
+        if (isDoingTurn) {
+            if (isGuessing) {
+                findViewById(R.id.setTexts).setVisibility(View.GONE);
+                findViewById(R.id.chooseTexts).setVisibility(View.VISIBLE);
+
+                Log.d(TAG, "guessing");
+
+                Guessing guess = new Guessing();
+                guess.start();
+            } else {
+                findViewById(R.id.setTexts).setVisibility(View.VISIBLE);
+                findViewById(R.id.chooseTexts).setVisibility(View.GONE);
+
+                Log.d(TAG, "setting");
+            }
+        }else {
             findViewById(R.id.setTexts).setVisibility(View.GONE);
-            findViewById(R.id.chooseTexts).setVisibility(View.VISIBLE);
-        } else {
-            findViewById(R.id.setTexts).setVisibility(View.VISIBLE);
             findViewById(R.id.chooseTexts).setVisibility(View.GONE);
 
-            Guessing guess = new Guessing();
-            guess.start();
+            showWarning(null, "It\'s not your turn!");
         }
     }
 
@@ -361,9 +359,9 @@ public class MpWifi extends Activity implements
     public void setGameplayUI() {
         isDoingTurn = true;
 
-        ArrayList data = getData();
+        mData = getData();
 
-        isGuessing = !(data == null || data.size() == 0);
+        isGuessing = !(mData == null || mData.size() == 0 || (mData.get(0).equals(myID)));
 
         setViewVisibility();
     }
@@ -399,7 +397,6 @@ public class MpWifi extends Activity implements
 
         // create alert dialog
         mAlertDialog = alertDialogBuilder.create();
-
         // show it
         mAlertDialog.show();
     }
@@ -434,70 +431,74 @@ public class MpWifi extends Activity implements
     @Override
     public void onActivityResult(int request, int response, Intent data) {
         super.onActivityResult(request, response, data);
-        if (request == RC_SIGN_IN) {
-            mSignInClicked = false;
-            mResolvingConnectionFailure = false;
-            if (response == Activity.RESULT_OK) {
-                mGoogleApiClient.connect();
-            } else {
-                BaseGameUtils.showActivityResultError(this, request, response, R.string.signin_other_error);
-            }
-        } else if (request == RC_LOOK_AT_MATCHES) {
-            // Returning from the 'Select Match' dialog
+        switch (request) {
+            case RC_SIGN_IN:
+                mSignInClicked = false;
+                mResolvingConnectionFailure = false;
+                if (response == Activity.RESULT_OK) {
+                    mGoogleApiClient.connect();
+                } else {
+                    BaseGameUtils.showActivityResultError(this, request, response, R.string.signin_other_error);
+                }
+                break;
+            case RC_LOOK_AT_MATCHES:
+                // Returning from the 'Select Match' dialog
 
-            if (response != Activity.RESULT_OK) {
-                // user canceled
-                return;
-            }
+                if (response != Activity.RESULT_OK) {
+                    // user canceled
+                    return;
+                }
 
-            TurnBasedMatch match = data
-                    .getParcelableExtra(Multiplayer.EXTRA_TURN_BASED_MATCH);
+                TurnBasedMatch match = data
+                        .getParcelableExtra(Multiplayer.EXTRA_TURN_BASED_MATCH);
 
-            if (match != null) {
-                updateMatch(match);
-            }
+                if (match != null) {
+                    updateMatch(match);
+                }
 
-            Log.d(TAG, "Match = " + match);
-        } else if (request == RC_SELECT_PLAYERS) {
-            // Returned from 'Select players to Invite' dialog
+                Log.d(TAG, "Match = " + match);
+                break;
+            case RC_SELECT_PLAYERS:
+                // Returned from 'Select players to Invite' dialog
 
-            if (response != Activity.RESULT_OK) {
-                // user canceled
-                return;
-            }
+                if (response != Activity.RESULT_OK) {
+                    // user canceled
+                    return;
+                }
 
-            // get the invitee list
-            final ArrayList<String> invitees = data
-                    .getStringArrayListExtra(Games.EXTRA_PLAYER_IDS);
+                // get the invitee list
+                final ArrayList<String> invitees = data
+                        .getStringArrayListExtra(Games.EXTRA_PLAYER_IDS);
 
-            // get automatch criteria
-            Bundle autoMatchCriteria = null;
+                // get automatch criteria
+                Bundle autoMatchCriteria = null;
 
-            int minAutoMatchPlayers = data.getIntExtra(
-                    Multiplayer.EXTRA_MIN_AUTOMATCH_PLAYERS, 0);
-            int maxAutoMatchPlayers = data.getIntExtra(
-                    Multiplayer.EXTRA_MAX_AUTOMATCH_PLAYERS, 0);
+                int minAutoMatchPlayers = data.getIntExtra(
+                        Multiplayer.EXTRA_MIN_AUTOMATCH_PLAYERS, 0);
+                int maxAutoMatchPlayers = data.getIntExtra(
+                        Multiplayer.EXTRA_MAX_AUTOMATCH_PLAYERS, 0);
 
-            if (minAutoMatchPlayers > 0) {
-                autoMatchCriteria = RoomConfig.createAutoMatchCriteria(
-                        minAutoMatchPlayers, maxAutoMatchPlayers, 0);
-            } else {
-                autoMatchCriteria = null;
-            }
+                if (minAutoMatchPlayers > 0) {
+                    autoMatchCriteria = RoomConfig.createAutoMatchCriteria(
+                            minAutoMatchPlayers, maxAutoMatchPlayers, 0);
+                } else {
+                    autoMatchCriteria = null;
+                }
 
-            TurnBasedMatchConfig tbmc = TurnBasedMatchConfig.builder()
-                    .addInvitedPlayers(invitees)
-                    .setAutoMatchCriteria(autoMatchCriteria).build();
+                TurnBasedMatchConfig tbmc = TurnBasedMatchConfig.builder()
+                        .addInvitedPlayers(invitees)
+                        .setAutoMatchCriteria(autoMatchCriteria).build();
 
-            // Start the match
-            Games.TurnBasedMultiplayer.createMatch(mGoogleApiClient, tbmc).setResultCallback(
-                    new ResultCallback<TurnBasedMultiplayer.InitiateMatchResult>() {
-                        @Override
-                        public void onResult(TurnBasedMultiplayer.InitiateMatchResult result) {
-                            processResult(result);
-                        }
-                    });
-            showSpinner();
+                // Start the match
+                Games.TurnBasedMultiplayer.createMatch(mGoogleApiClient, tbmc).setResultCallback(
+                        new ResultCallback<TurnBasedMultiplayer.InitiateMatchResult>() {
+                            @Override
+                            public void onResult(TurnBasedMultiplayer.InitiateMatchResult result) {
+                                processResult(result);
+                            }
+                        });
+                showSpinner();
+                break;
         }
     }
 
@@ -571,12 +572,21 @@ public class MpWifi extends Activity implements
         }
     }
 
-    public ArrayList getData(){
+    public ArrayList<String> getData(){
+
+        String playerId = Games.Players.getCurrentPlayerId(mGoogleApiClient);
+        myID = mMatch.getParticipantId(playerId);
+
+        IDs = mMatch.getParticipantIds();
+
+        if (myID.equals(IDs.get(0))) player = 0;
+        else player = 1;
+
         /*
-         * 0. ArrayList of player points
-         * 1. ID of the sentence author.
-         * 2,3,4. 3 sentences.
-         * 5. Position of the lie.
+         * 0. ID of the sentence author.
+         * 1,2,3. 3 sentences.
+         * 4. Position of the lie.
+         * 5,6. p_1 score, p_2 score.
          */
 
         if (mMatch == null || mMatch.getData() == null) return null;
@@ -585,31 +595,12 @@ public class MpWifi extends Activity implements
 
         char[] chars = string.toCharArray();
 
-        ArrayList strings = new ArrayList();
-
-        ArrayList<String> scores = new ArrayList<>();
+        ArrayList<String> strings = new ArrayList<>();
 
         int i = 0;
-        int scorePos = 0;
-        for (; i < chars.length; i++){
-            if (chars[i] == '~') {
-                break;
-            }
-            if (chars[i] == '|') {
-                scorePos++;
-                continue;
-            }
-            try {
-                scores.set(scorePos, strings.get(scorePos) + String.valueOf(chars[i]));
-            } catch (IndexOutOfBoundsException e) {
-                scores.add(String.valueOf(chars[i]));
-            }
-        }
-        strings.add(scores);
-        this.scores = scores;
-
         for (; i < chars.length; i++) {
             if (chars[i] == '~') {
+                i++;
                 break;
             }
             try {
@@ -622,6 +613,7 @@ public class MpWifi extends Activity implements
         int pos = 1;
         for (; i < chars.length; i++) {
             if (chars[i] == '~') {
+                i++;
                 break;
             }
             if (chars[i] == '|') {
@@ -637,6 +629,7 @@ public class MpWifi extends Activity implements
 
         for (; i < chars.length; i++) {
             if (chars[i] == '~') {
+                i++;
                 break;
             }
             try {
@@ -646,7 +639,29 @@ public class MpWifi extends Activity implements
             }
         }
 
-        Toast.makeText(this, strings.toString(), Toast.LENGTH_SHORT).show();
+        int scorePos = 5;
+        for (; i < chars.length; i++) {
+            if (chars[i] == '~') {
+                i++;
+                break;
+            }
+            if (chars[i] == '|') {
+                scorePos++;
+                continue;
+            }
+            try {
+                strings.set(scorePos, strings.get(scorePos) + String.valueOf(chars[i]));
+            } catch (IndexOutOfBoundsException e) {
+                strings.add(String.valueOf(chars[i]));
+            }
+        }
+
+        if (strings.size() != 0) {
+            scores.set(0, strings.get(5));
+            scores.set(1, strings.get(6));
+        }
+
+        Log.d(TAG, "Received: " + strings.toString());
 
         return strings;
     }
@@ -664,11 +679,9 @@ public class MpWifi extends Activity implements
 
         data = data + "~" + liePos;
 
-        data = data + "~";
-        for (int i = 0; i < scores.size(); i++){
-            if (i != 0) data = data + "|" + scores.get(i);
-            else data = data + scores.get(i);
-        }
+        data = data + "~" + scores.get(0) + "|" + scores.get(1);
+
+        Log.d(TAG, "Sent: " + data);
 
         return data.getBytes(Charset.forName("UTF-16"));
     }
@@ -777,6 +790,8 @@ public class MpWifi extends Activity implements
         }
 
         isDoingTurn = (match.getTurnStatus() == TurnBasedMatch.MATCH_TURN_STATUS_MY_TURN);
+
+        Log.d(TAG, "MyTurn: " + isDoingTurn);
 
         if (isDoingTurn) {
             updateMatch(match);
@@ -996,30 +1011,35 @@ public class MpWifi extends Activity implements
 
     public class Guessing{
 
-        String firstS, secondS, thirdS;
+        String firstS = "", secondS = "", thirdS = "";
         TextView firstTW, secondTW, thirdTW;
         Button switchPlayer;
         Integer round, current_round, player1, player2;
         Boolean firstLie, secondLie, thirdLie;
         Animation animFadeIn;
         ImageView cross;
-        ArrayList stringData;
+        ArrayList<String> stringData;
 
         public void start(){
 
             animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
             cross = (ImageView) findViewById(R.id.cross);
 
-            stringData = new MpWifi().getData();
+            stringData = mData;
+
+            if (stringData == null){
+                showWarning("Error", getString(R.string.general_error));
+                return;
+            }
 
             firstTW = (TextView) findViewById(R.id.firstTW);
             secondTW = (TextView) findViewById(R.id.secondTW);
             thirdTW = (TextView) findViewById(R.id.thirdTW);
             switchPlayer = (Button) findViewById(R.id.switch_player);
 
-            firstS = stringData.get(2).toString();
-            secondS = stringData.get(3).toString();
-            thirdS = stringData.get(4).toString();
+            firstS = stringData.get(1);
+            secondS = stringData.get(2);
+            thirdS = stringData.get(3);
 
             firstTW.setText(firstS);
             secondTW.setText(secondS);
@@ -1028,7 +1048,6 @@ public class MpWifi extends Activity implements
             firstTW.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     areYouSureDialog(0);
                 }
             });
@@ -1036,7 +1055,6 @@ public class MpWifi extends Activity implements
             secondTW.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     areYouSureDialog(1);
                 }
             });
@@ -1044,385 +1062,37 @@ public class MpWifi extends Activity implements
             thirdTW.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     areYouSureDialog(2);
-                }
-            });
-
-            switchPlayer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    SharedPreferences tfPrefs = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
-                    SharedPreferences.Editor tfEditor = tfPrefs.edit();
-                    tfEditor.clear().apply();
-
-                    SharedPreferences preferences = getSharedPreferences("totalRounds", MODE_PRIVATE);
-                    SharedPreferences.Editor editor = preferences.edit();
-
-                    SharedPreferences currentR = getSharedPreferences("currentR", MODE_PRIVATE);
-                    SharedPreferences.Editor currentEditor = currentR.edit();
-
-                    try {
-                        round = preferences.getInt("rounds", 0);
-                    } catch (NullPointerException e) {
-                        round = 2;
-                    }
-
-                    try {
-                        current_round = currentR.getInt("currentR", 0);
-                    } catch (NullPointerException e) {
-                        current_round = 1;
-                    }
-
-                    if (current_round < round) {
-
-                        Toast.makeText(getApplicationContext(), "Current Round is: " + current_round, Toast.LENGTH_SHORT).show();
-
-                        current_round++;
-
-                        Intent next_turn = new Intent(getApplicationContext(),OnePhone.class);
-                        startActivity(next_turn);
-                        finish();
-
-                        currentEditor.putInt("currentR", current_round).apply();
-                    } else {
-                        Intent scoreboard = new Intent(getApplicationContext(), ScoreActivity.class);
-                        startActivity(scoreboard);
-                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out_slower);
-                        finish();
-                        editor.putInt("currentR", 0).apply();
-                    }
-
                 }
             });
         }
 
-        public void areYouSureDialog(final int pos) {
+        void areYouSureDialog(final int pos) {
 
-
-            final AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+            final AlertDialog.Builder builder = new AlertDialog.Builder(MpWifi.this);
 
             builder.setMessage("Are you sure?");
 
             setTitleColor(getResources().getColor(R.color.truth));
 
-            final int liePos = Integer.parseInt(stringData.get(6).toString());
+            final int liePos = Integer.parseInt(stringData.get(4));
 
             builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
                     if (pos == liePos) {
-                        try{
-                            scores.set(player, String.valueOf(Integer.parseInt(scores.get(player)) + winPoint));
-                        }catch (IndexOutOfBoundsException e){
-                            scores.add(String.valueOf(Integer.parseInt(scores.get(player)) + winPoint));
-                        }
-                    }
+                        scores.set(player, String.valueOf(Integer.parseInt(scores.get(player)) + winPoint));
 
-                    SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
-
-                    firstLie = preferences.getBoolean("firstLie", false);
-                    secondLie = preferences.getBoolean("secondLie", false);
-                    thirdLie = preferences.getBoolean("thirdLie", false);
-
-                    if (!firstLie) {
-                        SharedPreferences points = getSharedPreferences("playerPoints", MODE_PRIVATE);
-                        SharedPreferences.Editor editor = points.edit();
-                        SharedPreferences currentR = getSharedPreferences("currentR", MODE_PRIVATE);
-
-                        try {
-                            player1 = points.getInt("player1", 0);
-                        } catch (NullPointerException e) {
-                            player1 = 0;
-                        }
-                        try {
-                            player2 = points.getInt("player2", 0);
-                        } catch (NullPointerException e) {
-                            player2 = 0;
-                        }
-
-                        current_round = currentR.getInt("currentR", 0);
-                        if ((current_round % 2) == 0) {
-                            player2++;
-                            editor.putInt("player2", player2).apply();
-                        } else {
-                            player1++;
-                            editor.putInt("player1", player1).apply();
-                        }
-
-                        Toast.makeText(getApplicationContext(), "CORRECT!", Toast.LENGTH_SHORT).show();
-                        switchPlayer.setVisibility(View.VISIBLE);
-                        firstTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
-
-                        firstTW.setClickable(false);
-                        secondTW.setClickable(false);
-                        thirdTW.setClickable(false);
-
-                    } else if (!secondLie) {
-                        new CountDownTimer(2000, 1000) {
-
-                            public void onTick(long millisUntilFinished) {
-                                cross.setVisibility(View.VISIBLE);
-                                cross.startAnimation(animFadeIn);
-                            }
-
-                            public void onFinish() {
-                                cross.clearAnimation();
-                                cross.setVisibility(View.GONE);
-                            }
-                        }.start();
-
-                        switchPlayer.setVisibility(View.VISIBLE);
-                        secondTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
-
-                        firstTW.setClickable(false);
-                        secondTW.setClickable(false);
-                        thirdTW.setClickable(false);
-
+                        Toast.makeText(getApplicationContext(), "You\'re a fuckin g!", Toast.LENGTH_SHORT).show();
                     } else {
-                        new CountDownTimer(2000, 1000) {
-
-                            public void onTick(long millisUntilFinished) {
-                                cross.setVisibility(View.VISIBLE);
-                                cross.startAnimation(animFadeIn);
-                            }
-
-                            public void onFinish() {
-                                cross.clearAnimation();
-                                cross.setVisibility(View.GONE);
-                            }
-                        }.start();
-
-                        firstTW.setClickable(false);
-                        secondTW.setClickable(false);
-                        thirdTW.setClickable(false);
-
-                        switchPlayer.setVisibility(View.VISIBLE);
-                        thirdTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
+                        Toast.makeText(getApplicationContext(), "You dumb idiot", Toast.LENGTH_SHORT).show();
                     }
-                }
-            });
 
-            builder.setNegativeButton("BACK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
+                    isGuessing = false;
+                    setViewVisibility();
 
-            builder.show();
-        }
-
-
-        public void areYouSureDialogS() {
-
-
-            final AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-
-            builder.setMessage("Are you sure?");
-
-            setTitleColor(getResources().getColor(R.color.truth));
-
-
-            builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
-
-                    firstLie = preferences.getBoolean("firstLie", false);
-                    secondLie = preferences.getBoolean("secondLie", false);
-                    thirdLie = preferences.getBoolean("thirdLie", false);
-
-
-                    if (!secondLie) {
-                        SharedPreferences rounds = getSharedPreferences("totalRounds", MODE_PRIVATE);
-                        SharedPreferences points = getSharedPreferences("playerPoints", MODE_PRIVATE);
-                        SharedPreferences.Editor editor = points.edit();
-
-                        SharedPreferences currentR = getSharedPreferences("currentR", MODE_PRIVATE);
-                        SharedPreferences.Editor currentEditor = currentR.edit();
-
-                        try {
-                            player1 = points.getInt("player1", 0);
-                        } catch (NullPointerException e) {
-                            player1 = 0;
-                        }
-                        try {
-                            player2 = points.getInt("player2", 0);
-                        } catch (NullPointerException e) {
-                            player2 = 0;
-                        }
-
-                        current_round = currentR.getInt("currentR", 0);
-                        if ((current_round % 2) == 0) {
-                            player2++;
-                            editor.putInt("player2", player2).apply();
-                        } else {
-                            player1++;
-                            editor.putInt("player1", player1).apply();
-                        }
-
-                        Toast.makeText(getApplicationContext(), "CORRECT!", Toast.LENGTH_SHORT).show();
-                        switchPlayer.setVisibility(View.VISIBLE);
-                        secondTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
-
-                        firstTW.setClickable(false);
-                        secondTW.setClickable(false);
-                        thirdTW.setClickable(false);
-
-                    } else if (!firstLie) {
-                        new CountDownTimer(2000, 1000) {
-
-                            public void onTick(long millisUntilFinished) {
-                                cross.setVisibility(View.VISIBLE);
-                                cross.startAnimation(animFadeIn);
-                            }
-
-                            public void onFinish() {
-                                cross.clearAnimation();
-                                cross.setVisibility(View.GONE);
-                            }
-                        }.start();
-
-                        switchPlayer.setVisibility(View.VISIBLE);
-                        firstTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
-
-                        firstTW.setClickable(false);
-                        secondTW.setClickable(false);
-                        thirdTW.setClickable(false);
-
-                    } else {
-                        new CountDownTimer(2000, 1000) {
-
-                            public void onTick(long millisUntilFinished) {
-                                cross.setVisibility(View.VISIBLE);
-                                cross.startAnimation(animFadeIn);
-                            }
-
-                            public void onFinish() {
-                                cross.clearAnimation();
-                                cross.setVisibility(View.GONE);
-                            }
-                        }.start();
-
-                        firstTW.setClickable(false);
-                        thirdTW.setClickable(false);
-                        thirdTW.setClickable(false);
-
-                        switchPlayer.setVisibility(View.VISIBLE);
-                        thirdTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
-                    }
-                }
-            });
-
-            builder.setNegativeButton("BACK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-
-            builder.show();
-        }
-
-
-        public void areYouSureDialogT() {
-
-
-            final AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-
-            builder.setMessage("Are you sure?");
-            setTitleColor(getResources().getColor(R.color.truth));
-
-            builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
-
-                    firstLie = preferences.getBoolean("firstLie", false);
-                    secondLie = preferences.getBoolean("secondLie", false);
-                    thirdLie = preferences.getBoolean("thirdLie", false);
-
-
-                    if (!thirdLie) {
-                        SharedPreferences points = getSharedPreferences("playerPoints", MODE_PRIVATE);
-                        SharedPreferences.Editor editor = points.edit();
-
-                        SharedPreferences currentR = getSharedPreferences("currentR", MODE_PRIVATE);
-
-                        try {
-                            player1 = points.getInt("player1", 0);
-                        } catch (NullPointerException e) {
-                            player1 = 0;
-                        }
-                        try {
-                            player2 = points.getInt("player2", 0);
-                        } catch (NullPointerException e) {
-                            player2 = 0;
-                        }
-
-                        current_round = currentR.getInt("currentR", 0);
-                        if ((current_round % 2) == 0) {
-                            player2++;
-                            editor.putInt("player2", player2).apply();
-                        } else {
-                            player1++;
-                            editor.putInt("player1", player1).apply();
-                        }
-
-                        Toast.makeText(getApplicationContext(), "CORRECT!", Toast.LENGTH_SHORT).show();
-                        switchPlayer.setVisibility(View.VISIBLE);
-                        thirdTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
-
-                        firstTW.setClickable(false);
-                        secondTW.setClickable(false);
-                        thirdTW.setClickable(false);
-
-                    } else if (!firstLie) {
-
-                        new CountDownTimer(2000, 1000) {
-
-                            public void onTick(long millisUntilFinished) {
-                                cross.setVisibility(View.VISIBLE);
-                                cross.startAnimation(animFadeIn);
-                            }
-
-                            public void onFinish() {
-                                cross.clearAnimation();
-                                cross.setVisibility(View.GONE);
-                            }
-                        }.start();
-
-                        switchPlayer.setVisibility(View.VISIBLE);
-                        firstTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
-
-                        firstTW.setClickable(false);
-                        secondTW.setClickable(false);
-                        thirdTW.setClickable(false);
-
-                    } else {
-                        new CountDownTimer(2000, 1000) {
-
-                            public void onTick(long millisUntilFinished) {
-                                cross.setVisibility(View.VISIBLE);
-                                cross.startAnimation(animFadeIn);
-                            }
-
-                            public void onFinish() {
-                                cross.clearAnimation();
-                                cross.setVisibility(View.GONE);
-                            }
-                        }.start();
-
-                        firstTW.setClickable(false);
-                        secondTW.setClickable(false);
-                        thirdTW.setClickable(false);
-
-                        switchPlayer.setVisibility(View.VISIBLE);
-                        secondTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
-                    }
+                    Toast.makeText(getApplicationContext(), mData.get(5) + " - " + mData.get(6), Toast.LENGTH_SHORT).show();
                 }
             });
 
