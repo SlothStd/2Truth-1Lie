@@ -14,7 +14,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 public class NextPlayer extends Activity {
@@ -46,13 +45,15 @@ public class NextPlayer extends Activity {
             firstS = getIntent().getExtras().getString("firstS", null);
             secondS = getIntent().getExtras().getString("secondS", null);
             thirdS = getIntent().getExtras().getString("thirdS", null);
-        } catch (NullPointerException e) {}
+        } catch (NullPointerException e) {
+        }
 
         try {
             firstTW.setText(firstS.toString());
             secondTW.setText(secondS.toString());
             thirdTW.setText(thirdS.toString());
-        } catch (NullPointerException e) {}
+        } catch (NullPointerException e) {
+        }
 
         firstTW.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -268,7 +269,6 @@ public class NextPlayer extends Activity {
                     SharedPreferences.Editor editor = points.edit();
 
                     SharedPreferences currentR = getSharedPreferences("currentR", MODE_PRIVATE);
-                    SharedPreferences.Editor currentEditor = currentR.edit();
 
                     try {
                         player1 = points.getInt("player1", 0);
@@ -362,7 +362,7 @@ public class NextPlayer extends Activity {
         builder.setMessage("Are you sure?");
         setTitleColor(getResources().getColor(R.color.truth));
 
-        builder.setPositiveButton("YES",  new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
@@ -464,8 +464,42 @@ public class NextPlayer extends Activity {
 
     @Override
     public void onBackPressed() {
-        exitSession();
-        super.onBackPressed();
+
+        final AlertDialog.Builder toMain = new AlertDialog.Builder(NextPlayer.this);
+        toMain.setMessage("you are about to leave the game, all saved data will be lost, are you sure you want to proceed?");
+        toMain.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                SharedPreferences points = getSharedPreferences("playerPoints", MODE_PRIVATE);
+                SharedPreferences.Editor editor = points.edit();
+                editor.clear().apply();
+
+                SharedPreferences currentR = getSharedPreferences("currentR", MODE_PRIVATE);
+                SharedPreferences.Editor editor1 = currentR.edit();
+                editor1.clear().apply();
+
+                SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
+                SharedPreferences.Editor editor2 = preferences.edit();
+                editor2.clear().apply();
+
+                Intent main = new Intent(NextPlayer.this, MainActivity.class);
+                NextPlayer.this.finish();
+                startActivity(main);
+            }
+        });
+
+        toMain.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        AlertDialog dialog = toMain.create();
+        dialog.show();
+
+//        super.onBackPressed();
 
     }
 

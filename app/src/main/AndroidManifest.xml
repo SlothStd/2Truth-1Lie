@@ -23,7 +23,8 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/nevidno">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,61 +34,71 @@
         <activity
             android:name=".OnePhone"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/nevidno">
 
         </activity>
         <activity
             android:name=".NextPlayer"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/nevidno">
 
         </activity>
         <activity
             android:name=".Settings"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/nevidno">
 
         </activity>
         <activity
             android:name=".ScoreActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/nevidno">
         </activity>
 
         <activity
             android:name=".MpWifi"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/nevidno">
         </activity>
 
         <activity
             android:name=".Bluetooth"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/nevidno">
 
         </activity>
         <activity
             android:name=".JoinLobby"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/nevidno">
 
         </activity>
         <activity
             android:name=".Lobby"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/nevidno">
 
         </activity>
         <activity
             android:name=".NextPlayerBluetooth"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/nevidno">
 
         </activity>
         <activity
             android:name=".OnePhoneBluetooth"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/nevidno">
         </activity>
 
     </application>

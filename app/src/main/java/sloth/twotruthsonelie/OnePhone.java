@@ -1,28 +1,22 @@
 package sloth.twotruthsonelie;
 
-import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Point;
-import android.hardware.display.DisplayManager;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.design.widget.Snackbar;
-import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 public class OnePhone extends Activity {
 
@@ -38,6 +32,7 @@ public class OnePhone extends Activity {
     CheckBox secondTruth, secondLie;
     CheckBox thirdTruth, thirdLie;
     Integer height;
+    MainActivity main = new MainActivity();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +45,7 @@ public class OnePhone extends Activity {
         height = size.y;
 
 //        if (height > 800) {
-            setContentView(R.layout.one_phone);
+        setContentView(R.layout.one_phone);
 //        } else {
 //            setContentView(R.layout.one_phone_small);
 //        }
@@ -266,35 +261,74 @@ public class OnePhone extends Activity {
             public void onClick(View v) {
 
 
-                        SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
+                SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
 
-                        snackbarEmpty = Snackbar.make(findViewById(android.R.id.content), "Don't leave the spaces blank", Snackbar.LENGTH_INDEFINITE);
-                        snackbarEmpty2 = Snackbar.make(findViewById(android.R.id.content), "Choose a lie", Snackbar.LENGTH_INDEFINITE);
+                snackbarEmpty = Snackbar.make(findViewById(android.R.id.content), "Don't leave the spaces blank", Snackbar.LENGTH_INDEFINITE);
+                snackbarEmpty2 = Snackbar.make(findViewById(android.R.id.content), "Choose a lie", Snackbar.LENGTH_INDEFINITE);
 
-                        first = preferences.getBoolean("fristLie", false);
-                        second = preferences.getBoolean("secondLie", false);
-                        third = preferences.getBoolean("thirdLie", false);
+                first = preferences.getBoolean("fristLie", false);
+                second = preferences.getBoolean("secondLie", false);
+                third = preferences.getBoolean("thirdLie", false);
 
-                        fString = firstS.getText().toString();
-                        sString = secondS.getText().toString();
-                        tString = thirdS.getText().toString();
+                fString = firstS.getText().toString();
+                sString = secondS.getText().toString();
+                tString = thirdS.getText().toString();
 
-                        Intent nextPlayer = new Intent(OnePhone.this, NextPlayer.class);
-                        if (fString.matches("") | sString.matches("") | tString.matches("")) {
-                            snackbarEmpty.setActionTextColor(getResources().getColor(R.color.purple_ish));
-                            snackbarEmpty.setDuration(Snackbar.LENGTH_SHORT);
-                            snackbarEmpty.show();
-                        } else if (!first && !second && !third){
-                            snackbarEmpty2.setDuration(Snackbar.LENGTH_SHORT);
-                            snackbarEmpty.show();
-                        } else {
-                            nextPlayer.putExtra("firstS", firstS.getText().toString());
-                            nextPlayer.putExtra("secondS", secondS.getText().toString());
-                            nextPlayer.putExtra("thirdS", thirdS.getText().toString());
-                            startActivity(nextPlayer);
-                            finish();
-                        }
+                Intent nextPlayer = new Intent(OnePhone.this, NextPlayer.class);
+                if (fString.matches("") || sString.matches("") || tString.matches("")) {
+                    snackbarEmpty.setActionTextColor(getResources().getColor(R.color.purple_ish));
+                    snackbarEmpty.setDuration(Snackbar.LENGTH_SHORT);
+                    snackbarEmpty.show();
+                } else if (!first && !second && !third) {
+                    snackbarEmpty2.setDuration(Snackbar.LENGTH_SHORT);
+                    snackbarEmpty2.show();
+                } else {
+                    Toast.makeText(getApplicationContext(), " " + first + " " + second + " " + third, Toast.LENGTH_LONG).show();
+                    nextPlayer.putExtra("firstS", firstS.getText().toString());
+                    nextPlayer.putExtra("secondS", secondS.getText().toString());
+                    nextPlayer.putExtra("thirdS", thirdS.getText().toString());
+                    startActivity(nextPlayer);
+                    finish();
+                }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        AlertDialog.Builder cancleGame = new AlertDialog.Builder(OnePhone.this);
+        cancleGame.setMessage("Quit Game?");
+        cancleGame.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                SharedPreferences points = getSharedPreferences("playerPoints", MODE_PRIVATE);
+                SharedPreferences.Editor editor = points.edit();
+                editor.clear().apply();
+
+                SharedPreferences currentR = getSharedPreferences("currentR", MODE_PRIVATE);
+                SharedPreferences.Editor editor1 = currentR.edit();
+                editor1.clear().apply();
+
+                SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
+                SharedPreferences.Editor editor2 = preferences.edit();
+                editor2.clear().apply();
+
+                Intent intent = new Intent(OnePhone.this, MainActivity.class);
+                finish();
+                startActivity(intent);
+            }
+        });
+
+        cancleGame.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        AlertDialog dialog = cancleGame.create();
+        dialog.show();
+
     }
 }

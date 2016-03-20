@@ -6,7 +6,8 @@
     <color name="black_overlay">#66000000</color>
     <color name="white">#ffffff</color>
 
-    <color name="purple_ish">#141821</color>
-    <color name="truth">#30d695</color>
-    <color name="lie">#bf2e2e</color>
+    <color name="purple_ish">#474f58</color>
+    <color name="truth">#9CCC65</color>
+    <color name="lie">#EF5350</color>
+    <color name="orange">#ff5722</color>
 </resources>

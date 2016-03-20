@@ -5,6 +5,8 @@
     android:thickness="3sp"
     android:tint="#ff5722">
 
-    <solid android:color="#ff5722" />
+    <solid android:color="@android:color/transparent" />
+
+    <stroke android:width="20dp" android:color="@color/lie" />
 
 </shape>

@@ -3,12 +3,9 @@ package sloth.twotruthsonelie;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.view.Display;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -19,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+
 /**
  * Created by Daniel on 1/27/2016.
  */
@@ -26,7 +24,7 @@ import android.widget.Toast;
 public class MainActivity extends Activity {
 
     Button onePhone, twoPhones, powerups, settings,
-        wifi, bt, googlePlusMULTI, checkGamesMULTI, playMULTI ;
+            wifi, bt, googlePlusMULTI, checkGamesMULTI, playMULTI;
     boolean is2PhoneOpen = false;
 
     Animation fadeIn;
@@ -35,6 +33,7 @@ public class MainActivity extends Activity {
     Animation slideUP, slideDOWN;
     RelativeLayout levelInfo;
     ImageView logo;
+    ObjectAnimator animation;
 
     ProgressBar progressBarPlayMULTI, progressBarCheckMULTI, progressGooglePLus;
     ProgressBar progressBar, progressBarSett, progressBarMulti, level;
@@ -65,14 +64,31 @@ public class MainActivity extends Activity {
         slideUP = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up);
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar.getProgressDrawable().setColorFilter(getResources().getColor(R.color.lie), PorterDuff.Mode.SRC_IN);
         progressBarSett = (ProgressBar) findViewById(R.id.progressBarSett);
+        progressBarSett.getProgressDrawable().setColorFilter(getResources().getColor(R.color.lie), PorterDuff.Mode.SRC_IN);
         progressBarMulti = (ProgressBar) findViewById(R.id.progressBarMulti);
+        progressBarMulti.getProgressDrawable().setColorFilter(getResources().getColor(R.color.lie), PorterDuff.Mode.SRC_IN);
+
         level = (ProgressBar) findViewById(R.id.progressBarLevel);
+
         progressBarPlayMULTI = (ProgressBar) findViewById(R.id.progressBarPlayMULTI);
+        progressBarPlayMULTI.getProgressDrawable().setColorFilter(getResources().getColor(R.color.orange), PorterDuff.Mode.SRC_IN);
         progressBarCheckMULTI = (ProgressBar) findViewById(R.id.progressCheckMULTI);
+        progressBarCheckMULTI.getProgressDrawable().setColorFilter(getResources().getColor(R.color.orange), PorterDuff.Mode.SRC_IN);
         progressGooglePLus = (ProgressBar) findViewById(R.id.progressGooglePluskMULTI);
+        progressGooglePLus.getProgressDrawable().setColorFilter(getResources().getColor(R.color.orange), PorterDuff.Mode.SRC_IN);
 
         levelInfo = (RelativeLayout) findViewById(R.id.level);
+
+        progressBar.setProgress(0);
+        progressBar.clearAnimation();
+
+        progressBarSett.setProgress(0);
+        progressBarSett.clearAnimation();
+
+        progressBarMulti.setProgress(0);
+        progressBarMulti.clearAnimation();
 
         powerups.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,7 +104,7 @@ public class MainActivity extends Activity {
 
                 Toast.makeText(MainActivity.this, "watevah", Toast.LENGTH_SHORT).show();
 
-                final ObjectAnimator animation = ObjectAnimator.ofInt(progressBarPlayMULTI, "progress", 0, 500);
+                animation = ObjectAnimator.ofInt(progressBarPlayMULTI, "progress", 0, 500);
                 animation.setDuration(700); //in milliseconds bruv
                 animation.setInterpolator(new DecelerateInterpolator());
 
@@ -107,6 +123,8 @@ public class MainActivity extends Activity {
                         * so Spustením hry
                         * */
 
+                        progressBarPlayMULTI.setProgress(0);
+                        animation.cancel();
                     }
                 }.start();
 
@@ -131,6 +149,7 @@ public class MainActivity extends Activity {
 
                     public void onFinish() {
 
+
                         /*
                         * Tuto
                         * daj
@@ -138,6 +157,8 @@ public class MainActivity extends Activity {
                         * s "CheckGames"
                         * */
 
+                        progressBarCheckMULTI.setProgress(0);
+                        animation.cancel();
                     }
                 }.start();
 
@@ -167,16 +188,19 @@ public class MainActivity extends Activity {
                         * s GooglePlusom
                         * */
 
+                        progressGooglePLus.setProgress(0);
+                        animation.cancel();
+
                     }
                 }.start();
 
             }
         });
 
-        progressBar.setVisibility(View.VISIBLE);
-        progressBar.startAnimation(fadeIn);
         onePhone.setVisibility(View.VISIBLE);
         onePhone.startAnimation(fadeIn);
+        progressBar.setVisibility(View.VISIBLE);
+        progressBar.startAnimation(fadeIn);
         onePhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -185,21 +209,19 @@ public class MainActivity extends Activity {
                 animation.setDuration(700); //in milliseconds bruv
                 animation.setInterpolator(new DecelerateInterpolator());
 
-                new CountDownTimer(800, 700) {
+                new CountDownTimer(100, 1000) {
 
                     public void onTick(long millisUntilFinished) {
-                        animation.start();
+//                        animation.start();
                     }
 
                     public void onFinish() {
 
-                        progressBar.setProgress(0);
-                        animation.cancel();
-                        progressBar.clearAnimation();
 
                         Intent singleplayer = new Intent(MainActivity.this, OnePhone.class);
                         startActivity(singleplayer);
                         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        MainActivity.this.finish();
                     }
                 }.start();
 
@@ -207,10 +229,10 @@ public class MainActivity extends Activity {
 
         });
 
-        progressBarMulti.setVisibility(View.VISIBLE);
-        progressBarMulti.setAnimation(fadeIn);
         twoPhones.setVisibility(View.VISIBLE);
         twoPhones.startAnimation(fadeIn);
+        progressBarMulti.setVisibility(View.VISIBLE);
+        progressBarMulti.setAnimation(fadeIn);
         twoPhones.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -219,10 +241,10 @@ public class MainActivity extends Activity {
                 animation.setDuration(700); //in milliseconds bruv
                 animation.setInterpolator(new DecelerateInterpolator());
 
-                new CountDownTimer(800, 700) {
+                new CountDownTimer(100, 1000) {
 
                     public void onTick(long millisUntilFinished) {
-                        animation.start();
+//                        animation.start();
                     }
 
                     public void onFinish() {
@@ -263,10 +285,10 @@ public class MainActivity extends Activity {
         });
 
 
-        progressBarSett.setVisibility(View.VISIBLE);
-        progressBarSett.setAnimation(fadeIn);
-        settings.setVisibility(View.VISIBLE);
         settings.startAnimation(fadeIn);
+        progressBarSett.setVisibility(View.VISIBLE);
+        settings.setVisibility(View.VISIBLE);
+        progressBarSett.setAnimation(fadeIn);
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -275,24 +297,19 @@ public class MainActivity extends Activity {
                 animation.setDuration(700); //in milliseconds bruv
                 animation.setInterpolator(new DecelerateInterpolator());
 
-                new CountDownTimer(800, 700) {
+                new CountDownTimer(500, 1000) {
 
                     public void onTick(long millisUntilFinished) {
-                        animation.start();
+//                        animation.start();
                     }
 
                     public void onFinish() {
 
-                        progressBarSett.setProgress(0);
-                        progressBarSett.clearAnimation();
-                        animation.cancel();
-
 
                         Intent toSettigns = new Intent(MainActivity.this, Settings.class);
                         startActivity(toSettigns);
+                        MainActivity.this.finish();
 
-                        progressBarSett.clearAnimation();
-                        animation.cancel();
                     }
                 }.start();
             }
@@ -303,6 +320,7 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 Intent singleplayer = new Intent(MainActivity.this, MpWifi.class);
                 startActivity(singleplayer);
+                MainActivity.this.finish();
             }
         });
 
@@ -312,6 +330,7 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 Intent singleplayer = new Intent(MainActivity.this, MpWifi.class);
                 startActivity(singleplayer);
+                MainActivity.this.finish();
             }
         });
         ///
@@ -323,6 +342,7 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 Intent bluetooth = new Intent(MainActivity.this, Bluetooth.class);
                 startActivity(bluetooth);
+                MainActivity.this.finish();
             }
         });
     }
@@ -364,36 +384,36 @@ public class MainActivity extends Activity {
 //            }
 //
 //            public void onFinish() {
-                powerups.setVisibility(View.VISIBLE);
-                powerups.setTranslationY(200);
-                powerups.animate().translationY(0);
+        powerups.setVisibility(View.VISIBLE);
+        powerups.setTranslationY(200);
+        powerups.animate().translationY(0);
 
-                levelInfo.setVisibility(View.VISIBLE);
-                levelInfo.setTranslationY(-600);
-                levelInfo.animate().translationY(0);
+        levelInfo.setVisibility(View.VISIBLE);
+        levelInfo.setTranslationY(-600);
+        levelInfo.animate().translationY(0);
 
-                playMULTI.clearAnimation();
-                playMULTI.setVisibility(View.VISIBLE);
-                playMULTI.setAnimation(fadeInSlower);
+        playMULTI.clearAnimation();
+        playMULTI.setVisibility(View.VISIBLE);
+        playMULTI.setAnimation(fadeInSlower);
 
 
-                checkGamesMULTI.clearAnimation();
-                checkGamesMULTI.setVisibility(View.VISIBLE);
-                checkGamesMULTI.setAnimation(fadeInSlower);
+        checkGamesMULTI.clearAnimation();
+        checkGamesMULTI.setVisibility(View.VISIBLE);
+        checkGamesMULTI.setAnimation(fadeInSlower);
 
-                googlePlusMULTI.clearAnimation();
-                googlePlusMULTI.setVisibility(View.VISIBLE);
-                googlePlusMULTI.setAnimation(fadeInSlower);
+        googlePlusMULTI.clearAnimation();
+        googlePlusMULTI.setVisibility(View.VISIBLE);
+        googlePlusMULTI.setAnimation(fadeInSlower);
 
-                progressBarPlayMULTI.setVisibility(View.VISIBLE);
-                progressBarPlayMULTI.setAnimation(fadeInSlower);
+        progressBarPlayMULTI.setVisibility(View.VISIBLE);
+        progressBarPlayMULTI.setAnimation(fadeInSlower);
 
-                progressBarCheckMULTI.setVisibility(View.VISIBLE);
-                progressBarCheckMULTI.setAnimation(fadeInSlower);
+        progressBarCheckMULTI.setVisibility(View.VISIBLE);
+        progressBarCheckMULTI.setAnimation(fadeInSlower);
 
-                progressGooglePLus.setVisibility(View.VISIBLE);
-                progressGooglePLus.setAnimation(fadeInSlower);
-            }
+        progressGooglePLus.setVisibility(View.VISIBLE);
+        progressGooglePLus.setAnimation(fadeInSlower);
+    }
 
 //        }.start();
 //    }
@@ -418,7 +438,7 @@ public class MainActivity extends Activity {
             progressGooglePLus.setVisibility(View.GONE);
 
             checkGamesMULTI.clearAnimation();
-            checkGamesMULTI .setVisibility(View.GONE);
+            checkGamesMULTI.setVisibility(View.GONE);
             progressBarCheckMULTI.clearAnimation();
             progressBarCheckMULTI.setVisibility(View.GONE);
 
