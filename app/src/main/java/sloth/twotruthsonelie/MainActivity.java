@@ -2,6 +2,7 @@ package sloth.twotruthsonelie;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -190,7 +191,6 @@ public class MainActivity extends Activity {
 
                         progressGooglePLus.setProgress(0);
                         animation.cancel();
-
                     }
                 }.start();
 
@@ -422,6 +422,8 @@ public class MainActivity extends Activity {
     @Override
     public void onBackPressed() {
 
+        boolean isPressed = false;
+
         if (is2PhoneOpen) {
 
             logo.setVisibility(View.VISIBLE);
@@ -463,7 +465,19 @@ public class MainActivity extends Activity {
 //            startActivity(intent);
 
         } else {
-            super.onBackPressed();
+
+            if(isPressed) {
+                super.onBackPressed();
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setMessage("Press back one more time to exit");
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+                isPressed = true;
+            }
         }
     }
+
+
 }

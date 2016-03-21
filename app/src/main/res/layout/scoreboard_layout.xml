@@ -36,8 +36,8 @@
     <ProgressBar
         android:id="@+id/player1Graph"
         style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="190dp"
-        android:layout_height="190dp"
+        android:layout_width="210dp"
+        android:layout_height="210dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/levelPlayer1"
         android:layout_marginTop="20dp"
@@ -78,8 +78,8 @@
     <ProgressBar
         android:id="@+id/player2Graph"
         style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="190dp"
-        android:layout_height="190dp"
+        android:layout_width="210dp"
+        android:layout_height="210dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/levelPlayer2"
         android:layout_marginTop="20dp"
