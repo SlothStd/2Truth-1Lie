@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -95,6 +96,9 @@ public class MpWifi extends Activity implements
     public ArrayList<String> IDs;
     public int player;
 
+    public int roundCount;
+    public int currentRound = 0;
+
     public static final int winPoint = 1;
 
     public ArrayList<String> scores = new ArrayList<>(Arrays.asList(new String[]{"0", "0"}));
@@ -131,6 +135,15 @@ public class MpWifi extends Activity implements
     @Override
     protected void onStart() {
         super.onStart();
+
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        try {
+            String roundsS = SP.getString("setRounds", "1");
+            roundCount = Integer.parseInt(roundsS) * 2;
+        } catch (NullPointerException e) {
+            roundCount = 2;
+        }
+
         Log.d(TAG, "onStart(): Connecting to Google APIs");
         mGoogleApiClient.connect();
     }
@@ -219,7 +232,7 @@ public class MpWifi extends Activity implements
     // and figure out what to do.
     public void onStartMatchClicked(View view) {
         Intent intent = Games.TurnBasedMultiplayer.getSelectOpponentsIntent(mGoogleApiClient,
-                1, 2, true);
+                1, 1, true);
         startActivityForResult(intent, RC_SELECT_PLAYERS);
     }
 
@@ -281,7 +294,7 @@ public class MpWifi extends Activity implements
     // Finish the game. Sometimes, this is your only choice.
     public void onFinishClicked(View view) {
         showSpinner();
-        Games.TurnBasedMultiplayer.finishMatch(mGoogleApiClient, mMatch.getMatchId())
+        Games.TurnBasedMultiplayer.finishMatch(mGoogleApiClient, mMatch.getMatchId(), convertData())
                 .setResultCallback(new ResultCallback<TurnBasedMultiplayer.UpdateMatchResult>() {
                     @Override
                     public void onResult(TurnBasedMultiplayer.UpdateMatchResult result) {
@@ -307,6 +320,23 @@ public class MpWifi extends Activity implements
                         processResult(result);
                     }
                 });
+    }
+
+    public void finishGameDialog(){
+        final AlertDialog.Builder builder = new AlertDialog.Builder(MpWifi.this);
+
+        builder.setTitle("You win");
+
+        builder.setMessage(scores.get(0) + " - " + scores.get(1));
+
+        builder.setNeutralButton("Proceed", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                onFinishClicked(null);
+            }
+        });
+        builder.show();
     }
 
     // Sign-in, Sign out behavior
@@ -587,6 +617,7 @@ public class MpWifi extends Activity implements
          * 1,2,3. 3 sentences.
          * 4. Position of the lie.
          * 5,6. p_1 score, p_2 score.
+         * 7. current round
          */
 
         if (mMatch == null || mMatch.getData() == null) return null;
@@ -655,10 +686,24 @@ public class MpWifi extends Activity implements
                 strings.add(String.valueOf(chars[i]));
             }
         }
-
         if (strings.size() != 0) {
             scores.set(0, strings.get(5));
             scores.set(1, strings.get(6));
+        }
+
+        for (; i < chars.length; i++) {
+            if (chars[i] == '~') {
+                i++;
+                break;
+            }
+            try {
+                strings.set(7, strings.get(7) + String.valueOf(chars[i]));
+            } catch (IndexOutOfBoundsException e) {
+                strings.add(String.valueOf(chars[i]));
+            }
+        }
+        if (strings.size() != 0) {
+            currentRound = Integer.parseInt(strings.get(7));
         }
 
         Log.d(TAG, "Received: " + strings.toString());
@@ -680,6 +725,8 @@ public class MpWifi extends Activity implements
         data = data + "~" + liePos;
 
         data = data + "~" + scores.get(0) + "|" + scores.get(1);
+
+        data = data + "~" + currentRound;
 
         Log.d(TAG, "Sent: " + data);
 
@@ -715,8 +762,8 @@ public class MpWifi extends Activity implements
 
                 // Note that in this state, you must still call "Finish" yourself,
                 // so we allow this to continue.
-                showWarning("Complete!",
-                        "This game is over; someone finished it!  You can only finish it now.");
+                mData = getData();
+                finishGameDialog();
         }
 
         // OK, it's active. Check on turn status.
@@ -1080,23 +1127,28 @@ public class MpWifi extends Activity implements
             builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
 
                     if (pos == liePos) {
                         scores.set(player, String.valueOf(Integer.parseInt(scores.get(player)) + winPoint));
 
-                        Toast.makeText(getApplicationContext(), "You\'re a fuckin g!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "You\'re a fuckin g! " + mData.get(5) + " - " + mData.get(6) + " " + currentRound + "/" + roundCount, Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(getApplicationContext(), "You dumb idiot", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "You dumb idiot " + mData.get(5) + " - " + mData.get(6) + " " + currentRound + "/" + roundCount, Toast.LENGTH_SHORT).show();
                     }
 
-                    isGuessing = false;
-                    setViewVisibility();
+                    currentRound++;
 
-                    Toast.makeText(getApplicationContext(), mData.get(5) + " - " + mData.get(6), Toast.LENGTH_SHORT).show();
+                    if (currentRound == roundCount) {
+                        finishGameDialog();
+                    } else {
+                        isGuessing = false;
+                        setViewVisibility();
+                    }
                 }
             });
 
-            builder.setNegativeButton("BACK", new DialogInterface.OnClickListener() {
+            builder.setNegativeButton("BACK", new DialogInterface.OnClickListener(){
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();
