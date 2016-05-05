@@ -124,6 +124,9 @@ public class MainActivity extends Activity {
                         * so Spustením hry
                         * */
 
+                        Intent multi = new Intent(MainActivity.this, MpWifi.class);
+                        startActivity(multi);
+
                         progressBarPlayMULTI.setProgress(0);
                         animation.cancel();
                     }
@@ -328,8 +331,8 @@ public class MainActivity extends Activity {
         findViewById(R.id.kappa123).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent singleplayer = new Intent(MainActivity.this, MpWifi.class);
-                startActivity(singleplayer);
+                Intent mp = new Intent(MainActivity.this, MpWifi.class);
+                startActivity(mp);
                 MainActivity.this.finish();
             }
         });

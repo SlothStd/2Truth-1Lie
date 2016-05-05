@@ -1,19 +1,24 @@
 package sloth.twotruthsonelie;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Arrays;
-
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
+import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -37,7 +42,6 @@ import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMatchConfig;
 import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMultiplayer;
 import com.google.android.gms.games.multiplayer.Multiplayer;
 import com.google.android.gms.plus.Plus;
-import com.google.example.games.basegameutils.BaseGameActivity;
 import com.google.example.games.basegameutils.BaseGameUtils;
 
 
@@ -53,7 +57,7 @@ public class MpWifi extends Activity implements
         OnTurnBasedMatchUpdateReceivedListener,
         View.OnClickListener {
 
-    public static final String TAG = "SkeletonActivity";
+    public static final String TAG = "2T1L MpWifi";
 
     // Client used to interact with Google APIs
     private GoogleApiClient mGoogleApiClient;
@@ -80,34 +84,28 @@ public class MpWifi extends Activity implements
     // How long to show toasts.
     final static int TOAST_DELAY = Toast.LENGTH_SHORT;
 
-    // Should I be showing the turn API?
-    public boolean isDoingTurn = false;
-
-    //Set sentence or make a guess?
-    public boolean isGuessing = false;
+    //Game state
+    public int gameState = 0;
 
     // This is the current match we're in; null if not loaded
     public TurnBasedMatch mMatch;
+    public MatchData matchData = new MatchData();
 
-    public byte[] mTurnData = null;
-    public ArrayList<String> mData = null;
+    private String myID, hisID;
+    private ArrayList<String> IDs;
+    private int player;
+    private String myDisplayName, hisDisplayName;
 
-    public String myID;
-    public ArrayList<String> IDs;
-    public int player;
+    private int roundCount = 2;
 
-    public int roundCount;
-    public int currentRound = 0;
+    private static final int winPoint = 1;
 
-    public static final int winPoint = 1;
+    private EditText firstS, secondS, thirdS;
+    private CheckBox firstTruth, firstLie;
+    private CheckBox secondTruth, secondLie;
+    private CheckBox thirdTruth, thirdLie;
 
-    public ArrayList<String> scores = new ArrayList<>(Arrays.asList(new String[]{"0", "0"}));
-
-    public EditText firstS, secondS, thirdS;
-    public CheckBox firstTruth, firstLie;
-    public CheckBox secondTruth, secondLie;
-    public CheckBox thirdTruth, thirdLie;
-    public String liePos;
+    ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,10 +136,21 @@ public class MpWifi extends Activity implements
 
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         try {
-            String roundsS = SP.getString("setRounds", "1");
+            String roundsS = SP.getString("setRounds", "3");
             roundCount = Integer.parseInt(roundsS) * 2;
         } catch (NullPointerException e) {
-            roundCount = 2;
+            roundCount = 6;
+        }
+
+        if (hasSoftKeys()){
+
+            final float scale = getResources().getDisplayMetrics().density;
+            int top = (int) (24 * scale + 0.5f);
+            int bottom = (int) (48 * scale + 0.5f);
+
+            findViewById(R.id.MpWifi_main_layout).setPadding(0, top, 0, bottom);
+        }else {
+            findViewById(R.id.MpWifi_main_layout).setPadding(0, 0, 0, 0);
         }
 
         Log.d(TAG, "onStart(): Connecting to Google APIs");
@@ -231,8 +240,8 @@ public class MpWifi extends Activity implements
     // Open the create-game UI. You will get back an onActivityResult
     // and figure out what to do.
     public void onStartMatchClicked(View view) {
-        Intent intent = Games.TurnBasedMultiplayer.getSelectOpponentsIntent(mGoogleApiClient,
-                1, 1, true);
+        Intent intent =
+                Games.TurnBasedMultiplayer.getSelectOpponentsIntent(mGoogleApiClient, 1, 1, true);
         startActivityForResult(intent, RC_SELECT_PLAYERS);
     }
 
@@ -270,7 +279,7 @@ public class MpWifi extends Activity implements
                         processResult(result);
                     }
                 });
-        isDoingTurn = false;
+        gameState = 0;
         setViewVisibility();
     }
 
@@ -294,7 +303,7 @@ public class MpWifi extends Activity implements
     // Finish the game. Sometimes, this is your only choice.
     public void onFinishClicked(View view) {
         showSpinner();
-        Games.TurnBasedMultiplayer.finishMatch(mGoogleApiClient, mMatch.getMatchId(), convertData())
+        Games.TurnBasedMultiplayer.finishMatch(mGoogleApiClient, mMatch.getMatchId(), matchData.convertData())
                 .setResultCallback(new ResultCallback<TurnBasedMultiplayer.UpdateMatchResult>() {
                     @Override
                     public void onResult(TurnBasedMultiplayer.UpdateMatchResult result) {
@@ -302,7 +311,7 @@ public class MpWifi extends Activity implements
                     }
                 });
 
-        isDoingTurn = false;
+        gameState = 0;
         setViewVisibility();
     }
 
@@ -310,33 +319,29 @@ public class MpWifi extends Activity implements
     // Upload your new gamestate, then take a turn, and pass it on to the next
     // player.
     public void onDoneClicked(View view) {
+
+        if (matchData.getLiePos() == -1){
+            Toast.makeText(this, "Select a lie you retard", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        ArrayList<String> sentences = new ArrayList<>();
+        sentences.add(firstS.getText().toString());
+        sentences.add(secondS.getText().toString());
+        sentences.add(thirdS.getText().toString());
+        matchData.setSentences(sentences);
+        matchData.setSentenceAuthor(myID);
+
         showSpinner();
 
         Games.TurnBasedMultiplayer.takeTurn(mGoogleApiClient, mMatch.getMatchId(),
-                convertData(), getNextParticipantId()).setResultCallback(
+                matchData.convertData(), getNextParticipantId()).setResultCallback(
                 new ResultCallback<TurnBasedMultiplayer.UpdateMatchResult>() {
                     @Override
                     public void onResult(TurnBasedMultiplayer.UpdateMatchResult result) {
                         processResult(result);
                     }
                 });
-    }
-
-    public void finishGameDialog(){
-        final AlertDialog.Builder builder = new AlertDialog.Builder(MpWifi.this);
-
-        builder.setTitle("You win");
-
-        builder.setMessage(scores.get(0) + " - " + scores.get(1));
-
-        builder.setNeutralButton("Proceed", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                onFinishClicked(null);
-            }
-        });
-        builder.show();
     }
 
     // Sign-in, Sign out behavior
@@ -362,48 +367,78 @@ public class MpWifi extends Activity implements
                 mGoogleApiClient).getDisplayName());*/
         findViewById(R.id.buttons).setVisibility(View.GONE);
 
-        if (isDoingTurn) {
-            if (isGuessing) {
+        getPlayerIDs();
+
+        switch (gameState){
+            case 0: //Not your turn
+
                 findViewById(R.id.setTexts).setVisibility(View.GONE);
-                findViewById(R.id.chooseTexts).setVisibility(View.VISIBLE);
+                findViewById(R.id.chooseTexts).setVisibility(View.GONE);
+                findViewById(R.id.notYourTurn).setVisibility(View.VISIBLE);
+                findViewById(R.id.gameFinished).setVisibility(View.GONE);
 
-                Log.d(TAG, "guessing");
+                Log.d(TAG, "Not your turn");
 
-                Guessing guess = new Guessing();
-                guess.start();
-            } else {
+                break;
+
+            case 1: //Setting sentences
+
                 findViewById(R.id.setTexts).setVisibility(View.VISIBLE);
                 findViewById(R.id.chooseTexts).setVisibility(View.GONE);
+                findViewById(R.id.notYourTurn).setVisibility(View.GONE);
+                findViewById(R.id.gameFinished).setVisibility(View.GONE);
 
-                Log.d(TAG, "setting");
-            }
-        }else {
-            findViewById(R.id.setTexts).setVisibility(View.GONE);
-            findViewById(R.id.chooseTexts).setVisibility(View.GONE);
+                Log.d(TAG, "Setting");
 
-            showWarning(null, "It\'s not your turn!");
+                break;
+
+            case 2: //Guessing
+
+                findViewById(R.id.setTexts).setVisibility(View.GONE);
+                findViewById(R.id.chooseTexts).setVisibility(View.VISIBLE);
+                findViewById(R.id.notYourTurn).setVisibility(View.GONE);
+                findViewById(R.id.gameFinished).setVisibility(View.GONE);
+
+                Log.d(TAG, "Guessing");
+
+                new Guessing().start();
+
+                break;
+
+            case 3: //Game finished
+
+                findViewById(R.id.setTexts).setVisibility(View.GONE);
+                findViewById(R.id.chooseTexts).setVisibility(View.GONE);
+                findViewById(R.id.notYourTurn).setVisibility(View.GONE);
+                findViewById(R.id.gameFinished).setVisibility(View.VISIBLE);
+
+                Log.d(TAG, "Finished");
+
+                break;
         }
     }
 
     // Switch to gameplay view.
     public void setGameplayUI() {
-        isDoingTurn = true;
+        getPlayerIDs();
 
-        mData = getData();
+        matchData.getData(mMatch.getData());
 
-        isGuessing = !(mData == null || mData.size() == 0 || (mData.get(0).equals(myID)));
+        if (matchData.getSentences().size() == 0)
+            gameState = 1;
+        else
+            gameState = 2;
 
         setViewVisibility();
     }
 
     // Helpful dialogs
-
     public void showSpinner() {
-        findViewById(R.id.progress).setVisibility(View.VISIBLE);
+        progress = ProgressDialog.show(this, null, "Loading", true, false);
     }
 
     public void dismissSpinner() {
-        findViewById(R.id.progress).setVisibility(View.GONE);
+        progress.dismiss();
     }
 
     // Generic warning/info dialog
@@ -542,18 +577,12 @@ public class MpWifi extends Activity implements
 
         mMatch = match;
 
-        String playerId = Games.Players.getCurrentPlayerId(mGoogleApiClient);
-        myID = mMatch.getParticipantId(playerId);
-
-        IDs = mMatch.getParticipantIds();
-
-        if (myID.equals(IDs.get(0))) player = 0;
-        else player = 1;
-
         showSpinner();
 
+        getPlayerIDs();
+
         Games.TurnBasedMultiplayer.takeTurn(mGoogleApiClient, match.getMatchId(),
-                mTurnData, myID).setResultCallback(
+                matchData.convertData(), myID).setResultCallback(
                 new ResultCallback<TurnBasedMultiplayer.UpdateMatchResult>() {
                     @Override
                     public void onResult(TurnBasedMultiplayer.UpdateMatchResult result) {
@@ -561,6 +590,30 @@ public class MpWifi extends Activity implements
                     }
                 });
     }
+
+    public void getPlayerIDs(){
+        String playerId = Games.Players.getCurrentPlayerId(mGoogleApiClient);
+        myID = mMatch.getParticipantId(playerId);
+
+        IDs = mMatch.getParticipantIds();
+
+        if (myID.equals(IDs.get(0))) {
+            player = 0;
+            hisID = IDs.get(1);
+        }
+        else {
+            player = 1;
+            hisID = IDs.get(0);
+        }
+
+        myDisplayName = mMatch.getParticipant(myID).getDisplayName();
+        hisDisplayName = mMatch.getParticipant(hisID).getDisplayName();
+
+        ((TextView) findViewById(R.id.p_1_TV)).setText(myDisplayName);
+        ((TextView) findViewById(R.id.p_2_TV)).setText(hisDisplayName);
+        ((TextView) findViewById(R.id.scoreTV)).setText(matchData.getScores().get(0) + " - " + matchData.getScores().get(1));
+    }
+
 
     // If you choose to rematch, then call it and wait for a response.
     public void rematch() {
@@ -573,7 +626,7 @@ public class MpWifi extends Activity implements
                     }
                 });
         mMatch = null;
-        isDoingTurn = false;
+        gameState = 0;
     }
 
     /**
@@ -602,23 +655,15 @@ public class MpWifi extends Activity implements
         }
     }
 
-    public ArrayList<String> getData(){
-
-        String playerId = Games.Players.getCurrentPlayerId(mGoogleApiClient);
-        myID = mMatch.getParticipantId(playerId);
-
-        IDs = mMatch.getParticipantIds();
-
-        if (myID.equals(IDs.get(0))) player = 0;
-        else player = 1;
-
-        /*
+    /*
+    public void getData(){
+         **
          * 0. ID of the sentence author.
          * 1,2,3. 3 sentences.
          * 4. Position of the lie.
          * 5,6. p_1 score, p_2 score.
          * 7. current round
-         */
+         **
 
         if (mMatch == null || mMatch.getData() == null) return null;
 
@@ -731,12 +776,14 @@ public class MpWifi extends Activity implements
         Log.d(TAG, "Sent: " + data);
 
         return data.getBytes(Charset.forName("UTF-16"));
-    }
+    }*/
 
     // This is the main function that gets called when players choose a match
     // from the inbox, or else create a match and want to start it.
     public void updateMatch(TurnBasedMatch match) {
         mMatch = match;
+
+        getPlayerIDs();
 
         int status = match.getStatus();
         int turnStatus = match.getTurnStatus();
@@ -762,23 +809,26 @@ public class MpWifi extends Activity implements
 
                 // Note that in this state, you must still call "Finish" yourself,
                 // so we allow this to continue.
-                mData = getData();
-                finishGameDialog();
+                matchData.getData(mMatch.getData());
+
+                gameState = 3;
+                setViewVisibility();
+
+                return;
         }
 
         // OK, it's active. Check on turn status.
         switch (turnStatus) {
             case TurnBasedMatch.MATCH_TURN_STATUS_MY_TURN:
-                mTurnData = mMatch.getData();
                 setGameplayUI();
                 return;
             case TurnBasedMatch.MATCH_TURN_STATUS_THEIR_TURN:
-                // Should return results.
-                showWarning("Alas...", "It's not your turn.");
+                gameState = 0;
                 break;
             case TurnBasedMatch.MATCH_TURN_STATUS_INVITED:
                 showWarning("Good inititative!",
                         "Still waiting for invitations.\n\nBe patient!");
+                gameState = 0;
         }
 
         setViewVisibility();
@@ -791,7 +841,7 @@ public class MpWifi extends Activity implements
             return;
         }
 
-        isDoingTurn = false;
+        gameState = 0;
 
         showWarning("Match",
                 "This match is canceled.  All other players will have their game ended.");
@@ -821,7 +871,7 @@ public class MpWifi extends Activity implements
         if (!checkStatusCode(match, result.getStatus().getStatusCode())) {
             return;
         }
-        isDoingTurn = (match.getTurnStatus() == TurnBasedMatch.MATCH_TURN_STATUS_MY_TURN);
+
         showWarning("Left", "You've left this match.");
     }
 
@@ -836,26 +886,32 @@ public class MpWifi extends Activity implements
             askForRematch();
         }
 
-        isDoingTurn = (match.getTurnStatus() == TurnBasedMatch.MATCH_TURN_STATUS_MY_TURN);
-
-        Log.d(TAG, "MyTurn: " + isDoingTurn);
-
-        if (isDoingTurn) {
+        if (match.getTurnStatus() == TurnBasedMatch.MATCH_TURN_STATUS_MY_TURN) {
             updateMatch(match);
             return;
         }
 
+        gameState = 0;
         setViewVisibility();
     }
 
     // Handle notification events.
     @Override
     public void onInvitationReceived(Invitation invitation) {
-        Toast.makeText(
-                this,
+        final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content),
                 "An invitation has arrived from "
-                        + invitation.getInviter().getDisplayName(), TOAST_DELAY)
-                .show();
+                        + invitation.getInviter().getDisplayName(),
+                Snackbar.LENGTH_LONG);
+
+        snackbar.setAction("Show", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onCheckGamesClicked(v);
+
+                snackbar.dismiss();
+            }
+        });
+        snackbar.show();
     }
 
     @Override
@@ -864,14 +920,42 @@ public class MpWifi extends Activity implements
     }
 
     @Override
-    public void onTurnBasedMatchReceived(TurnBasedMatch match) {
+    public void onTurnBasedMatchReceived(final TurnBasedMatch match) {
         Toast.makeText(this, "A match was updated.", TOAST_DELAY).show();
+
+        if (mMatch.getMatchId().equals(match.getMatchId())){
+            updateMatch(match);
+        }
+        else {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+            alertDialogBuilder
+                    .setTitle("It's your turn!")
+                    .setMessage("It is your turn in a game against " + match.getParticipant(match.getLastUpdaterId()).getDisplayName());
+
+            alertDialogBuilder
+                    .setCancelable(false)
+                    .setPositiveButton("Let's GO!",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    updateMatch(match);
+                                }
+                            })
+                    .setNegativeButton("Dismiss",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                }
+                            });
+
+            alertDialogBuilder.show();
+        }
     }
 
     @Override
     public void onTurnBasedMatchRemoved(String matchId) {
         Toast.makeText(this, "A match was removed.", TOAST_DELAY).show();
-
     }
 
     public void showErrorMessage(TurnBasedMatch match, int statusCode,
@@ -979,7 +1063,7 @@ public class MpWifi extends Activity implements
                 firstS.setBackgroundResource(R.drawable.custom_edittex_lie);
                 firstTruth.setChecked(false);
 
-                liePos = "0";
+                matchData.setLiePos(0);
             }
         });
 
@@ -1010,7 +1094,7 @@ public class MpWifi extends Activity implements
                 secondS.setBackgroundResource(R.drawable.custom_edittex_lie);
                 secondTruth.setChecked(false);
 
-                liePos = "1";
+                matchData.setLiePos(1);
             }
         });
 
@@ -1041,7 +1125,7 @@ public class MpWifi extends Activity implements
                 thirdS.setBackgroundResource(R.drawable.custom_edittex_lie);
                 thirdTruth.setChecked(false);
 
-                liePos = "2";
+                matchData.setLiePos(2);
             }
         });
 
@@ -1061,20 +1145,15 @@ public class MpWifi extends Activity implements
         String firstS = "", secondS = "", thirdS = "";
         TextView firstTW, secondTW, thirdTW;
         Button switchPlayer;
-        Integer round, current_round, player1, player2;
-        Boolean firstLie, secondLie, thirdLie;
         Animation animFadeIn;
         ImageView cross;
-        ArrayList<String> stringData;
 
         public void start(){
 
             animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
             cross = (ImageView) findViewById(R.id.cross);
 
-            stringData = mData;
-
-            if (stringData == null){
+            if (matchData == null){
                 showWarning("Error", getString(R.string.general_error));
                 return;
             }
@@ -1084,9 +1163,9 @@ public class MpWifi extends Activity implements
             thirdTW = (TextView) findViewById(R.id.thirdTW);
             switchPlayer = (Button) findViewById(R.id.switch_player);
 
-            firstS = stringData.get(1);
-            secondS = stringData.get(2);
-            thirdS = stringData.get(3);
+            firstS = matchData.getSentences().get(0);
+            secondS = matchData.getSentences().get(1);
+            thirdS = matchData.getSentences().get(2);
 
             firstTW.setText(firstS);
             secondTW.setText(secondS);
@@ -1114,7 +1193,7 @@ public class MpWifi extends Activity implements
             });
         }
 
-        void areYouSureDialog(final int pos) {
+        public void areYouSureDialog(final int pos) {
 
             final AlertDialog.Builder builder = new AlertDialog.Builder(MpWifi.this);
 
@@ -1122,29 +1201,29 @@ public class MpWifi extends Activity implements
 
             setTitleColor(getResources().getColor(R.color.truth));
 
-            final int liePos = Integer.parseInt(stringData.get(4));
+            final int liePos = matchData.getLiePos();
 
             builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();
 
+                    matchData.setCurrentRound(matchData.getCurrentRound() + 1);
+
                     if (pos == liePos) {
-                        scores.set(player, String.valueOf(Integer.parseInt(scores.get(player)) + winPoint));
+                        matchData.setScores(player, matchData.getScores().get(player) + winPoint);
 
-                        Toast.makeText(getApplicationContext(), "You\'re a fuckin g! " + mData.get(5) + " - " + mData.get(6) + " " + currentRound + "/" + roundCount, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "You\'re a fuckin g! " + matchData.getScores().get(0) + " - " + matchData.getScores().get(1) + " " + matchData.getCurrentRound() + "/" + roundCount, Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(getApplicationContext(), "You dumb idiot " + mData.get(5) + " - " + mData.get(6) + " " + currentRound + "/" + roundCount, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "You dumb idiot " + matchData.getScores().get(0) + " - " + matchData.getScores().get(1) + " " + matchData.getCurrentRound() + "/" + roundCount, Toast.LENGTH_SHORT).show();
                     }
 
-                    currentRound++;
-
-                    if (currentRound == roundCount) {
-                        finishGameDialog();
+                    if (matchData.getCurrentRound() == roundCount) {
+                        gameState = 3;
                     } else {
-                        isGuessing = false;
-                        setViewVisibility();
+                        gameState = 1;
                     }
+                    setViewVisibility();
                 }
             });
 
@@ -1157,5 +1236,32 @@ public class MpWifi extends Activity implements
 
             builder.show();
         }
+    }
+
+    public boolean hasSoftKeys(){
+        boolean hasSoftwareKeys = true;
+
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.JELLY_BEAN_MR1){
+            Display d = this.getWindowManager().getDefaultDisplay();
+
+            DisplayMetrics realDisplayMetrics = new DisplayMetrics();
+            d.getRealMetrics(realDisplayMetrics);
+
+            int realHeight = realDisplayMetrics.heightPixels;
+            int realWidth = realDisplayMetrics.widthPixels;
+
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            d.getMetrics(displayMetrics);
+
+            int displayHeight = displayMetrics.heightPixels;
+            int displayWidth = displayMetrics.widthPixels;
+
+            hasSoftwareKeys =  (realWidth - displayWidth) > 0 || (realHeight - displayHeight) > 0;
+        }else{
+            boolean hasMenuKey = ViewConfiguration.get(this).hasPermanentMenuKey();
+            boolean hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
+            hasSoftwareKeys = !hasMenuKey && !hasBackKey;
+        }
+        return hasSoftwareKeys;
     }
 }

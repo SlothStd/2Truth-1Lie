@@ -1,349 +1,575 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/MpWifi_main_layout">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible"
-        android:id="@+id/buttons">
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Start"
-            android:onClick="onStartMatchClicked"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:id="@+id/startBtn"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Check Games"
-            android:onClick="onCheckGamesClicked"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/startBtn"
-            android:layout_marginTop="8dp"/>
-
-        <!-- sign-in button -->
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/sign_in_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"/>
-
-        <!-- sign-out button -->
-        <Button
-            android:id="@+id/sign_out_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sign Out"
-            android:visibility="gone"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"/>
-
-    </RelativeLayout>
-
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:padding="20dp"
-        android:visibility="gone"
-        android:layout_gravity="center_horizontal"
-        android:id="@+id/progress"/>
-
-    <AbsoluteLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@color/purple_ish"
-        android:id="@+id/setTexts"
-        android:visibility="gone">
+        android:id="@+id/buttons"
+        android:weightSum="5"
+        android:background="@color/darker_bg"
+        android:visibility="visible">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="OK"
-            android:onClick="onDoneClicked"/>
-
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:weightSum="10">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Wrong"
+                    android:textStyle="bold"
+                    android:textColor="@color/lie"
+                    android:layout_marginRight="50dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Correct"
+                    android:textStyle="bold"
+                    android:textColor="@color/truth"
+                    android:layout_marginLeft="50dp"/>
+
+            </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_x="262dp"
-                android:layout_y="0dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true">
+                android:layout_height="0dp"
+                android:layout_weight="8">
+
+                <ProgressBar
+                    android:id="@+id/fakeProgressJustBecauseIcan"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:progress="0"
+                    android:max="120000"
+                    android:progressDrawable="@drawable/fake_progress"
+                    android:layout_marginBottom="10dp" />
+
+                <ProgressBar
+                    android:id="@+id/progressbarScore"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:progress="999990"
+                    android:max="120000"
+                    android:progressDrawable="@drawable/scoreboard_progressbar"
+                    android:layout_marginBottom="10dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="75%"
+                    android:layout_centerInParent="true"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/truth"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Level 12"
+                    android:textColor="@color/white"/>
+
+                <ProgressBar
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="100"
+                    android:progress="50"
+                    style="?android:attr/progressBarStyleHorizontal"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:orientation="vertical"
+            android:weightSum="3"
+            android:background="@color/lighter_bg">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:padding="8dp"
+                android:gravity="center_vertical"
+                android:clickable="true"
+                android:onClick="onStartMatchClicked"
+                android:id="@+id/startBtn">
+                
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:layout_marginRight="16dp"/>
+                
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Play"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Choose an opponent to start the game with"
+                        android:textColor="@color/white"
+                        android:layout_marginTop="2dp"
+                        android:textSize="12sp"/>
+
+                </LinearLayout>
+                
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:padding="8dp"
+                android:gravity="center_vertical"
+                android:clickable="true"
+                android:onClick="onCheckGamesClicked">
+
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:layout_marginRight="16dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Check Games"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Look at available ongoing games"
+                        android:textColor="@color/white"
+                        android:layout_marginTop="2dp"
+                        android:textSize="12sp"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/sign_in_button"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:visibility="visible"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:padding="8dp"
+                android:gravity="center_vertical"
+                android:id="@+id/sign_out_button"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:layout_marginRight="16dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sign in"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sign in with your Google account"
+                        android:textColor="@color/white"
+                        android:layout_marginTop="2dp"
+                        android:textSize="12sp"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="10">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="16dp">
+
+            <!-- Score -->
+            <ImageView
+                android:layout_width="64px"
+                android:layout_height="64px"
+                android:id="@+id/p_1_IV"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/p_1_TV"
+                android:text="player 1"
+                android:layout_marginRight="12dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/scoreTV"
+                android:text=" 0 - 0 "/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/p_2_TV"
+                android:text="player 2"
+                android:layout_marginLeft="12dp"/>
+
+        </LinearLayout>
+        <!-- Score -->
+
+        <!-- Set Texts Screen -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:weightSum="7"
+            android:id="@+id/setTexts"
+            android:layout_weight="9"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:orientation="horizontal"
+                android:padding="6dp"
+                android:gravity="center_vertical"
+                android:weightSum="5">
+
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp"
+                    android:gravity="center_horizontal|top"
+                    android:background="@drawable/custom_edittext_truth"
+                    android:id="@+id/firstS"
+                    android:padding="5dp"/>
 
                 <RelativeLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:layout_x="0dp"
-                    android:layout_y="480dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true">
-
-
-                    <Button
-                        android:layout_width="220dp"
-                        android:layout_height="60dp"
-                        android:background="@drawable/rounded_button"
-                        android:text="PROCEED"
-                        android:onClick="onDoneClicked"
-                        android:textColor="#fff"
-                        android:textSize="20sp"
-                        android:id="@+id/proceed"
-                        android:layout_below="@+id/thirdS"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="35dp" />
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@color/truth"
-                        android:visibility="gone"
-                        android:id="@+id/thirdTruth"
-                        android:layout_marginRight="22dp"
-                        android:layout_marginEnd="22dp"
-                        android:layout_alignTop="@+id/thirdLie"
-                        android:layout_toLeftOf="@+id/proceed"
-                        android:layout_toStartOf="@+id/proceed" />
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@color/truth"
-                        android:visibility="gone"
-                        android:id="@+id/secondTruth"
-                        android:layout_below="@+id/firstTruth"
-                        android:layout_alignLeft="@+id/thirdTruth"
-                        android:layout_alignStart="@+id/thirdTruth"
-                        android:layout_marginTop="119dp" />
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center">
 
                     <CheckBox
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:visibility="gone"
                         android:background="@color/truth"
-                        android:id="@+id/firstTruth"
-                        android:layout_marginTop="103dp"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignLeft="@+id/secondTruth"
-                        android:layout_alignStart="@+id/secondTruth" />
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:button="@drawable/custom_checkbox"
-                        android:id="@+id/thirdLie"
-                        android:layout_alignStart="@+id/secondLie"
-                        android:layout_alignTop="@+id/thirdS"
-                        android:layout_toRightOf="@+id/thirdS"
-                        android:layout_marginTop="25dp" />
+                        android:id="@+id/firstTruth"/>
 
                     <CheckBox
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:button="@drawable/custom_checkbox"
                         android:id="@+id/firstLie"
-                        android:layout_alignTop="@+id/firstS"
-                        android:layout_toEndOf="@+id/firstS"
-                        android:layout_marginTop="25dp"
-                        android:layout_marginLeft="-85dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_toRightOf="@+id/firstS"
-                        android:checked="false" />
+                        android:visibility="visible"
+                        android:checked="false"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:orientation="horizontal"
+                android:padding="6dp"
+                android:gravity="center_vertical"
+                android:weightSum="5">
+
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp"
+                    android:gravity="center_horizontal|top"
+                    android:background="@drawable/custom_edittext_truth"
+                    android:id="@+id/secondS"
+                    android:padding="5dp"
+                    android:layout_weight="4"/>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/truth"
+                        android:visibility="gone"
+                        android:id="@+id/secondTruth"/>
 
                     <CheckBox
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:button="@drawable/custom_checkbox"
                         android:id="@+id/secondLie"
-                        android:layout_alignStart="@+id/firstLie"
-                        android:layout_marginBottom="26dp"
-                        android:layout_alignTop="@+id/secondS"
-                        android:layout_marginTop="25dp"
-                        android:layout_toRightOf="@+id/secondS" />
-
-                    <EditText
-                        android:layout_width="fill_parent"
-                        android:layout_height="130dp"
-                        android:textColor="#ffffff"
-                        android:textSize="20sp"
-                        android:gravity="center_horizontal|top"
-                        android:background="@drawable/custom_edittext_truth"
-                        android:id="@+id/firstS"
-                        android:autoText="false"
-                        android:paddingTop="5dp"
-                        android:layout_alignStart="@+id/secondS"
-                        android:layout_marginTop="50dp"
-                        android:layout_marginRight="100dp"
-                        android:textAlignment="center" />
-
-                    <EditText
-                        android:layout_width="fill_parent"
-                        android:layout_height="130dp"
-                        android:textColor="#ffffff"
-                        android:textSize="20sp"
-                        android:gravity="center_horizontal|top"
-                        android:background="@drawable/custom_edittext_truth"
-                        android:id="@+id/secondS"
-                        android:paddingTop="5dp"
-                        android:layout_alignParentStart="true"
-                        android:layout_below="@+id/firstS"
-                        android:layout_alignParentLeft="true"
-                        android:layout_marginBottom="15dp"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginRight="100dp"
-                        android:textAlignment="center" />
-
-                    <EditText
-                        android:layout_width="fill_parent"
-                        android:layout_height="130dp"
-                        android:textColor="#ffffff"
-                        android:textSize="20sp"
-                        android:gravity="center_horizontal|top"
-                        android:background="@drawable/custom_edittext_truth"
-                        android:id="@+id/thirdS"
-                        android:paddingTop="5dp"
-                        android:layout_below="@+id/secondS"
-                        android:layout_marginTop="10dp"
-                        android:layout_alignLeft="@+id/secondS"
-                        android:layout_marginRight="100dp"
-                        android:textAlignment="center" />
-
-                    <EditText
-                        android:layout_width="90dp"
-                        android:layout_height="33dp"
-                        android:id="@+id/player2"
-                        android:textColor="#ffffff"
-                        android:background="@drawable/player_indicator"
-                        android:text="player 2"
-                        android:textSize="12sp"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginRight="-8dp"
-                        android:visibility="gone" />
-
-                    <EditText
-                        android:layout_width="90dp"
-                        android:layout_height="33dp"
-                        android:id="@+id/player1"
-                        android:layout_toLeftOf="@+id/proceed"
-                        android:layout_toRightOf="@+id/secondTruth"
-                        android:layout_toEndOf="@+id/secondTruth"
-                        android:textColor="#ffffff"
-                        android:background="@drawable/player_indicator"
-                        android:text="player 1"
-                        android:textSize="12sp"
-                        android:layout_below="@+id/thirdTruth"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginLeft="-8dp"
-                        android:layout_alignParentStart="false"
-                        android:layout_alignParentLeft="false"
-                        android:layout_alignParentBottom="false"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:visibility="gone" />
+                        android:checked="false"/>
 
                 </RelativeLayout>
 
-            </RelativeLayout>
+            </LinearLayout>
 
-        </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:orientation="horizontal"
+                android:padding="6dp"
+                android:gravity="center_vertical"
+                android:weightSum="5">
 
-    </AbsoluteLayout>
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp"
+                    android:gravity="center_horizontal|top"
+                    android:background="@drawable/custom_edittext_truth"
+                    android:id="@+id/thirdS"
+                    android:padding="5dp"
+                    android:layout_weight="4"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/chooseTexts"
-        android:orientation="vertical"
-        android:weightSum="3"
-        android:visibility="gone">
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center">
 
-        <TextView
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/truth"
+                        android:visibility="gone"
+                        android:id="@+id/thirdTruth"/>
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:button="@drawable/custom_checkbox"
+                        android:id="@+id/thirdLie"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/rounded_button"
+                    android:text="PROCEED"
+                    android:onClick="onDoneClicked"
+                    android:textColor="#000"
+                    android:textSize="20sp"
+                    android:id="@+id/proceed" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+        <!-- Set Texts Screen -->
+
+        <!-- Guess Screen -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_alignParentStart="true"
-            android:background="@drawable/circle_button"
-            android:id="@+id/firstTW"
-            android:textColor="#ffffff"
-            android:textSize="20sp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="5dp"
-            android:layout_above="@+id/secondTW"
-            android:layout_alignParentLeft="true"
-            android:layout_marginTop="40dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:gravity="center_horizontal" />
+            android:id="@+id/chooseTexts"
+            android:orientation="vertical"
+            android:layout_weight="9"
+            android:weightSum="3"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/custom_edittext_truth"
+                android:id="@+id/firstTW"
+                android:textColor="#ffffff"
+                android:textSize="20sp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_horizontal"/>
 
 
-        <TextView
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:id="@+id/secondTW"
+                android:paddingLeft="10dp"
+                android:textColor="#ffffff"
+                android:textSize="20sp"
+                android:background="@drawable/custom_edittext_truth"
+                android:paddingRight="10dp"
+                android:paddingTop="5dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_horizontal" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:id="@+id/thirdTW"
+                android:paddingLeft="10dp"
+                android:textColor="#ffffff"
+                android:textSize="20sp"
+                android:paddingRight="10dp"
+                android:paddingTop="5dp"
+                android:background="@drawable/custom_edittext_truth"
+                android:layout_marginTop="40dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_horizontal" />
+
+        </LinearLayout>
+        <!-- Guess Screen -->
+
+        <!-- Not your turn Screen -->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_alignParentStart="true"
-            android:id="@+id/secondTW"
-            android:paddingLeft="10dp"
-            android:textColor="#ffffff"
-            android:textSize="20sp"
-            android:background="@drawable/circle_button"
-            android:paddingRight="10dp"
-            android:paddingTop="5dp"
-            android:layout_above="@+id/thirdTW"
-            android:layout_alignParentLeft="true"
-            android:layout_marginTop="40dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:gravity="center_horizontal" />
-
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:id="@+id/thirdTW"
-            android:layout_marginBottom="119dp"
-            android:paddingLeft="10dp"
-            android:textColor="#ffffff"
-            android:textSize="20sp"
-            android:paddingRight="10dp"
-            android:paddingTop="5dp"
-            android:background="@drawable/circle_button"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="40dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:gravity="center_horizontal" />
-
-<!--
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/cross"
-            android:background="@drawable/cross"
+            android:layout_height="match_parent"
             android:visibility="gone"
-            android:layout_below="@+id/firstTW"
-            android:layout_centerHorizontal="true" />
--->
+            android:orientation="vertical"
+            android:gravity="center"
+            android:id="@+id/notYourTurn">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Not your turn fam!"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Check Other Games"
+                android:onClick="onCheckGamesClicked"
+                android:layout_marginTop="8dp"/>
+
+        </LinearLayout>
+        <!-- Not your turn Screen -->
+
+        <!-- Game finished Screen -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:id="@+id/gameFinished">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="You win/lose"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Finish"
+                android:onClick="onFinishClicked"
+                android:layout_marginTop="8dp"/>
+
+        </LinearLayout>
+        <!-- Game finished Screen -->
 
     </LinearLayout>
 
