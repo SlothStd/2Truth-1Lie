@@ -2,13 +2,8 @@ package sloth.twotruthsonelie;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
-<<<<<<< HEAD
-
-import android.animation.ObjectAnimator;
-=======
 import java.util.Arrays;
 
->>>>>>> origin/master
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -32,8 +27,6 @@ import android.view.ViewConfiguration;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.CycleInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -128,12 +121,10 @@ public class MpWifi extends Activity implements
     private CheckBox secondTruth, secondLie;
     private CheckBox thirdTruth, thirdLie;
 
-    ProgressDialog progress;
-    ProgressBar loading1, loading2;
     CountDownTimer timer;
-    Button button;
-    Boolean rotate;
+    ProgressBar loading1, loading2;
 
+    ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,9 +165,6 @@ public class MpWifi extends Activity implements
             roundCount = 6;
         }
 
-<<<<<<< HEAD
-        if (hasSoftKeys()) {
-=======
 
         if (mMatch != null) {
             SharedPreferences prefs = getSharedPreferences(mMatch.getMatchId(), Context.MODE_PRIVATE);
@@ -194,14 +182,13 @@ public class MpWifi extends Activity implements
         }
 
         if (hasSoftKeys()){
->>>>>>> origin/master
 
             final float scale = getResources().getDisplayMetrics().density;
             int top = (int) (24 * scale + 0.5f);
             int bottom = (int) (48 * scale + 0.5f);
 
             findViewById(R.id.MpWifi_main_layout).setPadding(0, top, 0, bottom);
-        } else {
+        }else {
             findViewById(R.id.MpWifi_main_layout).setPadding(0, 0, 0, 0);
         }
 
@@ -383,13 +370,13 @@ public class MpWifi extends Activity implements
     // player.
     public void onDoneClicked(View view) {
 
-        if (matchData.getLiePos() == -1) {
+        if (matchData.getLiePos() == -1){
             Toast.makeText(this, "Select a lie you retard", Toast.LENGTH_SHORT).show();
             return;
         }
         if (firstS.getText().toString().isEmpty() ||
                 secondS.getText().toString().isEmpty() ||
-                    thirdS.getText().toString().isEmpty()){
+                thirdS.getText().toString().isEmpty()){
 
             Toast.makeText(this, "Fill up all three text fields", Toast.LENGTH_SHORT).show();
             return;
@@ -447,7 +434,7 @@ public class MpWifi extends Activity implements
 
         getPlayerIDs();
 
-        switch (gameState) {
+        switch (gameState){
             case 0: //Not your turn
 
                 findViewById(R.id.setTexts).setVisibility(View.GONE);
@@ -683,7 +670,7 @@ public class MpWifi extends Activity implements
                 });
     }
 
-    public void getPlayerIDs() {
+    public void getPlayerIDs(){
         String playerId = Games.Players.getCurrentPlayerId(mGoogleApiClient);
         myID = mMatch.getParticipantId(playerId);
 
@@ -692,7 +679,8 @@ public class MpWifi extends Activity implements
         if (myID.equals(IDs.get(0))) {
             player = 0;
             hisID = IDs.get(1);
-        } else {
+        }
+        else {
             player = 1;
             hisID = IDs.get(0);
         }
@@ -735,11 +723,13 @@ public class MpWifi extends Activity implements
 
         ArrayList<String> participantIds = mMatch.getParticipantIds();
 
-        if (participantIds.get(0).equals(myParticipantId)) {
+        if (participantIds.get(0).equals(myParticipantId)){
             return participantIds.get(1);
-        } else if (participantIds.get(1).equals(myParticipantId)) {
+        }
+        else if (participantIds.get(1).equals(myParticipantId)){
             return participantIds.get(0);
-        } else {
+        }
+        else{
             return null;
         }
     }
@@ -1012,9 +1002,10 @@ public class MpWifi extends Activity implements
     public void onTurnBasedMatchReceived(final TurnBasedMatch match) {
         Toast.makeText(this, "A match was updated.", TOAST_DELAY).show();
 
-        if (mMatch.getMatchId().equals(match.getMatchId())) {
+        if (mMatch.getMatchId().equals(match.getMatchId())){
             updateMatch(match);
-        } else {
+        }
+        else {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 
             alertDialogBuilder
@@ -1228,9 +1219,6 @@ public class MpWifi extends Activity implements
         });
     }
 
-<<<<<<< HEAD
-    public class Guessing {
-=======
     public void goToFinishScreen(View view) {
         view.setVisibility(View.GONE);
 
@@ -1314,7 +1302,6 @@ public class MpWifi extends Activity implements
     }
 
     public class Guessing{
->>>>>>> origin/master
 
         String firstS = "", secondS = "", thirdS = "";
         TextView firstTW, secondTW, thirdTW;
@@ -1323,12 +1310,12 @@ public class MpWifi extends Activity implements
         ImageView cross;
         boolean clicked = false;
 
-        public void start() {
+        public void start(){
 
             animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
             cross = (ImageView) findViewById(R.id.cross);
 
-            if (matchData == null) {
+            if (matchData == null){
                 showWarning("Error", getString(R.string.general_error));
                 return;
             }
@@ -1426,7 +1413,7 @@ public class MpWifi extends Activity implements
                 }
             });
 
-            builder.setNegativeButton("BACK", new DialogInterface.OnClickListener() {
+            builder.setNegativeButton("BACK", new DialogInterface.OnClickListener(){
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();
@@ -1437,10 +1424,10 @@ public class MpWifi extends Activity implements
         }
     }
 
-    public boolean hasSoftKeys() {
+    public boolean hasSoftKeys(){
         boolean hasSoftwareKeys = true;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.JELLY_BEAN_MR1){
             Display d = this.getWindowManager().getDefaultDisplay();
 
             DisplayMetrics realDisplayMetrics = new DisplayMetrics();
@@ -1455,29 +1442,14 @@ public class MpWifi extends Activity implements
             int displayHeight = displayMetrics.heightPixels;
             int displayWidth = displayMetrics.widthPixels;
 
-            hasSoftwareKeys = (realWidth - displayWidth) > 0 || (realHeight - displayHeight) > 0;
-        } else {
+            hasSoftwareKeys =  (realWidth - displayWidth) > 0 || (realHeight - displayHeight) > 0;
+        }else{
             boolean hasMenuKey = ViewConfiguration.get(this).hasPermanentMenuKey();
             boolean hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
             hasSoftwareKeys = !hasMenuKey && !hasBackKey;
         }
         return hasSoftwareKeys;
     }
-
-    public void progressbars(View view) {
-
-
-        findViewById(R.id.buttons).setVisibility(View.GONE);
-        findViewById(R.id.setTexts).setVisibility(View.GONE);
-        findViewById(R.id.chooseTexts).setVisibility(View.GONE);
-        findViewById(R.id.notYourTurn).setVisibility(View.VISIBLE);
-        findViewById(R.id.gameFinished).setVisibility(View.GONE);
-
-
-        metoda1();
-
-    }
-
 
     public void metoda1() {
 
@@ -1502,11 +1474,5 @@ public class MpWifi extends Activity implements
                 }
             }.start();
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(MpWifi.this, MainActivity.class);
-        startActivity(intent);
     }
 }
