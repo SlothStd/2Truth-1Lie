@@ -1,14 +1,20 @@
 package sloth.twotruthsonelie;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.util.DisplayMetrics;
@@ -43,6 +49,13 @@ import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMultiplayer;
 import com.google.android.gms.games.multiplayer.Multiplayer;
 import com.google.android.gms.plus.Plus;
 import com.google.example.games.basegameutils.BaseGameUtils;
+import com.jjoe64.graphview.DefaultLabelFormatter;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.LabelFormatter;
+import com.jjoe64.graphview.Viewport;
+import com.jjoe64.graphview.helper.StaticLabelsFormatter;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
 
 /**
@@ -96,6 +109,8 @@ public class MpWifi extends Activity implements
     private int player;
     private String myDisplayName, hisDisplayName;
 
+    private GraphHistory graphHistory;
+
     private int roundCount = 2;
 
     private static final int winPoint = 1;
@@ -142,6 +157,22 @@ public class MpWifi extends Activity implements
             roundCount = 6;
         }
 
+
+        if (mMatch != null) {
+            SharedPreferences prefs = getSharedPreferences(mMatch.getMatchId(), Context.MODE_PRIVATE);
+            if (prefs.getBoolean("isSaved", false)) {
+                matchData.getData(prefs.getString("matchData", null));
+            }
+        }
+
+        SharedPreferences prefs = getSharedPreferences("GraphHistory", Context.MODE_PRIVATE);
+        if (!prefs.getString("GraphHistory", "err").equals("err")){
+            graphHistory = new GraphHistory(prefs.getString("GraphHistory", null));
+        }
+        else {
+            graphHistory = new GraphHistory();
+        }
+
         if (hasSoftKeys()){
 
             final float scale = getResources().getDisplayMetrics().density;
@@ -160,6 +191,17 @@ public class MpWifi extends Activity implements
     @Override
     protected void onStop() {
         super.onStop();
+
+        if (mMatch != null && gameState == 1) {
+            SharedPreferences prefs = getSharedPreferences(mMatch.getMatchId(), Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+
+            editor.putBoolean("isSaved", true);
+            editor.putString("matchData", matchData.convertDataToString()).apply();
+        }
+
+        getSharedPreferences("GraphHistory", Context.MODE_PRIVATE).edit().putString("GraphHistory", graphHistory.encrypt()).apply();
+
         Log.d(TAG, "onStop(): Disconnecting from Google APIs");
         if (mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
@@ -324,6 +366,13 @@ public class MpWifi extends Activity implements
             Toast.makeText(this, "Select a lie you retard", Toast.LENGTH_SHORT).show();
             return;
         }
+        if (firstS.getText().toString().isEmpty() ||
+                secondS.getText().toString().isEmpty() ||
+                    thirdS.getText().toString().isEmpty()){
+
+            Toast.makeText(this, "Fill up all three text fields", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         ArrayList<String> sentences = new ArrayList<>();
         sentences.add(firstS.getText().toString());
@@ -342,6 +391,14 @@ public class MpWifi extends Activity implements
                         processResult(result);
                     }
                 });
+
+        firstS.setText("");
+        secondS.setText("");
+        thirdS.setText("");
+        matchData.setLiePos(-1);
+
+        SharedPreferences prefs = getSharedPreferences(mMatch.getMatchId(), Context.MODE_PRIVATE);
+        prefs.edit().clear().apply();
     }
 
     // Sign-in, Sign out behavior
@@ -412,6 +469,8 @@ public class MpWifi extends Activity implements
                 findViewById(R.id.notYourTurn).setVisibility(View.GONE);
                 findViewById(R.id.gameFinished).setVisibility(View.VISIBLE);
 
+                setUpGraph();
+
                 Log.d(TAG, "Finished");
 
                 break;
@@ -422,7 +481,19 @@ public class MpWifi extends Activity implements
     public void setGameplayUI() {
         getPlayerIDs();
 
+        SharedPreferences prefs = getSharedPreferences(mMatch.getMatchId(), Context.MODE_PRIVATE);
+        if (prefs.getBoolean("isSaved", false)) {
+            matchData.getData(prefs.getString("matchData", "~||~~|~"));
+
+            gameState = 1;
+            setViewVisibility();
+
+            return;
+        }
+
         matchData.getData(mMatch.getData());
+
+        graphHistory.compare(matchData.getScores(), player);
 
         if (matchData.getSentences().size() == 0)
             gameState = 1;
@@ -611,7 +682,7 @@ public class MpWifi extends Activity implements
 
         ((TextView) findViewById(R.id.p_1_TV)).setText(myDisplayName);
         ((TextView) findViewById(R.id.p_2_TV)).setText(hisDisplayName);
-        ((TextView) findViewById(R.id.scoreTV)).setText(matchData.getScores().get(0) + " - " + matchData.getScores().get(1));
+        ((TextView) findViewById(R.id.scoreTV)).setText(matchData.getScores().get(player) + " - " + matchData.getScores().get(Math.abs(player - 1)));
     }
 
 
@@ -1140,6 +1211,88 @@ public class MpWifi extends Activity implements
         });
     }
 
+    public void goToFinishScreen(View view) {
+        view.setVisibility(View.GONE);
+
+        findViewById(R.id.buttons).setVisibility(View.GONE);
+        findViewById(R.id.setTexts).setVisibility(View.GONE);
+        findViewById(R.id.chooseTexts).setVisibility(View.GONE);
+        findViewById(R.id.notYourTurn).setVisibility(View.GONE);
+        findViewById(R.id.gameFinished).setVisibility(View.VISIBLE);
+
+        GraphHistory tempHist = new GraphHistory(new ArrayList<Boolean>(Arrays.asList(new Boolean[]{true, false, true, false})), new ArrayList<Boolean>(Arrays.asList(new Boolean[]{false, true, false, true})));
+
+        GraphView graph = (GraphView) findViewById(R.id.graph);
+
+        LineGraphSeries<DataPoint> series1 = new LineGraphSeries<>(tempHist.getMyDataPoints());
+        LineGraphSeries<DataPoint> series2 = new LineGraphSeries<>(tempHist.getHisDataPoints());
+
+        series1.setColor(getResources().getColor(R.color.truth));
+        series2.setColor(getResources().getColor(R.color.lie));
+
+        graph.getGridLabelRenderer().setNumHorizontalLabels(5);
+        graph.getGridLabelRenderer().setNumVerticalLabels(5);
+
+        graph.getGridLabelRenderer().setLabelFormatter(new LabelFormatter() {
+            @Override
+            public String formatLabel(double value, boolean isValueX) {
+                if (value == 0){
+                    return "";
+                }
+                else {
+                    return String.valueOf((int) value);
+                }
+            }
+            @Override
+            public void setViewport(Viewport viewport) {}
+        });
+
+        LineGraphSeries<DataPoint> transparent = new LineGraphSeries<>(new DataPoint[]{
+                new DataPoint(4, 4)
+        });
+        transparent.setColor(getResources().getColor(android.R.color.transparent));
+
+        graph.addSeries(series1);
+        graph.addSeries(series2);
+        graph.addSeries(transparent);
+    }
+
+    public void setUpGraph(){
+        GraphView graph = (GraphView) findViewById(R.id.graph);
+
+        LineGraphSeries<DataPoint> series1 = new LineGraphSeries<>(graphHistory.getMyDataPoints());
+        LineGraphSeries<DataPoint> series2 = new LineGraphSeries<>(graphHistory.getHisDataPoints());
+
+        series1.setColor(getResources().getColor(R.color.truth));
+        series2.setColor(getResources().getColor(R.color.lie));
+
+        graph.getGridLabelRenderer().setNumHorizontalLabels(roundCount);
+        graph.getGridLabelRenderer().setNumVerticalLabels(roundCount);
+
+        graph.getGridLabelRenderer().setLabelFormatter(new LabelFormatter() {
+            @Override
+            public String formatLabel(double value, boolean isValueX) {
+                if (value == 0){
+                    return "";
+                }
+                else {
+                    return String.valueOf((int) value);
+                }
+            }
+            @Override
+            public void setViewport(Viewport viewport) {}
+        });
+
+        LineGraphSeries<DataPoint> transparent = new LineGraphSeries<>(new DataPoint[]{
+                new DataPoint(4, 4)
+        });
+        transparent.setColor(getResources().getColor(android.R.color.transparent));
+
+        graph.addSeries(series1);
+        graph.addSeries(series2);
+        graph.addSeries(transparent);
+    }
+
     public class Guessing{
 
         String firstS = "", secondS = "", thirdS = "";
@@ -1147,6 +1300,7 @@ public class MpWifi extends Activity implements
         Button switchPlayer;
         Animation animFadeIn;
         ImageView cross;
+        boolean clicked = false;
 
         public void start(){
 
@@ -1174,21 +1328,30 @@ public class MpWifi extends Activity implements
             firstTW.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    areYouSureDialog(0);
+                    if (!clicked) {
+                        clicked = true;
+                        areYouSureDialog(0);
+                    }
                 }
             });
 
             secondTW.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    areYouSureDialog(1);
+                    if (!clicked) {
+                        clicked = true;
+                        areYouSureDialog(1);
+                    }
                 }
             });
 
             thirdTW.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    areYouSureDialog(2);
+                    if (!clicked) {
+                        clicked = true;
+                        areYouSureDialog(2);
+                    }
                 }
             });
         }
@@ -1211,19 +1374,34 @@ public class MpWifi extends Activity implements
                     matchData.setCurrentRound(matchData.getCurrentRound() + 1);
 
                     if (pos == liePos) {
-                        matchData.setScores(player, matchData.getScores().get(player) + winPoint);
+                        matchData.setScores(player, matchData.getScores(player) + winPoint);
+
+                        graphHistory.addMyHistory(true);
 
                         Toast.makeText(getApplicationContext(), "You\'re a fuckin g! " + matchData.getScores().get(0) + " - " + matchData.getScores().get(1) + " " + matchData.getCurrentRound() + "/" + roundCount, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "You dumb idiot " + matchData.getScores().get(0) + " - " + matchData.getScores().get(1) + " " + matchData.getCurrentRound() + "/" + roundCount, Toast.LENGTH_SHORT).show();
                     }
+                    else {
+                        Toast.makeText(getApplicationContext(), "You dumb idiot " + matchData.getScores().get(0) + " - " + matchData.getScores().get(1) + " " + matchData.getCurrentRound() + "/" + roundCount, Toast.LENGTH_SHORT).show();
+
+                        graphHistory.addMyHistory(false);
+                    }
+
+                    graphHistory.setLastScore(matchData.getScores());
 
                     if (matchData.getCurrentRound() == roundCount) {
                         gameState = 3;
                     } else {
                         gameState = 1;
                     }
-                    setViewVisibility();
+
+                    new CountDownTimer(5000, 5000) {
+                        public void onTick(long millisUntilFinished) {
+                        }
+                        public void onFinish() {
+                            setViewVisibility();
+                            clicked = false;
+                        }
+                    }.start();
                 }
             });
 

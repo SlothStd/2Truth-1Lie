@@ -64,6 +64,10 @@ public class MatchData {
         return scores;
     }
 
+    public int getScores(int pos) {
+        return scores.get(pos);
+    }
+
     public void setScores(ArrayList<Integer> scores) {
         this.scores = scores;
     }
@@ -86,6 +90,8 @@ public class MatchData {
      * 4. Position of the lie.
      * 5,6. p_1 score, p_2 score.
      * 7. current round
+     *
+     * ID~1|2|3~pos~score|score~round
      **/
     public void getData(byte[] data){
         String string = new String(data, Charset.forName("UTF-16"));
@@ -168,6 +174,10 @@ public class MatchData {
         Log.d(TAG, "Received: " + string);
     }
 
+    public void getData(String data){
+        getData(data.getBytes(Charset.forName("UTF-16")));
+    }
+
     public byte[] convertData(){
 
         String data;
@@ -191,5 +201,30 @@ public class MatchData {
         Log.d(TAG, "Sent: " + data);
 
         return data.getBytes(Charset.forName("UTF-16"));
+    }
+
+    public String convertDataToString(){
+
+        String data;
+
+        data = sentenceAuthor;
+
+        try {
+            data = data + "~" + (sentences.get(0));
+            data = data + "|" + (sentences.get(1));
+            data = data + "|" + (sentences.get(2));
+        }catch (IndexOutOfBoundsException e){
+            data = data + "~";
+        }
+
+        data = data + "~" + liePos;
+
+        data = data + "~" + scores.get(0) + "|" + scores.get(1);
+
+        data = data + "~" + currentRound;
+
+        Log.d(TAG, "Sent: " + data);
+
+        return data;
     }
 }
