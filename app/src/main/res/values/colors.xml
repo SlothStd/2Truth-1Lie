@@ -8,7 +8,9 @@
 
     <color name="purple_ish">#474f58</color>
     <color name="truth">#9CCC65</color>
+    <color name="truthTransparent">#429CCC65</color>
     <color name="lie">#EF5350</color>
+    <color name="lieTransparent">#84EF5350</color>
     <color name="orange">#ff5722</color>
 
     <color name="darker_bg">#313131</color>

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/purple_ish"
+    android:background="@drawable/kamene"
     android:theme="@style/nevidno">
 
 
@@ -84,6 +84,7 @@
                     android:layout_alignStart="@+id/secondLie"
                     android:layout_alignTop="@+id/thirdS"
                     android:layout_toRightOf="@+id/thirdS"
+                    android:visibility="gone"
                     android:layout_marginTop="25dp" />
 
                 <CheckBox
@@ -97,6 +98,7 @@
                     android:layout_marginLeft="-85dp"
                     android:layout_marginRight="10dp"
                     android:layout_toRightOf="@+id/firstS"
+                    android:visibility="gone"
                     android:checked="false" />
 
                 <CheckBox
@@ -107,6 +109,7 @@
                     android:layout_alignStart="@+id/firstLie"
                     android:layout_marginBottom="26dp"
                     android:layout_alignTop="@+id/secondS"
+                    android:visibility="gone"
                     android:layout_marginTop="25dp"
                     android:layout_toRightOf="@+id/secondS" />
 

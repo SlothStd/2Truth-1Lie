@@ -6,6 +6,6 @@
     android:tint="@color/white">
 
 
-    <solid android:color="@color/truth" />
+    <solid android:color="@color/lie" />
 
 </shape>

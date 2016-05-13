@@ -4,6 +4,12 @@
     android:layout_height="match_parent"
     android:id="@+id/MpWifi_main_layout">
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Finish Screen"
+        android:onClick="goToFinishScreen"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -128,13 +134,13 @@
                 android:clickable="true"
                 android:onClick="onStartMatchClicked"
                 android:id="@+id/startBtn">
-                
+
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="match_parent"
                     android:background="@color/white"
                     android:layout_marginRight="16dp"/>
-                
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -157,7 +163,7 @@
                         android:textSize="12sp"/>
 
                 </LinearLayout>
-                
+
             </LinearLayout>
 
             <LinearLayout
@@ -524,27 +530,63 @@
         <!-- Guess Screen -->
 
         <!-- Not your turn Screen -->
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone"
+            android:visibility="visible"
             android:orientation="vertical"
+            android:background="@color/darker_bg"
             android:gravity="center"
             android:id="@+id/notYourTurn">
 
+
+            <ProgressBar
+                android:id="@+id/loading1"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="47dp"
+                android:layout_height="47dp"
+                android:padding="1dp"
+                android:progressDrawable="@drawable/green_progressbar"
+                android:layout_above="@+id/turnText"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                android:max="500"
+                android:progress="250" />
+
+            <ProgressBar
+                android:id="@+id/loading2"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:progressDrawable="@drawable/red_progressbar"
+                android:layout_alignBottom="@+id/loading1"
+                android:layout_centerHorizontal="true"
+                android:padding="1dp"
+                android:layout_marginBottom="8dp"
+                android:max="500"
+                android:progress="250" />
+
+
             <TextView
+                android:id="@+id/turnText"
                 android:layout_width="wrap_content"
+                android:layout_above="@+id/checkOtherGames"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
                 android:layout_height="wrap_content"
                 android:text="Not your turn fam!"/>
 
             <Button
+                android:id="@+id/checkOtherGames"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Check Other Games"
                 android:onClick="onCheckGamesClicked"
                 android:layout_marginTop="8dp"/>
 
-        </LinearLayout>
+        </RelativeLayout>
         <!-- Not your turn Screen -->
 
         <!-- Game finished Screen -->
@@ -567,6 +609,11 @@
                 android:text="Finish"
                 android:onClick="onFinishClicked"
                 android:layout_marginTop="8dp"/>
+
+            <com.jjoe64.graphview.GraphView
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:id="@+id/graph"/>
 
         </LinearLayout>
         <!-- Game finished Screen -->

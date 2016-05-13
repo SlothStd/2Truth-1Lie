@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -32,6 +33,7 @@ public class MainActivity extends Activity {
     Animation fadeInSlower;
     Animation fadeInSlowest;
     Animation slideUP, slideDOWN;
+    boolean isPressed = false;
     RelativeLayout levelInfo;
     ImageView logo;
     ObjectAnimator animation;
@@ -200,10 +202,10 @@ public class MainActivity extends Activity {
             }
         });
 
-        onePhone.setVisibility(View.VISIBLE);
-        onePhone.startAnimation(fadeIn);
         progressBar.setVisibility(View.VISIBLE);
-        progressBar.startAnimation(fadeIn);
+//        progressBar.startAnimation(fadeIn);
+        onePhone.setVisibility(View.VISIBLE);
+//        onePhone.startAnimation(fadeIn);
         onePhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -232,10 +234,10 @@ public class MainActivity extends Activity {
 
         });
 
-        twoPhones.setVisibility(View.VISIBLE);
-        twoPhones.startAnimation(fadeIn);
         progressBarMulti.setVisibility(View.VISIBLE);
-        progressBarMulti.setAnimation(fadeIn);
+//        progressBarMulti.setAnimation(fadeIn);
+        twoPhones.setVisibility(View.VISIBLE);
+//        twoPhones.startAnimation(fadeIn);
         twoPhones.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -288,10 +290,10 @@ public class MainActivity extends Activity {
         });
 
 
-        settings.startAnimation(fadeIn);
+//        settings.startAnimation(fadeIn);
         progressBarSett.setVisibility(View.VISIBLE);
         settings.setVisibility(View.VISIBLE);
-        progressBarSett.setAnimation(fadeIn);
+//        progressBarSett.setAnimation(fadeIn);
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -331,6 +333,7 @@ public class MainActivity extends Activity {
         findViewById(R.id.kappa123).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent mp = new Intent(MainActivity.this, MpWifi.class);
                 startActivity(mp);
                 MainActivity.this.finish();
@@ -425,62 +428,6 @@ public class MainActivity extends Activity {
     @Override
     public void onBackPressed() {
 
-        boolean isPressed = false;
-
-        if (is2PhoneOpen) {
-
-            logo.setVisibility(View.VISIBLE);
-            setSlideUP();
-
-            playMULTI.clearAnimation();
-            playMULTI.setVisibility(View.GONE);
-            progressBarPlayMULTI.clearAnimation();
-            progressBarPlayMULTI.setVisibility(View.GONE);
-
-            googlePlusMULTI.clearAnimation();
-            googlePlusMULTI.setVisibility(View.GONE);
-            progressGooglePLus.clearAnimation();
-            progressGooglePLus.setVisibility(View.GONE);
-
-            checkGamesMULTI.clearAnimation();
-            checkGamesMULTI.setVisibility(View.GONE);
-            progressBarCheckMULTI.clearAnimation();
-            progressBarCheckMULTI.setVisibility(View.GONE);
-
-            progressBar.setVisibility(View.VISIBLE);
-            progressBar.startAnimation(fadeIn);
-            onePhone.setVisibility(View.VISIBLE);
-            onePhone.startAnimation(fadeIn);
-
-            progressBarMulti.setVisibility(View.VISIBLE);
-            progressBarMulti.setAnimation(fadeIn);
-            twoPhones.setVisibility(View.VISIBLE);
-            twoPhones.startAnimation(fadeIn);
-
-            progressBarSett.setVisibility(View.VISIBLE);
-            progressBarSett.setAnimation(fadeIn);
-            settings.setVisibility(View.VISIBLE);
-            settings.startAnimation(fadeIn);
-
-            is2PhoneOpen = false;
-//            Intent intent = getIntent();
-//            finish();
-//            startActivity(intent);
-
-        } else {
-
-            if(isPressed) {
-                super.onBackPressed();
-            } else {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setMessage("Press back one more time to exit");
-
-                AlertDialog dialog = builder.create();
-                dialog.show();
-                isPressed = true;
-            }
-        }
+        MainActivity.this.finish();
     }
-
-
 }
