@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -46,6 +47,11 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (getIntent().getFlags() == 0x14000000){
+            Intent multi = new Intent(MainActivity.this, MpWifi.class);
+            startActivity(multi);
+        }
 
         onePhone = (Button) findViewById(R.id.Onephone);
         twoPhones = (Button) findViewById(R.id.Twophones);
