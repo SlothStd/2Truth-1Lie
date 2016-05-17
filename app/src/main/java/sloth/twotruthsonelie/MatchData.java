@@ -184,6 +184,15 @@ public class MatchData {
 
         data = sentenceAuthor;
 
+        for (int i = 0; i < sentences.size(); i++) {
+            String temp = sentences.get(i);
+
+            temp = temp.replace('~', '-');
+            temp = temp.replace('|', '\\');
+
+            sentences.set(i, temp);
+        }
+
         try {
             data = data + "~" + (sentences.get(0));
             data = data + "|" + (sentences.get(1));

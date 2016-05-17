@@ -1,6 +1,5 @@
 package sloth.twotruthsonelie;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -11,7 +10,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -24,7 +22,6 @@ import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -50,11 +47,9 @@ import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMultiplayer;
 import com.google.android.gms.games.multiplayer.Multiplayer;
 import com.google.android.gms.plus.Plus;
 import com.google.example.games.basegameutils.BaseGameUtils;
-import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LabelFormatter;
 import com.jjoe64.graphview.Viewport;
-import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
@@ -159,27 +154,13 @@ public class MpWifi extends Activity implements
 
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         try {
-            String roundsS = SP.getString("setRounds", "3");
+            String roundsS = SP.getString("setRounds", "2");
             roundCount = Integer.parseInt(roundsS) * 2;
         } catch (NullPointerException e) {
             roundCount = 6;
         }
 
-
-        if (mMatch != null) {
-            SharedPreferences prefs = getSharedPreferences(mMatch.getMatchId(), Context.MODE_PRIVATE);
-            if (prefs.getBoolean("isSaved", false)) {
-                matchData.getData(prefs.getString("matchData", null));
-            }
-        }
-
-        SharedPreferences prefs = getSharedPreferences("GraphHistory", Context.MODE_PRIVATE);
-        if (!prefs.getString("GraphHistory", "err").equals("err")){
-            graphHistory = new GraphHistory(prefs.getString("GraphHistory", null));
-        }
-        else {
-            graphHistory = new GraphHistory();
-        }
+        loadSP();
 
         if (hasSoftKeys()){
 
@@ -196,23 +177,43 @@ public class MpWifi extends Activity implements
         mGoogleApiClient.connect();
     }
 
+    public void loadSP(){
+        if (mMatch != null) {
+            SharedPreferences prefs = getSharedPreferences(mMatch.getMatchId(), Context.MODE_PRIVATE);
+            if (prefs.getBoolean("isSaved", false)) {
+                matchData.getData(prefs.getString("matchData", null));
+            }
+
+            if (!prefs.getString("GraphHistory", "err").equals("err")) {
+                graphHistory = new GraphHistory(prefs.getString("GraphHistory", null), mMatch.getMatchId());
+            } else {
+                graphHistory = new GraphHistory(mMatch.getMatchId());
+            }
+        }
+    }
+
     @Override
     protected void onStop() {
         super.onStop();
 
-        if (mMatch != null && gameState == 1) {
-            SharedPreferences prefs = getSharedPreferences(mMatch.getMatchId(), Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = prefs.edit();
-
-            editor.putBoolean("isSaved", true);
-            editor.putString("matchData", matchData.convertDataToString()).apply();
-        }
-
-        getSharedPreferences("GraphHistory", Context.MODE_PRIVATE).edit().putString("GraphHistory", graphHistory.encrypt()).apply();
+        saveSP();
 
         Log.d(TAG, "onStop(): Disconnecting from Google APIs");
         if (mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
+        }
+    }
+
+    public void saveSP(){
+        if (mMatch != null ) {
+            SharedPreferences prefs = getSharedPreferences(mMatch.getMatchId(), Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+
+            if (gameState == 1) {
+                editor.putBoolean("isSaved", true);
+                editor.putString("matchData", matchData.convertDataToString());
+            }
+            editor.putString("GraphHistory", graphHistory.encrypt()).apply();
         }
     }
 
@@ -350,22 +351,6 @@ public class MpWifi extends Activity implements
         setViewVisibility();
     }
 
-    // Finish the game. Sometimes, this is your only choice.
-    public void onFinishClicked(View view) {
-        showSpinner();
-        Games.TurnBasedMultiplayer.finishMatch(mGoogleApiClient, mMatch.getMatchId(), matchData.convertData())
-                .setResultCallback(new ResultCallback<TurnBasedMultiplayer.UpdateMatchResult>() {
-                    @Override
-                    public void onResult(TurnBasedMultiplayer.UpdateMatchResult result) {
-                        processResult(result);
-                    }
-                });
-
-        gameState = 0;
-        setViewVisibility();
-    }
-
-
     // Upload your new gamestate, then take a turn, and pass it on to the next
     // player.
     public void onDoneClicked(View view) {
@@ -477,10 +462,34 @@ public class MpWifi extends Activity implements
                 findViewById(R.id.notYourTurn).setVisibility(View.GONE);
                 findViewById(R.id.gameFinished).setVisibility(View.VISIBLE);
 
-                setUpGraph();
+                if (matchData.getSentences().get(0).equals("`")){
+                    Log.d(TAG, "Finished2");
 
-                Log.d(TAG, "Finished");
+                    graphHistory.compare(matchData.getScores(), player);
+                    setUpGraph();
 
+                    Games.TurnBasedMultiplayer.finishMatch(mGoogleApiClient, mMatch.getMatchId())
+                            .setResultCallback(new ResultCallback<TurnBasedMultiplayer.UpdateMatchResult>() {
+                                @Override
+                                public void onResult(TurnBasedMultiplayer.UpdateMatchResult result) {
+                                    processResult(result);
+                                }
+                            });
+                }
+                else {
+                    Log.d(TAG, "Finished1");
+
+                    setUpGraph();
+
+                    matchData.setSentences(new ArrayList<String>(Arrays.asList(new String[]{"`", "`", "`"})));
+                    Games.TurnBasedMultiplayer.finishMatch(mGoogleApiClient, mMatch.getMatchId(), matchData.convertData())
+                            .setResultCallback(new ResultCallback<TurnBasedMultiplayer.UpdateMatchResult>() {
+                                @Override
+                                public void onResult(TurnBasedMultiplayer.UpdateMatchResult result) {
+                                    processResult(result);
+                                }
+                            });
+                }
                 break;
         }
     }
@@ -501,12 +510,16 @@ public class MpWifi extends Activity implements
 
         matchData.getData(mMatch.getData());
 
-        graphHistory.compare(matchData.getScores(), player);
-
-        if (matchData.getSentences().size() == 0)
+        if (matchData.getSentences().size() == 0) {
             gameState = 1;
-        else
+        }
+        else {
             gameState = 2;
+        }
+
+        if (matchData.getCurrentRound() != 0) {
+            graphHistory.compare(matchData.getScores(), player);
+        }
 
         setViewVisibility();
     }
@@ -517,7 +530,7 @@ public class MpWifi extends Activity implements
     }
 
     public void dismissSpinner() {
-        progress.dismiss();
+        if (progress != null) progress.dismiss();
     }
 
     // Generic warning/info dialog
@@ -864,6 +877,10 @@ public class MpWifi extends Activity implements
 
         getPlayerIDs();
 
+        if (graphHistory == null || !graphHistory.matchID.equals(mMatch.getMatchId())){
+            loadSP();
+        }
+
         int status = match.getStatus();
         int turnStatus = match.getTurnStatus();
 
@@ -970,8 +987,10 @@ public class MpWifi extends Activity implements
             return;
         }
 
-        gameState = 0;
-        setViewVisibility();
+        if (gameState != 3) {
+            gameState = 0;
+            setViewVisibility();
+        }
     }
 
     // Handle notification events.
@@ -1221,7 +1240,7 @@ public class MpWifi extends Activity implements
 
     public void goToFinishScreen(View view) {
         view.setVisibility(View.GONE);
-
+/*
         findViewById(R.id.buttons).setVisibility(View.GONE);
         findViewById(R.id.setTexts).setVisibility(View.GONE);
         findViewById(R.id.chooseTexts).setVisibility(View.GONE);
@@ -1262,11 +1281,12 @@ public class MpWifi extends Activity implements
 
         graph.addSeries(series1);
         graph.addSeries(series2);
-        graph.addSeries(transparent);
+        graph.addSeries(transparent);*/
     }
 
     public void setUpGraph(){
         GraphView graph = (GraphView) findViewById(R.id.graph);
+        graph.removeAllSeries();
 
         LineGraphSeries<DataPoint> series1 = new LineGraphSeries<>(graphHistory.getMyDataPoints());
         LineGraphSeries<DataPoint> series2 = new LineGraphSeries<>(graphHistory.getHisDataPoints());
@@ -1274,8 +1294,8 @@ public class MpWifi extends Activity implements
         series1.setColor(getResources().getColor(R.color.truth));
         series2.setColor(getResources().getColor(R.color.lie));
 
-        graph.getGridLabelRenderer().setNumHorizontalLabels(roundCount);
-        graph.getGridLabelRenderer().setNumVerticalLabels(roundCount);
+        /*graph.getGridLabelRenderer().setNumHorizontalLabels(roundCount/2);
+        graph.getGridLabelRenderer().setNumVerticalLabels(roundCount/2);
 
         graph.getGridLabelRenderer().setLabelFormatter(new LabelFormatter() {
             @Override
@@ -1292,13 +1312,13 @@ public class MpWifi extends Activity implements
         });
 
         LineGraphSeries<DataPoint> transparent = new LineGraphSeries<>(new DataPoint[]{
-                new DataPoint(4, 4)
+                new DataPoint(roundCount/2, roundCount/2)
         });
-        transparent.setColor(getResources().getColor(android.R.color.transparent));
+        transparent.setColor(getResources().getColor(android.R.color.transparent));*/
 
         graph.addSeries(series1);
         graph.addSeries(series2);
-        graph.addSeries(transparent);
+        //graph.addSeries(transparent);
     }
 
     public class Guessing{
@@ -1336,7 +1356,6 @@ public class MpWifi extends Activity implements
                 @Override
                 public void onClick(View v) {
                     if (!clicked) {
-                        clicked = true;
                         areYouSureDialog(0);
                     }
                 }
@@ -1346,7 +1365,6 @@ public class MpWifi extends Activity implements
                 @Override
                 public void onClick(View v) {
                     if (!clicked) {
-                        clicked = true;
                         areYouSureDialog(1);
                     }
                 }
@@ -1356,7 +1374,6 @@ public class MpWifi extends Activity implements
                 @Override
                 public void onClick(View v) {
                     if (!clicked) {
-                        clicked = true;
                         areYouSureDialog(2);
                     }
                 }
@@ -1377,6 +1394,8 @@ public class MpWifi extends Activity implements
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();
+
+                    clicked = true;
 
                     matchData.setCurrentRound(matchData.getCurrentRound() + 1);
 
@@ -1401,7 +1420,7 @@ public class MpWifi extends Activity implements
                         gameState = 1;
                     }
 
-                    new CountDownTimer(5000, 5000) {
+                    new CountDownTimer(1000, 1000) {
                         public void onTick(long millisUntilFinished) {
                         }
                         public void onFinish() {

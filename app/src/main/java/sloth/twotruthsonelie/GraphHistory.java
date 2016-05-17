@@ -1,5 +1,7 @@
 package sloth.twotruthsonelie;
 
+import android.util.Log;
+
 import com.jjoe64.graphview.series.DataPoint;
 
 import java.util.ArrayList;
@@ -12,22 +14,29 @@ public class GraphHistory {
     private ArrayList<Boolean> hisHistory;
     private ArrayList<Integer> lastScore;
 
-    public GraphHistory() {
+    public final String matchID;
+
+    private static final String TAG = "2T1L GraphHistory";
+
+    public GraphHistory(String matchID) {
         this.myHistory = new ArrayList<>();
         this.hisHistory = new ArrayList<>();
         this.lastScore = new ArrayList<>();
+        this.matchID = matchID;
     }
 
-    public GraphHistory(ArrayList<Boolean> myHistory, ArrayList<Boolean> hisHistory){
+    public GraphHistory(ArrayList<Boolean> myHistory, ArrayList<Boolean> hisHistory, String matchID){
         this.myHistory = myHistory;
         this.hisHistory = hisHistory;
         this.lastScore = new ArrayList<>();
+        this.matchID = matchID;
     }
 
-    public GraphHistory(String source){
+    public GraphHistory(String source, String matchID){
         this.myHistory = new ArrayList<>();
         this.hisHistory = new ArrayList<>();
         this.lastScore = new ArrayList<>();
+        this.matchID = matchID;
 
         char[] chars = source.toCharArray();
 
@@ -74,6 +83,8 @@ public class GraphHistory {
 
     public void addMyHistory(boolean isWin){
         this.myHistory.add(isWin);
+
+        Log.d(TAG, "addMyHistory(): " + myHistory.toString());
     }
 
     public int myWinCount(){
@@ -132,6 +143,8 @@ public class GraphHistory {
 
     public void setLastScore(ArrayList<Integer> lastScore) {
         this.lastScore = lastScore;
+
+        Log.d(TAG, "setLastScore(): " + lastScore.toString());
     }
 
     public void setLastScore(int pos, int value) {
@@ -169,11 +182,15 @@ public class GraphHistory {
         else {
             addHisHistory(true);
         }
+
+        Log.d(TAG, "compare(): "+ hisWinCount() + " - "+ scores.get(Math.abs(player - 1)) + "; " + hisHistory.toString());
     }
 
     public DataPoint[] getMyDataPoints(){
         DataPoint[] dataPoints = new DataPoint[myHistory.size() + 1];
         dataPoints[0] = new DataPoint(0, 0);
+
+        String debug = "";
 
         int score = 0;
 
@@ -183,13 +200,19 @@ public class GraphHistory {
             }
 
             dataPoints[i + 1] = new DataPoint(i + 1, score);
+
+            debug = debug + dataPoints[i+1].toString();
         }
+        Log.d(TAG, "getMyDataPoints(): " + debug);
+
         return dataPoints;
     }
 
     public DataPoint[] getHisDataPoints(){
         DataPoint[] dataPoints = new DataPoint[hisHistory.size() + 1];
         dataPoints[0] = new DataPoint(0, 0);
+
+        String debug = "";
 
         int score = 0;
 
@@ -199,7 +222,11 @@ public class GraphHistory {
             }
 
             dataPoints[i + 1] = new DataPoint(i + 1, score);
+
+            debug = debug + dataPoints[i+1].toString();
         }
+        Log.d(TAG, "getHisDataPoints(): " + debug);
+
         return dataPoints;
     }
 }
