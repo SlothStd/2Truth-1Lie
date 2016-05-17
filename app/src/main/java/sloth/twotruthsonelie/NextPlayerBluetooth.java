@@ -49,7 +49,6 @@ public class NextPlayerBluetooth extends Activity {
         setContentView(R.layout.next_player_layout);
 
         animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
-        cross = (ImageView) findViewById(R.id.cross);
 
 
         firstTW = (TextView) findViewById(R.id.firstTW);

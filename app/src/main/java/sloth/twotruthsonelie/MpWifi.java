@@ -1313,7 +1313,6 @@ public class MpWifi extends Activity implements
         public void start(){
 
             animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
-            cross = (ImageView) findViewById(R.id.cross);
 
             if (matchData == null){
                 showWarning("Error", getString(R.string.general_error));

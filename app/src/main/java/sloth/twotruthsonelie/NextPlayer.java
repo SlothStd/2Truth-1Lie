@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
@@ -15,16 +16,18 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 
 public class NextPlayer extends Activity {
 
     String firstS, secondS, thirdS, roundsS;
-    TextView firstTW, secondTW, thirdTW;
+    TextView firstTW, secondTW, thirdTW, playerGuessing;
     Button switchPlayer;
     Integer round, current_round, player1, player2;
     Boolean firstLie, secondLie, thirdLie;
     Animation animFadeIn;
-    ImageView cross;
+    Typeface canter;
 
 
     @Override
@@ -33,13 +36,22 @@ public class NextPlayer extends Activity {
         setContentView(R.layout.next_player_layout);
 
         animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
-        cross = (ImageView) findViewById(R.id.cross);
+        canter = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/canter.otf");
 
+        playerGuessing = (TextView) findViewById(R.id.playerGuessing);
+        playerGuessing.setTypeface(canter);
 
         firstTW = (TextView) findViewById(R.id.firstTW);
+        firstTW.setTypeface(canter);
+
         secondTW = (TextView) findViewById(R.id.secondTW);
+        secondTW.setTypeface(canter);
+
         thirdTW = (TextView) findViewById(R.id.thirdTW);
+        thirdTW.setTypeface(canter);
+
         switchPlayer = (Button) findViewById(R.id.switch_player);
+
 
         try {
             firstS = getIntent().getExtras().getString("firstS", null);
@@ -148,6 +160,8 @@ public class NextPlayer extends Activity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
+                firstTW.setBackground(getResources().getDrawable(R.drawable.custom_edittext_clicked));
+
                 SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
 
                 firstLie = preferences.getBoolean("firstLie", false);
@@ -179,7 +193,6 @@ public class NextPlayer extends Activity {
                         editor.putInt("player1", player1).apply();
                     }
 
-//                    Toast.makeText(NextPlayer.this, "CORRECT!", Toast.LENGTH_SHORT).show();
                     switchPlayer.setVisibility(View.VISIBLE);
                     firstTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
 
@@ -191,13 +204,13 @@ public class NextPlayer extends Activity {
                     new CountDownTimer(2000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
-//                            cross.setVisibility(View.VISIBLE);
-//                            cross.startAnimation(animFadeIn);
+//                            
+//                            
                         }
 
                         public void onFinish() {
-//                            cross.clearAnimation();
-//                            cross.setVisibility(View.GONE);
+//                            
+//                           
                         }
                     }.start();
 
@@ -212,13 +225,9 @@ public class NextPlayer extends Activity {
                     new CountDownTimer(2000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
-//                            cross.setVisibility(View.VISIBLE);
-//                            cross.startAnimation(animFadeIn);
                         }
 
                         public void onFinish() {
-//                            cross.clearAnimation();
-//                            cross.setVisibility(View.GONE);
                         }
                     }.start();
 
@@ -256,6 +265,9 @@ public class NextPlayer extends Activity {
         builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
+                secondTW.setBackground(getResources().getDrawable(R.drawable.custom_edittext_clicked));
+
                 SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
 
                 firstLie = preferences.getBoolean("firstLie", false);
@@ -302,13 +314,13 @@ public class NextPlayer extends Activity {
                     new CountDownTimer(2000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
-//                            cross.setVisibility(View.VISIBLE);
-//                            cross.startAnimation(animFadeIn);
+//                            
+//                            
                         }
 
                         public void onFinish() {
-//                            cross.clearAnimation();
-//                            cross.setVisibility(View.GONE);
+//                            
+//                           
                         }
                     }.start();
 
@@ -323,13 +335,13 @@ public class NextPlayer extends Activity {
                     new CountDownTimer(2000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
-//                            cross.setVisibility(View.VISIBLE);
-//                            cross.startAnimation(animFadeIn);
+//                            
+//                            
                         }
 
                         public void onFinish() {
-//                            cross.clearAnimation();
-//                            cross.setVisibility(View.GONE);
+//                            
+//                           
                         }
                     }.start();
 
@@ -365,6 +377,9 @@ public class NextPlayer extends Activity {
         builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
+                thirdTW.setBackground(getResources().getDrawable(R.drawable.custom_edittext_clicked));
+
                 SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
 
                 firstLie = preferences.getBoolean("firstLie", false);
@@ -411,13 +426,13 @@ public class NextPlayer extends Activity {
                     new CountDownTimer(2000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
-//                            cross.setVisibility(View.VISIBLE);
-//                            cross.startAnimation(animFadeIn);
+//                            
+//                            
                         }
 
                         public void onFinish() {
-//                            cross.clearAnimation();
-//                            cross.setVisibility(View.GONE);
+//                            
+//                           
                         }
                     }.start();
 
@@ -432,13 +447,13 @@ public class NextPlayer extends Activity {
                     new CountDownTimer(2000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
-//                            cross.setVisibility(View.VISIBLE);
-//                            cross.startAnimation(animFadeIn);
+//                            
+//                            
                         }
 
                         public void onFinish() {
-//                            cross.clearAnimation();
-//                            cross.setVisibility(View.GONE);
+//                            
+//                           
                         }
                     }.start();
 

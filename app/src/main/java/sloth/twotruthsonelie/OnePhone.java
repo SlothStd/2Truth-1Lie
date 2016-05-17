@@ -44,11 +44,7 @@ public class OnePhone extends Activity {
 
         height = size.y;
 
-//        if (height > 800) {
         setContentView(R.layout.one_phone);
-//        } else {
-//            setContentView(R.layout.one_phone_small);
-//        }
 
         firstS = (EditText) findViewById(R.id.firstS);
         secondS = (EditText) findViewById(R.id.secondS);
