@@ -2,15 +2,21 @@ package sloth.twotruthsonelie;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
 /**
  * Created by Daniel on 1/28/2016.
@@ -24,11 +30,14 @@ public class ScoreActivity extends Activity {
     ProgressBar progressBarLeft, progressBarRight;
     CountDownTimer timer;
     ObjectAnimator animation;
+    GraphHistory graphHistory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.scoreboard_layout);
+
+        setUpGraph();
 
         player1TW = (TextView) findViewById(R.id.player1TV);
         player2TW = (TextView) findViewById(R.id.player2TV);
@@ -94,6 +103,32 @@ public class ScoreActivity extends Activity {
         }.start();
     }
 
+    public void setUpGraph(){
+        SharedPreferences prefs = getSharedPreferences("SingleGraphHistory", Context.MODE_PRIVATE);
+        if (!prefs.getString("GraphHistory", "err").equals("err")) {
+            Log.d("GraphHistory", "good");
+            graphHistory = new GraphHistory(prefs.getString("GraphHistory", null), "single");
+        } else {
+            Log.d("GraphHistory", "bad");
+            graphHistory = new GraphHistory("single");
+        }
+
+        GraphView graph = (GraphView) findViewById(R.id.graphSP);
+        graph.removeAllSeries();
+
+        LineGraphSeries<DataPoint> series1 = new LineGraphSeries<>(graphHistory.getMyDataPoints());
+        LineGraphSeries<DataPoint> series2 = new LineGraphSeries<>(graphHistory.getHisDataPoints());
+
+        series1.setColor(getResources().getColor(R.color.truth));
+        series2.setColor(getResources().getColor(R.color.lie));
+
+        graph.addSeries(series1);
+        graph.addSeries(series2);
+    }
+
+    public void resetGraph(){
+        getSharedPreferences("SingleGraphHistory", Context.MODE_PRIVATE).edit().clear().apply();
+    }
 
     @Override
     public void onBackPressed() {
@@ -109,8 +144,16 @@ public class ScoreActivity extends Activity {
         SharedPreferences.Editor editor = preferences.edit();
         editor.clear().apply();
 
+        resetGraph();
+
         Intent toMenu = new Intent(ScoreActivity.this, MainActivity.class);
         ScoreActivity.this.finish();
         startActivity(toMenu);
+    }
+
+    @Override
+    protected void onStop() {
+        resetGraph();
+        super.onStop();
     }
 }

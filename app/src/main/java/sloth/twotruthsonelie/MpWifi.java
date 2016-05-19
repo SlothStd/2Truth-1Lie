@@ -48,8 +48,6 @@ import com.google.android.gms.games.multiplayer.Multiplayer;
 import com.google.android.gms.plus.Plus;
 import com.google.example.games.basegameutils.BaseGameUtils;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.LabelFormatter;
-import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
@@ -1249,7 +1247,7 @@ public class MpWifi extends Activity implements
 
         GraphHistory tempHist = new GraphHistory(new ArrayList<Boolean>(Arrays.asList(new Boolean[]{true, false, true, false})), new ArrayList<Boolean>(Arrays.asList(new Boolean[]{false, true, false, true})));
 
-        GraphView graph = (GraphView) findViewById(R.id.graph);
+        GraphView graph = (GraphView) findViewById(R.id.graphMP);
 
         LineGraphSeries<DataPoint> series1 = new LineGraphSeries<>(tempHist.getMyDataPoints());
         LineGraphSeries<DataPoint> series2 = new LineGraphSeries<>(tempHist.getHisDataPoints());
@@ -1285,7 +1283,7 @@ public class MpWifi extends Activity implements
     }
 
     public void setUpGraph(){
-        GraphView graph = (GraphView) findViewById(R.id.graph);
+        GraphView graph = (GraphView) findViewById(R.id.graphMP);
         graph.removeAllSeries();
 
         LineGraphSeries<DataPoint> series1 = new LineGraphSeries<>(graphHistory.getMyDataPoints());

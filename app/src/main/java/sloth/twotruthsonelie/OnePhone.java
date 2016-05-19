@@ -2,6 +2,7 @@ package sloth.twotruthsonelie;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -33,6 +34,7 @@ public class OnePhone extends Activity {
     CheckBox thirdTruth, thirdLie;
     Integer height;
     MainActivity main = new MainActivity();
+    GraphHistory graphHistory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,8 @@ public class OnePhone extends Activity {
         height = size.y;
 
         setContentView(R.layout.one_phone);
+
+        graphHistory = new GraphHistory("single");
 
         firstS = (EditText) findViewById(R.id.firstS);
         secondS = (EditText) findViewById(R.id.secondS);
@@ -310,6 +314,8 @@ public class OnePhone extends Activity {
                 SharedPreferences.Editor editor2 = preferences.edit();
                 editor2.clear().apply();
 
+                resetGraph();
+
                 Intent intent = new Intent(OnePhone.this, MainActivity.class);
                 finish();
                 startActivity(intent);
@@ -326,5 +332,9 @@ public class OnePhone extends Activity {
         AlertDialog dialog = cancleGame.create();
         dialog.show();
 
+    }
+
+    public void resetGraph(){
+        getSharedPreferences("SingleGraphHistory", Context.MODE_PRIVATE).edit().clear().apply();
     }
 }

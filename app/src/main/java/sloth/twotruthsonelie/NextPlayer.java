@@ -2,6 +2,7 @@ package sloth.twotruthsonelie;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,14 +10,12 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 
 public class NextPlayer extends Activity {
@@ -28,7 +27,8 @@ public class NextPlayer extends Activity {
     Boolean firstLie, secondLie, thirdLie;
     Animation animFadeIn;
     Typeface canter;
-
+    GraphHistory graphHistory;
+    boolean wasTrue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +51,6 @@ public class NextPlayer extends Activity {
         thirdTW.setTypeface(canter);
 
         switchPlayer = (Button) findViewById(R.id.switch_player);
-
 
         try {
             firstS = getIntent().getExtras().getString("firstS", null);
@@ -110,6 +109,28 @@ public class NextPlayer extends Activity {
 
                 SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
+
+                SharedPreferences graphHistorySP = getSharedPreferences("SingleGraphHistory", Context.MODE_PRIVATE);
+                if (!graphHistorySP.getString("GraphHistory", "err").equals("err")) {
+                    Log.d("GraphHistory", "good");
+                    graphHistory = new GraphHistory(graphHistorySP.getString("GraphHistory", null), "single");
+                } else {
+                    Log.d("GraphHistory", "bad");
+                    graphHistory = new GraphHistory("single");
+                }
+
+                SharedPreferences.Editor graphHistorySPEditor = graphHistorySP.edit();
+                Log.d("GraphHistory", String.valueOf(currentR.getInt("currentR", 0)) + String.valueOf(currentR.getInt("currentR", 0)%2));
+                if ((currentR.getInt("currentR", 0) % 2) == 0){
+                    Log.d("GraphHistory", "my");
+                    graphHistory.addMyHistory(wasTrue);
+                }else {
+                    Log.d("GraphHistory", "his");
+                    graphHistory.addHisHistory(wasTrue);
+                }
+                graphHistorySPEditor.putString("GraphHistory", graphHistory.encrypt()).commit();
+
+
                 try {
                     roundsS = SP.getString("setRounds", "0");
                     round = Integer.parseInt(roundsS) * 2 - 1;
@@ -145,7 +166,6 @@ public class NextPlayer extends Activity {
 
     }
 
-
     public void areYouSureDialogF() {
 
 
@@ -172,6 +192,8 @@ public class NextPlayer extends Activity {
                     SharedPreferences points = getSharedPreferences("playerPoints", MODE_PRIVATE);
                     SharedPreferences.Editor editor = points.edit();
                     SharedPreferences currentR = getSharedPreferences("currentR", MODE_PRIVATE);
+
+                    wasTrue = true;
 
                     try {
                         player1 = points.getInt("player1", 0);
@@ -201,6 +223,9 @@ public class NextPlayer extends Activity {
                     thirdTW.setClickable(false);
 
                 } else if (!secondLie) {
+
+                    wasTrue = false;
+
                     new CountDownTimer(2000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
@@ -222,6 +247,9 @@ public class NextPlayer extends Activity {
                     thirdTW.setClickable(false);
 
                 } else {
+
+                    wasTrue = false;
+
                     new CountDownTimer(2000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
@@ -282,6 +310,8 @@ public class NextPlayer extends Activity {
 
                     SharedPreferences currentR = getSharedPreferences("currentR", MODE_PRIVATE);
 
+                    wasTrue = true;
+
                     try {
                         player1 = points.getInt("player1", 0);
                     } catch (NullPointerException e) {
@@ -311,6 +341,8 @@ public class NextPlayer extends Activity {
                     thirdTW.setClickable(false);
 
                 } else if (!firstLie) {
+                    wasTrue = false;
+
                     new CountDownTimer(2000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
@@ -332,6 +364,8 @@ public class NextPlayer extends Activity {
                     thirdTW.setClickable(false);
 
                 } else {
+                    wasTrue = false;
+
                     new CountDownTimer(2000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
@@ -388,6 +422,8 @@ public class NextPlayer extends Activity {
 
 
                 if (!thirdLie) {
+                    wasTrue = true;
+
                     SharedPreferences points = getSharedPreferences("playerPoints", MODE_PRIVATE);
                     SharedPreferences.Editor editor = points.edit();
 
@@ -422,6 +458,7 @@ public class NextPlayer extends Activity {
                     thirdTW.setClickable(false);
 
                 } else if (!firstLie) {
+                    wasTrue = false;
 
                     new CountDownTimer(2000, 1000) {
 
@@ -444,6 +481,8 @@ public class NextPlayer extends Activity {
                     thirdTW.setClickable(false);
 
                 } else {
+                    wasTrue = false;
+
                     new CountDownTimer(2000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
@@ -498,6 +537,8 @@ public class NextPlayer extends Activity {
                 SharedPreferences.Editor editor2 = preferences.edit();
                 editor2.clear().apply();
 
+                resetGraph();
+
                 Intent main = new Intent(NextPlayer.this, MainActivity.class);
                 NextPlayer.this.finish();
                 startActivity(main);
@@ -517,6 +558,11 @@ public class NextPlayer extends Activity {
 //        super.onBackPressed();
 
     }
+
+    public void resetGraph(){
+        getSharedPreferences("SingleGraphHistory", Context.MODE_PRIVATE).edit().clear().apply();
+    }
+
 
     public void exitSession() {
 

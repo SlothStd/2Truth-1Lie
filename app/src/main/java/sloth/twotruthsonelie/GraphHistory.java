@@ -13,9 +13,7 @@ public class GraphHistory {
     private ArrayList<Boolean> myHistory;
     private ArrayList<Boolean> hisHistory;
     private ArrayList<Integer> lastScore;
-
     public final String matchID;
-
     private static final String TAG = "2T1L GraphHistory";
 
     public GraphHistory(String matchID) {
@@ -52,15 +50,14 @@ public class GraphHistory {
                 myHistory.add(false);
         }
         for (; i < chars.length; i++){
-            if (chars[i] == '~'){
-                break;
-            }
 
             if (chars[i] == '1')
                 hisHistory.add(true);
             else if (chars[i] == '0')
                 hisHistory.add(false);
         }
+
+        Log.d(TAG, "GraphHistory(): " + myHistory.toString() + " ; " + hisHistory.toString());
     }
 
 
@@ -118,6 +115,8 @@ public class GraphHistory {
 
     public void addHisHistory(boolean isWin){
         this.hisHistory.add(isWin);
+
+        Log.d(TAG, "addHisHistory(): " + hisHistory.toString());
     }
 
     public int hisWinCount(){
@@ -171,6 +170,8 @@ public class GraphHistory {
             else
                 s = s + "0";
         }
+
+        Log.d(TAG, "encrypt(): " + s);
 
         return s;
     }
