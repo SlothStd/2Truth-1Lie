@@ -229,13 +229,11 @@ public class NextPlayer extends Activity {
                     new CountDownTimer(2000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
-//                            
-//                            
+
                         }
 
                         public void onFinish() {
-//                            
-//                           
+
                         }
                     }.start();
 
