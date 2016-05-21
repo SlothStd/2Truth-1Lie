@@ -28,25 +28,23 @@ public class OnePhone extends Activity {
     TextView player1TW, player2TW;
     Animation fade_in;
     Button proceed;
-    Integer current_round, player1, player2;
+    Integer current_round;
     CheckBox firstTruth, firstLie;
     CheckBox secondTruth, secondLie;
     CheckBox thirdTruth, thirdLie;
     Integer height;
-    MainActivity main = new MainActivity();
     GraphHistory graphHistory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.one_phone);
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
 
         height = size.y;
-
-        setContentView(R.layout.one_phone);
 
         graphHistory = new GraphHistory("single");
 
@@ -276,10 +274,13 @@ public class OnePhone extends Activity {
 
                 Intent nextPlayer = new Intent(OnePhone.this, NextPlayer.class);
                 if (fString.matches("") || sString.matches("") || tString.matches("")) {
-                    snackbarEmpty.setActionTextColor(getResources().getColor(R.color.purple_ish));
+                    snackbarEmpty.setActionTextColor(getResources().getColor(R.color.white));
+                    snackbarEmpty.getView().setBackgroundColor(getResources().getColor(R.color.blueTransparent));
                     snackbarEmpty.setDuration(Snackbar.LENGTH_SHORT);
                     snackbarEmpty.show();
                 } else if (!first && !second && !third) {
+                    snackbarEmpty2.setActionTextColor(getResources().getColor(R.color.white));
+                    snackbarEmpty2.getView().setBackgroundColor(getResources().getColor(R.color.blueTransparent));
                     snackbarEmpty2.setDuration(Snackbar.LENGTH_SHORT);
                     snackbarEmpty2.show();
                 } else {
@@ -297,11 +298,13 @@ public class OnePhone extends Activity {
     @Override
     public void onBackPressed() {
 
-        AlertDialog.Builder cancleGame = new AlertDialog.Builder(OnePhone.this);
-        cancleGame.setMessage("Quit Game?");
-        cancleGame.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+        final CustomDialog custom_dialog = new CustomDialog();
+        custom_dialog.showDiaolg(OnePhone.this, "Exit", "Cancle", "Are you sure you want to exit?");
+        custom_dialog.positive.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(View v) {
+                custom_dialog.dialog.dismiss();
                 SharedPreferences points = getSharedPreferences("playerPoints", MODE_PRIVATE);
                 SharedPreferences.Editor editor = points.edit();
                 editor.clear().apply();
@@ -319,18 +322,9 @@ public class OnePhone extends Activity {
                 Intent intent = new Intent(OnePhone.this, MainActivity.class);
                 finish();
                 startActivity(intent);
-            }
-        });
-
-        cancleGame.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
 
             }
         });
-
-        AlertDialog dialog = cancleGame.create();
-        dialog.show();
 
     }
 

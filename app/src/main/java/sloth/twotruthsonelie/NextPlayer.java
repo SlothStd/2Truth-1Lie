@@ -16,6 +16,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class NextPlayer extends Activity {
@@ -120,11 +121,11 @@ public class NextPlayer extends Activity {
                 }
 
                 SharedPreferences.Editor graphHistorySPEditor = graphHistorySP.edit();
-                Log.d("GraphHistory", String.valueOf(currentR.getInt("currentR", 0)) + String.valueOf(currentR.getInt("currentR", 0)%2));
-                if ((currentR.getInt("currentR", 0) % 2) == 0){
+                Log.d("GraphHistory", String.valueOf(currentR.getInt("currentR", 0)) + String.valueOf(currentR.getInt("currentR", 0) % 2));
+                if ((currentR.getInt("currentR", 0) % 2) == 0) {
                     Log.d("GraphHistory", "my");
                     graphHistory.addMyHistory(wasTrue);
-                }else {
+                } else {
                     Log.d("GraphHistory", "his");
                     graphHistory.addHisHistory(wasTrue);
                 }
@@ -517,12 +518,12 @@ public class NextPlayer extends Activity {
     @Override
     public void onBackPressed() {
 
-        final AlertDialog.Builder toMain = new AlertDialog.Builder(NextPlayer.this);
-        toMain.setMessage("you are about to leave the game, all saved data will be lost, are you sure you want to proceed?");
-        toMain.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        final CustomDialog custom_dialog = new CustomDialog();
+        custom_dialog.showDiaolg(NextPlayer.this, "Exit", "Cancle", "Are you sure you want to exit?");
+        custom_dialog.positive.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-
+            public void onClick(View v) {
+                custom_dialog.dialog.dismiss();
                 SharedPreferences points = getSharedPreferences("playerPoints", MODE_PRIVATE);
                 SharedPreferences.Editor editor = points.edit();
                 editor.clear().apply();
@@ -537,27 +538,17 @@ public class NextPlayer extends Activity {
 
                 resetGraph();
 
-                Intent main = new Intent(NextPlayer.this, MainActivity.class);
-                NextPlayer.this.finish();
-                startActivity(main);
-            }
-        });
-
-        toMain.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(NextPlayer.this, MainActivity.class);
+                finish();
+                startActivity(intent);
 
             }
         });
-
-        AlertDialog dialog = toMain.create();
-        dialog.show();
-
-//        super.onBackPressed();
 
     }
 
-    public void resetGraph(){
+
+    public void resetGraph() {
         getSharedPreferences("SingleGraphHistory", Context.MODE_PRIVATE).edit().clear().apply();
     }
 

@@ -4,9 +4,11 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -23,11 +25,24 @@ public class Settings extends PreferenceActivity {
         addPreferencesFromResource(R.xml.settings);
         setTheme(R.style.whiteText);
 
+        PreferenceScreen screen = getPreferenceScreen();
+
         ListView listView = getListView();
 
         listView.setBackgroundColor(Color.TRANSPARENT);
         listView.setCacheColorHint(getResources().getColor(R.color.white));
         listView.setBackgroundColor(getResources().getColor(R.color.purple_ish));
+
+        PreferenceCategory margin = (PreferenceCategory) findPreference("margin");
+
+
+        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+        if (currentapiVersion >= Build.VERSION_CODES.KITKAT){
+
+        } else {
+            screen.removePreference(margin);
+        }
+
 
         Preference share = (Preference) findPreference("share");
         share.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

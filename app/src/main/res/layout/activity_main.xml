@@ -5,13 +5,6 @@
     android:background="@color/lighter_bg"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/kappa123"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="MP"
-        android:visibility="visible"/>
-
     <ImageView
         android:id="@+id/appNameLogo"
         android:layout_width="340dp"
@@ -29,7 +22,6 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_marginBottom="20dp"
-        android:background="@drawable/circle_button"
         android:text="Wifi"
         android:textColor="#ffffff"
         android:textSize="28sp"
@@ -41,7 +33,6 @@
         android:layout_height="60dp"
         android:layout_below="@+id/WiFi"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/circle_button"
         android:text="Bluetooth"
         android:textColor="#fff"
         android:textSize="28sp"
@@ -57,7 +48,6 @@
         android:stateListAnimator="@null"
         android:layout_marginRight="8dp"
         android:layout_marginTop="30dp"
-        android:background="@drawable/circle_button"
         android:textColor="#fff"
         android:textSize="28sp"
         android:visibility="gone" />
@@ -150,7 +140,6 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="0dp"
-        android:background="@drawable/layout_shadow"
         android:visibility="gone">
 
         <RelativeLayout
@@ -192,7 +181,6 @@
                 android:layout_marginTop="45dp"
                 android:max="500"
                 android:progress="0"
-                android:progressDrawable="@drawable/progressbar_level"
                 android:visibility="visible" />
 
             <TextView
@@ -237,7 +225,6 @@
                 android:layout_toLeftOf="@+id/anchor"
                 android:max="500"
                 android:progress="0"
-                android:progressDrawable="@drawable/correct_wrong_circle"
                 android:visibility="visible" />
 
             <ProgressBar
@@ -256,7 +243,6 @@
                 android:layout_marginTop="15dp"
                 android:max="500"
                 android:progress="0"
-                android:progressDrawable="@drawable/wrong_cricle"
                 android:visibility="visible" />
 
             <TextView
@@ -319,7 +305,6 @@
         android:stateListAnimator="@null"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="90dp"
-        android:background="@drawable/multi_circle_button"
         android:visibility="gone" />
 
     <ProgressBar
@@ -336,7 +321,6 @@
         android:background="@drawable/play"
         android:max="500"
         android:progress="0"
-        android:progressDrawable="@drawable/orange_progressbar"
         android:visibility="gone" />
 
     <Button
@@ -348,7 +332,6 @@
         android:layout_marginRight="20dp"
         android:layout_toLeftOf="@+id/playMULTI"
         android:layout_toStartOf="@+id/playMULTI"
-        android:background="@drawable/multi_circle_button"
         android:visibility="gone" />
 
     <ProgressBar
@@ -367,7 +350,6 @@
         android:background="@drawable/check_games"
         android:max="500"
         android:progress="0"
-        android:progressDrawable="@drawable/orange_progressbar"
         android:visibility="gone" />
 
     <Button
@@ -379,7 +361,6 @@
         android:layout_marginLeft="20dp"
         android:layout_toEndOf="@+id/playMULTI"
         android:layout_toRightOf="@+id/playMULTI"
-        android:background="@drawable/multi_circle_button"
         android:visibility="gone" />
 
     <ProgressBar
@@ -398,7 +379,6 @@
         android:background="@drawable/google_plus"
         android:max="500"
         android:progress="0"
-        android:progressDrawable="@drawable/orange_progressbar"
         android:visibility="gone" />
 
 </RelativeLayout>

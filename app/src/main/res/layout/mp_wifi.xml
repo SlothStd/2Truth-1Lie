@@ -343,7 +343,6 @@
                     <CheckBox
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:button="@drawable/custom_checkbox"
                         android:id="@+id/firstLie"
                         android:visibility="visible"
                         android:checked="false"/>
@@ -388,7 +387,6 @@
                     <CheckBox
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:button="@drawable/custom_checkbox"
                         android:id="@+id/secondLie"
                         android:checked="false"/>
 
@@ -432,7 +430,6 @@
                     <CheckBox
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:button="@drawable/custom_checkbox"
                         android:id="@+id/thirdLie"/>
 
                 </RelativeLayout>

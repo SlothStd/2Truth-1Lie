@@ -2,6 +2,10 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:windowBackground="@color/purple_ish" >
 
+    <PreferenceCategory
+        android:key="margin"
+        android:icon="@null"/>
+
     <ListPreference android:key="setRounds"
         android:title="Rounds"
         android:summary="Set rounds for singleplayer mode"
@@ -11,14 +15,10 @@
         android:entryValues="@array/rounds"
         android:defaultValue="false" />
 
-
-    <PreferenceScreen android:key="feedback"
-        android:title="Feedback"
-        android:textColor="@color/white"
-        android:summary="Let us know what you want to see in the upcomming update" >
-        <intent android:action="android.intent.action.VIEW"
-            android:data="mailto:slothstd@gmail.com">
-        </intent>
+    <PreferenceScreen android:key="howTo"
+        android:title="Friends"
+        android:summary="How to play with friends" >
+    android:textColor="@color/white"
     </PreferenceScreen>
 
     <PreferenceScreen android:key="share"
@@ -27,10 +27,13 @@
         android:summary="Share with friends to play with them" >
     </PreferenceScreen>
 
-    <PreferenceScreen android:key="howTo"
-        android:title="Friends"
-        android:summary="How to play with friends" >
-    android:textColor="@color/white"
+    <PreferenceScreen android:key="feedback"
+        android:title="Feedback"
+        android:textColor="@color/white"
+        android:summary="Let us know what you want to see in the upcomming update" >
+        <intent android:action="android.intent.action.VIEW"
+            android:data="mailto:slothstd@gmail.com">
+        </intent>
     </PreferenceScreen>
 
 </PreferenceScreen>

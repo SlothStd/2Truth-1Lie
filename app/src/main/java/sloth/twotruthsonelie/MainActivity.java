@@ -26,15 +26,12 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
-    Button onePhone, twoPhones, powerups, settings,
-            wifi, bt, googlePlusMULTI, checkGamesMULTI, playMULTI;
-    boolean is2PhoneOpen = false;
+    Button onePhone, twoPhones, powerups, settings;
 
     Animation fadeIn;
     Animation fadeInSlower;
     Animation fadeInSlowest;
     Animation slideUP, slideDOWN;
-    boolean isPressed = false;
     RelativeLayout levelInfo;
     ImageView logo;
     ObjectAnimator animation;
@@ -56,15 +53,10 @@ public class MainActivity extends Activity {
         onePhone = (Button) findViewById(R.id.Onephone);
         twoPhones = (Button) findViewById(R.id.Twophones);
         settings = (Button) findViewById(R.id.Settings);
-        wifi = (Button) findViewById(R.id.WiFi);
-        bt = (Button) findViewById(R.id.BT);
         powerups = (Button) findViewById(R.id.powerups);
         logo = (ImageView) findViewById(R.id.appNameLogo);
 
         ////////////////////////Buttony namiesto WIFI → Activita////////////////
-        checkGamesMULTI = (Button) findViewById(R.id.checkGamesMulti);
-        playMULTI = (Button) findViewById(R.id.playMULTI);
-        googlePlusMULTI = (Button) findViewById(R.id.googlePlusMULTI);
 
         fadeIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
         fadeInSlower = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_slower);
@@ -107,106 +99,6 @@ public class MainActivity extends Activity {
         });
 
 
-        playMULTI.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Toast.makeText(MainActivity.this, "watevah", Toast.LENGTH_SHORT).show();
-
-                animation = ObjectAnimator.ofInt(progressBarPlayMULTI, "progress", 0, 500);
-                animation.setDuration(700); //in milliseconds bruv
-                animation.setInterpolator(new DecelerateInterpolator());
-
-                new CountDownTimer(800, 700) {
-
-                    public void onTick(long millisUntilFinished) {
-                        animation.start();
-                    }
-
-                    public void onFinish() {
-
-                        /*
-                        * Tuto
-                        * daj
-                        * chujoviny
-                        * so Spustením hry
-                        * */
-
-                        Intent multi = new Intent(MainActivity.this, MpWifi.class);
-                        startActivity(multi);
-
-                        progressBarPlayMULTI.setProgress(0);
-                        animation.cancel();
-                    }
-                }.start();
-
-            }
-
-        });
-
-        checkGamesMULTI.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                final ObjectAnimator animation = ObjectAnimator.ofInt(progressBarCheckMULTI, "progress", 0, 500);
-                animation.setDuration(700); //in milliseconds bruv
-                animation.setInterpolator(new DecelerateInterpolator());
-
-                new CountDownTimer(800, 700) {
-
-                    public void onTick(long millisUntilFinished) {
-                        animation.start();
-                    }
-
-                    public void onFinish() {
-
-
-                        /*
-                        * Tuto
-                        * daj
-                        * chujoviny
-                        * s "CheckGames"
-                        * */
-
-                        progressBarCheckMULTI.setProgress(0);
-                        animation.cancel();
-                    }
-                }.start();
-
-            }
-        });
-
-        googlePlusMULTI.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                final ObjectAnimator animation = ObjectAnimator.ofInt(progressGooglePLus, "progress", 0, 500);
-                animation.setDuration(700); //in milliseconds bruv
-                animation.setInterpolator(new DecelerateInterpolator());
-
-                new CountDownTimer(800, 700) {
-
-                    public void onTick(long millisUntilFinished) {
-                        animation.start();
-                    }
-
-                    public void onFinish() {
-
-                        /*
-                        * Tuto
-                        * daj
-                        * chujoviny
-                        * s GooglePlusom
-                        * */
-
-                        progressGooglePLus.setProgress(0);
-                        animation.cancel();
-                    }
-                }.start();
-
-            }
-        });
 
         progressBar.setVisibility(View.VISIBLE);
 //        progressBar.startAnimation(fadeIn);
@@ -248,50 +140,10 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                final ObjectAnimator animation = ObjectAnimator.ofInt(progressBarMulti, "progress", 0, 500);
-                animation.setDuration(700); //in milliseconds bruv
-                animation.setInterpolator(new DecelerateInterpolator());
+                Intent multiplayer = new Intent(MainActivity.this, MpWifi.class);
+                MainActivity.this.finish();
+                startActivity(multiplayer);
 
-                new CountDownTimer(100, 1000) {
-
-                    public void onTick(long millisUntilFinished) {
-//                        animation.start();
-                    }
-
-                    public void onFinish() {
-
-
-                        checkGamesMULTI.clearAnimation();
-                        playMULTI.clearAnimation();
-                        googlePlusMULTI.clearAnimation();
-                        setSlideDOWN();
-
-                        progressBar.setProgress(0);
-                        progressBar.clearAnimation();
-                        progressBar.setVisibility(View.GONE);
-
-                        progressBarMulti.setProgress(0);
-                        animation.cancel();
-                        progressBarMulti.clearAnimation();
-                        progressBarMulti.setVisibility(View.GONE);
-
-                        is2PhoneOpen = true;
-
-                        onePhone.clearAnimation();
-                        onePhone.setVisibility(View.GONE);
-                        twoPhones.clearAnimation();
-                        twoPhones.setVisibility(View.GONE);
-                        settings.clearAnimation();
-
-
-//
-//                        wifi.setVisibility(View.VISIBLE);
-//                        wifi.setAnimation(fadeIn);
-//
-//                        bt.setVisibility(View.VISIBLE);
-//                        bt.setAnimation(fadeInSlower);
-                    }
-                }.start();
             }
         });
 
@@ -325,38 +177,6 @@ public class MainActivity extends Activity {
                 }.start();
             }
         });
-
-        wifi.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent singleplayer = new Intent(MainActivity.this, MpWifi.class);
-                startActivity(singleplayer);
-                MainActivity.this.finish();
-            }
-        });
-
-        ////
-        findViewById(R.id.kappa123).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent mp = new Intent(MainActivity.this, MpWifi.class);
-                startActivity(mp);
-                MainActivity.this.finish();
-            }
-        });
-        ///
-
-        bt.setOnClickListener(new View.OnClickListener() {
-
-
-            @Override
-            public void onClick(View v) {
-                Intent bluetooth = new Intent(MainActivity.this, Bluetooth.class);
-                startActivity(bluetooth);
-                MainActivity.this.finish();
-            }
-        });
     }
 
     private void setSlideUP() {
@@ -386,49 +206,6 @@ public class MainActivity extends Activity {
         }.start();
 
     }
-
-    private void setSlideDOWN() {
-
-
-//        new CountDownTimer(100, 500) {
-//
-//            public void onTick(long millisUntilFinished) {
-//            }
-//
-//            public void onFinish() {
-        powerups.setVisibility(View.VISIBLE);
-        powerups.setTranslationY(200);
-        powerups.animate().translationY(0);
-
-        levelInfo.setVisibility(View.VISIBLE);
-        levelInfo.setTranslationY(-600);
-        levelInfo.animate().translationY(0);
-
-        playMULTI.clearAnimation();
-        playMULTI.setVisibility(View.VISIBLE);
-        playMULTI.setAnimation(fadeInSlower);
-
-
-        checkGamesMULTI.clearAnimation();
-        checkGamesMULTI.setVisibility(View.VISIBLE);
-        checkGamesMULTI.setAnimation(fadeInSlower);
-
-        googlePlusMULTI.clearAnimation();
-        googlePlusMULTI.setVisibility(View.VISIBLE);
-        googlePlusMULTI.setAnimation(fadeInSlower);
-
-        progressBarPlayMULTI.setVisibility(View.VISIBLE);
-        progressBarPlayMULTI.setAnimation(fadeInSlower);
-
-        progressBarCheckMULTI.setVisibility(View.VISIBLE);
-        progressBarCheckMULTI.setAnimation(fadeInSlower);
-
-        progressGooglePLus.setVisibility(View.VISIBLE);
-        progressGooglePLus.setAnimation(fadeInSlower);
-    }
-
-//        }.start();
-//    }
 
 
     @Override

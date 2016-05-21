@@ -1491,4 +1491,11 @@ public class MpWifi extends Activity implements
             }.start();
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent toMenu = new Intent(MpWifi.this, MainActivity.class);
+        this.finish();
+        startActivity(toMenu);
+    }
 }
