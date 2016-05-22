@@ -55,12 +55,9 @@ public class ScoreActivity extends Activity {
         roundsS = SP.getString("setRounds", "0");
         round = Integer.parseInt(roundsS);
         round = round * 10000;
-        Toast.makeText(ScoreActivity.this, "rounds" + round, Toast.LENGTH_SHORT).show();
 
         player1 = points.getInt("player1", 0) * 10000;
-        Toast.makeText(ScoreActivity.this, "player1 " + player1, Toast.LENGTH_SHORT).show();
         player2 = points.getInt("player2", 0) * 10000;
-        Toast.makeText(ScoreActivity.this, "player2 " + player2, Toast.LENGTH_SHORT).show();
 
         percentage2 = (double) player2 / round;
         percentage1 = (double) player1 / round;
@@ -74,8 +71,6 @@ public class ScoreActivity extends Activity {
         percentageLeft.setText(String.valueOf(percentageInt1) + "%");
         percentageRight.setText(String.valueOf(percentageInt2) + "%");
 
-        Toast.makeText(ScoreActivity.this, "firstPercentage " + percentage1, Toast.LENGTH_SHORT).show();
-        Toast.makeText(ScoreActivity.this, "secondPercentage " + percentage2, Toast.LENGTH_SHORT).show();
 
         progressBarRight.setMax(round);
         progressBarLeft.setMax(round);

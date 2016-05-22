@@ -553,27 +553,6 @@ public class NextPlayer extends Activity {
     }
 
 
-    public void exitSession() {
-
-        AlertDialog.Builder exit = new AlertDialog.Builder(this);
-        exit.setMessage("You are about to leave your current session");
-
-        exit.setPositiveButton("EXIT", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                finish();
-            }
-        });
-
-
-        exit.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-    }
-
 }
 
 

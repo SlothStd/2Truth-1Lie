@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.view.Display;
@@ -16,8 +18,13 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 public class OnePhone extends Activity {
 
@@ -35,10 +42,24 @@ public class OnePhone extends Activity {
     Integer height;
     GraphHistory graphHistory;
 
+    ArrayList<Integer> backgrounds = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.one_phone);
+
+        backgrounds.add(R.drawable.bckg1);
+        backgrounds.add(R.drawable.bckg2);
+        backgrounds.add(R.drawable.bckg3);
+        backgrounds.add(R.drawable.bckg4);
+        backgrounds.add(R.drawable.bckg5);
+        backgrounds.add(R.drawable.bckg6);
+        backgrounds.add(R.drawable.bckg7);
+
+        Random rand = new Random();
+        int radnNum = rand.nextInt(backgrounds.size());
+        findViewById(R.id.linearLayout).setBackgroundResource(backgrounds.get(radnNum));
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -274,22 +295,33 @@ public class OnePhone extends Activity {
 
                 Intent nextPlayer = new Intent(OnePhone.this, NextPlayer.class);
                 if (fString.matches("") || sString.matches("") || tString.matches("")) {
+
                     snackbarEmpty.setActionTextColor(getResources().getColor(R.color.white));
                     snackbarEmpty.getView().setBackgroundColor(getResources().getColor(R.color.blueTransparent));
+                    View view = snackbarEmpty.getView();
+                    TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
+                    tv.setTextColor(Color.WHITE);
                     snackbarEmpty.setDuration(Snackbar.LENGTH_SHORT);
                     snackbarEmpty.show();
+
                 } else if (!first && !second && !third) {
+
                     snackbarEmpty2.setActionTextColor(getResources().getColor(R.color.white));
                     snackbarEmpty2.getView().setBackgroundColor(getResources().getColor(R.color.blueTransparent));
+                    View view = snackbarEmpty2.getView();
+                    TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
+                    tv.setTextColor(Color.WHITE);
                     snackbarEmpty2.setDuration(Snackbar.LENGTH_SHORT);
                     snackbarEmpty2.show();
+
                 } else {
-                    Toast.makeText(getApplicationContext(), " " + first + " " + second + " " + third, Toast.LENGTH_LONG).show();
+
                     nextPlayer.putExtra("firstS", firstS.getText().toString());
                     nextPlayer.putExtra("secondS", secondS.getText().toString());
                     nextPlayer.putExtra("thirdS", thirdS.getText().toString());
                     startActivity(nextPlayer);
                     finish();
+
                 }
             }
         });
