@@ -297,7 +297,7 @@ public class OnePhone extends Activity {
                 if (fString.matches("") || sString.matches("") || tString.matches("")) {
 
                     snackbarEmpty.setActionTextColor(getResources().getColor(R.color.white));
-                    snackbarEmpty.getView().setBackgroundColor(getResources().getColor(R.color.blueTransparent));
+                    snackbarEmpty.getView().setBackgroundColor(getResources().getColor(R.color.blue));
                     View view = snackbarEmpty.getView();
                     TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
                     tv.setTextColor(Color.WHITE);
@@ -307,7 +307,7 @@ public class OnePhone extends Activity {
                 } else if (!first && !second && !third) {
 
                     snackbarEmpty2.setActionTextColor(getResources().getColor(R.color.white));
-                    snackbarEmpty2.getView().setBackgroundColor(getResources().getColor(R.color.blueTransparent));
+                    snackbarEmpty2.getView().setBackgroundColor(getResources().getColor(R.color.coolRed));
                     View view = snackbarEmpty2.getView();
                     TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
                     tv.setTextColor(Color.WHITE);

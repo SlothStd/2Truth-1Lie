@@ -11,8 +11,9 @@
     <color name="truthTransparent">#429CCC65</color>
     <color name="orange">#ff5722</color>
 
-    <color name="lie">#EF5350</color>
-    <color name="lieTransparent">#84EF5350</color>
+    <color name="lie">#DA5F6A</color>
+    <color name="lieTransparent">#84DA5F6A</color>
+    <color name="coolRed">#DA5F6A</color>
 
     <color name="blue">#56adf8</color>
     <color name="blueTransparent">#8456adf8</color>

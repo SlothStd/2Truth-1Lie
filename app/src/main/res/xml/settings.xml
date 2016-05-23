@@ -13,7 +13,7 @@
         android:dialogTitle="Set Rounds"
         android:entries="@array/rounds"
         android:entryValues="@array/rounds"
-        android:defaultValue="false" />
+        android:defaultValue="1" />
 
     <PreferenceScreen android:key="howTo"
         android:title="Friends"

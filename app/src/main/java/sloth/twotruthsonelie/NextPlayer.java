@@ -331,7 +331,6 @@ public class NextPlayer extends Activity {
                         editor.putInt("player1", player1).apply();
                     }
 
-//                    Toast.makeText(NextPlayer.this, "CORRECT!", Toast.LENGTH_SHORT).show();
                     switchPlayer.setVisibility(View.VISIBLE);
                     secondTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
 
@@ -462,13 +461,9 @@ public class NextPlayer extends Activity {
                     new CountDownTimer(2000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
-//                            
-//                            
                         }
 
                         public void onFinish() {
-//                            
-//                           
                         }
                     }.start();
 
