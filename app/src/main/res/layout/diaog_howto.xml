@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/infoText"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/coolRed"
+        android:text="How To Play"
+        android:textColor="@color/white"
+        android:textSize="25sp"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:id="@+id/tutorialText"
+        android:layout_width="300dp"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:padding="13dp"
+        android:text=" -Make friends in real life \n -Add friends to your circles on
+        google plus \n -be awesome \n -make sure ou got your wifi
+         turned on "
+        android:textSize="19sp"
+        android:textColor="#000"
+        />
+
+    <Button
+        android:id="@+id/gotIt"
+        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_gravity="center"
+        android:text="Got it"
+        android:background="@android:color/transparent"
+        android:textColor="@color/coolRed"
+        android:textSize="15sp"/>
+
+
+
+    </LinearLayout>

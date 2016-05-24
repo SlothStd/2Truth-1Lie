@@ -70,6 +70,9 @@ public class Settings extends PreferenceActivity {
             @Override
             public boolean onPreferenceClick(Preference preference) {
 
+                DialogHowTo dialog = new DialogHowTo();
+                dialog.Dialog(Settings.this);
+
                 return true;
             }
         });
