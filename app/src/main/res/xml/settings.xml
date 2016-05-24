@@ -9,11 +9,11 @@
     <ListPreference android:key="setRounds"
         android:title="Rounds"
         android:summary="Set rounds for singleplayer mode"
-        android:textColor="@color/white"
+        android:textColor="@color/back_notTooMuchTransparent"
         android:dialogTitle="Set Rounds"
         android:entries="@array/rounds"
         android:entryValues="@array/rounds"
-        android:defaultValue="1" />
+        android:defaultValue="" />
 
     <PreferenceScreen android:key="howTo"
         android:title="Friends"

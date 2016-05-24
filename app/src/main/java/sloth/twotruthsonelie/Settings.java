@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
@@ -34,6 +35,8 @@ public class Settings extends PreferenceActivity {
         listView.setBackgroundColor(getResources().getColor(R.color.purple_ish));
 
         PreferenceCategory margin = (PreferenceCategory) findPreference("margin");
+        ListPreference rounds = (ListPreference) findPreference("setRounds");
+        rounds.setValueIndex(0);
 
 
         int currentapiVersion = android.os.Build.VERSION.SDK_INT;
@@ -49,11 +52,9 @@ public class Settings extends PreferenceActivity {
             @Override
             public boolean onPreferenceClick(Preference preference) {
 
-                Toast.makeText(Settings.this, "rekt", Toast.LENGTH_SHORT).show();
-
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_TEXT, "YOLO TEST KAPPA 123");
+                intent.putExtra(Intent.EXTRA_TEXT, "IT worky");
                 intent.setType("text/plain");
                 intent.setPackage("com.facebook.orca");
                 try {
