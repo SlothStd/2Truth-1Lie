@@ -5,16 +5,26 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
+import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
+import android.view.ViewConfiguration;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GridLabelRenderer;
+import com.jjoe64.graphview.LabelFormatter;
+import com.jjoe64.graphview.LegendRenderer;
+import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
@@ -36,6 +46,22 @@ public class ScoreActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.scoreboard_layout);
+
+        if (hasSoftKeys()){
+
+            final float scale = getResources().getDisplayMetrics().density;
+            int top = (int) (24 * scale + 0.5f);
+            int bottom = (int) (48 * scale + 0.5f);
+
+            findViewById(R.id.scores_main).setPadding(0, top, 0, bottom);
+        }else {
+            findViewById(R.id.scores_main).setPadding(0, 0, 0, 0);
+        }
+
+        if (getIntent().getBooleanExtra("custom", false)){
+            customGraph();
+            return;
+        }
 
         setUpGraph();
 
@@ -106,10 +132,8 @@ public class ScoreActivity extends Activity {
     public void setUpGraph(){
         SharedPreferences prefs = getSharedPreferences("SingleGraphHistory", Context.MODE_PRIVATE);
         if (!prefs.getString("GraphHistory", "err").equals("err")) {
-            Log.d("GraphHistory", "good");
             graphHistory = new GraphHistory(prefs.getString("GraphHistory", null), "single");
         } else {
-            Log.d("GraphHistory", "bad");
             graphHistory = new GraphHistory("single");
         }
 
@@ -124,6 +148,112 @@ public class ScoreActivity extends Activity {
 
         graph.addSeries(series1);
         graph.addSeries(series2);
+
+        series1.setTitle("Player 1");
+        series2.setTitle("Player 2");
+
+        series1.setThickness(10);
+        series2.setThickness(10);
+
+        graph.getLegendRenderer().setVisible(true);
+        graph.getLegendRenderer().setFixedPosition(0, 0);
+        graph.getLegendRenderer().setSpacing(20);
+        graph.getLegendRenderer().setBackgroundColor(getResources().getColor(android.R.color.transparent));
+
+        graph.getViewport().setXAxisBoundsManual(true);
+        graph.getViewport().setYAxisBoundsManual(true);
+
+        graph.getViewport().setMaxY(2);
+        graph.getViewport().setMinY(0);
+
+        graph.getViewport().setMaxX(2);
+        graph.getViewport().setMinX(0);
+
+        graph.getGridLabelRenderer().setNumHorizontalLabels(3);
+        graph.getGridLabelRenderer().setNumVerticalLabels(3);
+
+        graph.getGridLabelRenderer().setHorizontalLabelsColor(getResources().getColor(android.R.color.white));
+        graph.getGridLabelRenderer().setVerticalLabelsColor(getResources().getColor(android.R.color.white));
+
+        /* ? */ graph.getGridLabelRenderer().setGridColor(getResources().getColor(android.R.color.white));
+
+        graph.getGridLabelRenderer().setLabelFormatter(new LabelFormatter() {
+            @Override
+            public String formatLabel(double value, boolean isValueX) {
+                if (!isValueX && value == 0)
+                    return "";
+                else
+                    return String.valueOf(value).substring(0, 1);
+            }
+
+            @Override
+            public void setViewport(Viewport viewport) {
+            }
+        });
+    }
+
+    public void customGraph(){
+        GraphView graph = (GraphView) findViewById(R.id.graphSP);
+        graph.removeAllSeries();
+
+        LineGraphSeries<DataPoint> series1 = new LineGraphSeries<>(new DataPoint[]{
+                new DataPoint(0, 0),
+                new DataPoint(1, 1),
+                new DataPoint(2, 2)
+        });
+        LineGraphSeries<DataPoint> series2 = new LineGraphSeries<>(new DataPoint[]{
+                new DataPoint(0, 0),
+                new DataPoint(1, 0),
+                new DataPoint(2, 1)
+        });
+
+        series1.setColor(getResources().getColor(R.color.truth));
+        series2.setColor(getResources().getColor(R.color.lie));
+
+        graph.addSeries(series1);
+        graph.addSeries(series2);
+
+        series1.setTitle("Player 1");
+        series2.setTitle("Player 2");
+
+        series1.setThickness(10);
+        series2.setThickness(10);
+
+        graph.getLegendRenderer().setVisible(true);
+        graph.getLegendRenderer().setFixedPosition(0, 0);
+        graph.getLegendRenderer().setSpacing(20);
+        graph.getLegendRenderer().setBackgroundColor(getResources().getColor(android.R.color.transparent));
+
+        graph.getViewport().setXAxisBoundsManual(true);
+        graph.getViewport().setYAxisBoundsManual(true);
+
+        graph.getViewport().setMaxY(2);
+        graph.getViewport().setMinY(0);
+
+        graph.getViewport().setMaxX(2);
+        graph.getViewport().setMinX(0);
+
+        graph.getGridLabelRenderer().setNumHorizontalLabels(3);
+        graph.getGridLabelRenderer().setNumVerticalLabels(3);
+
+        graph.getGridLabelRenderer().setHorizontalLabelsColor(getResources().getColor(android.R.color.white));
+        graph.getGridLabelRenderer().setVerticalLabelsColor(getResources().getColor(android.R.color.white));
+
+        /* ? */ graph.getGridLabelRenderer().setGridColor(getResources().getColor(android.R.color.white));
+
+        graph.getGridLabelRenderer().setLabelFormatter(new LabelFormatter() {
+            @Override
+            public String formatLabel(double value, boolean isValueX) {
+                if (!isValueX && value == 0)
+                    return "";
+                else
+                    return String.valueOf(value).substring(0, 1);
+            }
+
+            @Override
+            public void setViewport(Viewport viewport) {
+            }
+        });
     }
 
     public void resetGraph(){
@@ -155,5 +285,32 @@ public class ScoreActivity extends Activity {
     protected void onStop() {
         resetGraph();
         super.onStop();
+    }
+
+    public boolean hasSoftKeys(){
+        boolean hasSoftwareKeys = true;
+
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.JELLY_BEAN_MR1){
+            Display d = this.getWindowManager().getDefaultDisplay();
+
+            DisplayMetrics realDisplayMetrics = new DisplayMetrics();
+            d.getRealMetrics(realDisplayMetrics);
+
+            int realHeight = realDisplayMetrics.heightPixels;
+            int realWidth = realDisplayMetrics.widthPixels;
+
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            d.getMetrics(displayMetrics);
+
+            int displayHeight = displayMetrics.heightPixels;
+            int displayWidth = displayMetrics.widthPixels;
+
+            hasSoftwareKeys =  (realWidth - displayWidth) > 0 || (realHeight - displayHeight) > 0;
+        }else{
+            boolean hasMenuKey = ViewConfiguration.get(this).hasPermanentMenuKey();
+            boolean hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
+            hasSoftwareKeys = !hasMenuKey && !hasBackKey;
+        }
+        return hasSoftwareKeys;
     }
 }

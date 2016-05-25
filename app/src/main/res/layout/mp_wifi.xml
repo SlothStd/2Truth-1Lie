@@ -96,6 +96,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/levelTextView"
                     android:text="Level 12"
                     android:textColor="@color/white"/>
 
@@ -104,7 +105,8 @@
                     android:layout_height="wrap_content"
                     android:max="100"
                     android:progress="50"
-                    style="?android:attr/progressBarStyleHorizontal"/>
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:id="@+id/levelProgress"/>
 
             </LinearLayout>
 
@@ -595,11 +597,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/you_win_lose"
                 android:text="You win/lose"/>
 
             <com.jjoe64.graphview.GraphView
-                android:layout_width="200dp"
-                android:layout_height="200dp"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
                 android:id="@+id/graphMP"/>
 
         </LinearLayout>

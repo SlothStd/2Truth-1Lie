@@ -1,9 +1,7 @@
 package sloth.twotruthsonelie;
 
 import android.util.Log;
-
 import com.jjoe64.graphview.series.DataPoint;
-
 import java.util.ArrayList;
 
 /**

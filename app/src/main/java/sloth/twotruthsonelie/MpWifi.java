@@ -48,8 +48,12 @@ import com.google.android.gms.games.multiplayer.Multiplayer;
 import com.google.android.gms.plus.Plus;
 import com.google.example.games.basegameutils.BaseGameUtils;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.LabelFormatter;
+import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+
+import org.w3c.dom.Text;
 
 
 /**
@@ -107,7 +111,11 @@ public class MpWifi extends Activity implements
 
     private int roundCount = 2;
 
-    private static final int winPoint = 1;
+    public final int winPoint = 1;
+    public final int gameFinishedXp = 10;
+    public final int winBonus = 15;
+    public final int tieBonus = 5;
+    public final int roundWinBonus = 2;
 
     private EditText firstS, secondS, thirdS;
     private CheckBox firstTruth, firstLie;
@@ -149,6 +157,8 @@ public class MpWifi extends Activity implements
     @Override
     protected void onStart() {
         super.onStart();
+
+        updateLevels();
 
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         try {
@@ -460,34 +470,8 @@ public class MpWifi extends Activity implements
                 findViewById(R.id.notYourTurn).setVisibility(View.GONE);
                 findViewById(R.id.gameFinished).setVisibility(View.VISIBLE);
 
-                if (matchData.getSentences().get(0).equals("`")){
-                    Log.d(TAG, "Finished2");
+                finishGame();
 
-                    graphHistory.compare(matchData.getScores(), player);
-                    setUpGraph();
-
-                    Games.TurnBasedMultiplayer.finishMatch(mGoogleApiClient, mMatch.getMatchId())
-                            .setResultCallback(new ResultCallback<TurnBasedMultiplayer.UpdateMatchResult>() {
-                                @Override
-                                public void onResult(TurnBasedMultiplayer.UpdateMatchResult result) {
-                                    processResult(result);
-                                }
-                            });
-                }
-                else {
-                    Log.d(TAG, "Finished1");
-
-                    setUpGraph();
-
-                    matchData.setSentences(new ArrayList<String>(Arrays.asList(new String[]{"`", "`", "`"})));
-                    Games.TurnBasedMultiplayer.finishMatch(mGoogleApiClient, mMatch.getMatchId(), matchData.convertData())
-                            .setResultCallback(new ResultCallback<TurnBasedMultiplayer.UpdateMatchResult>() {
-                                @Override
-                                public void onResult(TurnBasedMultiplayer.UpdateMatchResult result) {
-                                    processResult(result);
-                                }
-                            });
-                }
                 break;
         }
     }
@@ -554,6 +538,68 @@ public class MpWifi extends Activity implements
         mAlertDialog = alertDialogBuilder.create();
         // show it
         mAlertDialog.show();
+    }
+
+    public void finishGame(){
+        if (matchData.getSentences().get(0).equals("`")){
+            Log.d(TAG, "Finished2");
+
+            graphHistory.compare(matchData.getScores(), player);
+            setUpGraph();
+
+            Games.TurnBasedMultiplayer.finishMatch(mGoogleApiClient, mMatch.getMatchId())
+                    .setResultCallback(new ResultCallback<TurnBasedMultiplayer.UpdateMatchResult>() {
+                        @Override
+                        public void onResult(TurnBasedMultiplayer.UpdateMatchResult result) {
+                            processResult(result);
+                        }
+                    });
+        }
+        else {
+            Log.d(TAG, "Finished1");
+
+            setUpGraph();
+
+            matchData.setSentences(new ArrayList<String>(Arrays.asList(new String[]{"`", "`", "`"})));
+            Games.TurnBasedMultiplayer.finishMatch(mGoogleApiClient, mMatch.getMatchId(), matchData.convertData())
+                    .setResultCallback(new ResultCallback<TurnBasedMultiplayer.UpdateMatchResult>() {
+                        @Override
+                        public void onResult(TurnBasedMultiplayer.UpdateMatchResult result) {
+                            processResult(result);
+                        }
+                    });
+        }
+
+
+        SharedPreferences prefs = getSharedPreferences("Levels", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        int xp = prefs.getInt("xp", 0);
+
+        if (matchData.didIWin(player) == null){
+            ((TextView) findViewById(R.id.you_win_lose)).setText(R.string.its_a_tie);
+
+            xp += gameFinishedXp;
+            xp += tieBonus;
+            xp += (matchData.getScores(player) * roundWinBonus);
+        }
+        else if (matchData.didIWin(player)){
+            ((TextView) findViewById(R.id.you_win_lose)).setText(R.string.you_win);
+
+            xp += gameFinishedXp;
+            xp += winBonus;
+            xp += (matchData.getScores(player) * roundWinBonus);
+        }
+        else {
+            ((TextView) findViewById(R.id.you_win_lose)).setText(R.string.you_lose);
+
+            xp += gameFinishedXp;
+            xp += (matchData.getScores(player) * roundWinBonus);
+        }
+
+        editor.putInt("xp", xp).apply();
+
+        Log.d(TAG, String.valueOf(xp));
     }
 
     // Rematch dialog
@@ -704,6 +750,28 @@ public class MpWifi extends Activity implements
         ((TextView) findViewById(R.id.scoreTV)).setText(matchData.getScores().get(player) + " - " + matchData.getScores().get(Math.abs(player - 1)));
     }
 
+    public void updateLevels(){
+        SharedPreferences preferences = getSharedPreferences("Levels", Context.MODE_PRIVATE);
+        int xp = preferences.getInt("xp", 0),
+            a = 50,
+            level = 1,
+            previous = 0;
+
+        while(a <= xp){
+            level++;
+
+            previous = a;
+
+            a += a + (Math.round(0.1 * a));
+        }
+
+        ((TextView) findViewById(R.id.levelTextView)).setText("Level " + String.valueOf(level));
+
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.levelProgress);
+
+        progressBar.setMax(a);
+        progressBar.setProgress(xp - previous);
+    }
 
     // If you choose to rematch, then call it and wait for a response.
     public void rematch() {
@@ -1292,31 +1360,50 @@ public class MpWifi extends Activity implements
         series1.setColor(getResources().getColor(R.color.truth));
         series2.setColor(getResources().getColor(R.color.lie));
 
-        /*graph.getGridLabelRenderer().setNumHorizontalLabels(roundCount/2);
-        graph.getGridLabelRenderer().setNumVerticalLabels(roundCount/2);
+        graph.addSeries(series1);
+        graph.addSeries(series2);
+
+        series1.setTitle(myDisplayName);
+        series2.setTitle(hisDisplayName);
+
+        series1.setThickness(10);
+        series2.setThickness(10);
+
+        graph.getLegendRenderer().setVisible(true);
+        graph.getLegendRenderer().setFixedPosition(0, 0);
+        graph.getLegendRenderer().setSpacing(20);
+        graph.getLegendRenderer().setBackgroundColor(getResources().getColor(android.R.color.transparent));
+
+        graph.getViewport().setXAxisBoundsManual(true);
+        graph.getViewport().setYAxisBoundsManual(true);
+
+        graph.getViewport().setMaxY(roundCount/2);
+        graph.getViewport().setMinY(0);
+
+        graph.getViewport().setMaxX(roundCount/2);
+        graph.getViewport().setMinX(0);
+
+        graph.getGridLabelRenderer().setNumHorizontalLabels((roundCount/2) + 1);
+        graph.getGridLabelRenderer().setNumVerticalLabels((roundCount/2) + 1);
+
+        graph.getGridLabelRenderer().setHorizontalLabelsColor(getResources().getColor(android.R.color.white));
+        graph.getGridLabelRenderer().setVerticalLabelsColor(getResources().getColor(android.R.color.white));
+
+        /* ? */ graph.getGridLabelRenderer().setGridColor(getResources().getColor(android.R.color.white));
 
         graph.getGridLabelRenderer().setLabelFormatter(new LabelFormatter() {
             @Override
             public String formatLabel(double value, boolean isValueX) {
-                if (value == 0){
+                if (!isValueX && value == 0)
                     return "";
-                }
-                else {
-                    return String.valueOf((int) value);
-                }
+                else
+                    return String.valueOf(value).substring(0, 1);
             }
+
             @Override
-            public void setViewport(Viewport viewport) {}
+            public void setViewport(Viewport viewport) {
+            }
         });
-
-        LineGraphSeries<DataPoint> transparent = new LineGraphSeries<>(new DataPoint[]{
-                new DataPoint(roundCount/2, roundCount/2)
-        });
-        transparent.setColor(getResources().getColor(android.R.color.transparent));*/
-
-        graph.addSeries(series1);
-        graph.addSeries(series2);
-        //graph.addSeries(transparent);
     }
 
     public class Guessing{

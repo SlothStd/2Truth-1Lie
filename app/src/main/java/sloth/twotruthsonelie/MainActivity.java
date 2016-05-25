@@ -384,7 +384,6 @@ public class MainActivity extends Activity {
             }
 
         }.start();
-
     }
 
     private void setSlideDOWN() {

@@ -112,10 +112,8 @@ public class NextPlayer extends Activity {
 
                 SharedPreferences graphHistorySP = getSharedPreferences("SingleGraphHistory", Context.MODE_PRIVATE);
                 if (!graphHistorySP.getString("GraphHistory", "err").equals("err")) {
-                    Log.d("GraphHistory", "good");
                     graphHistory = new GraphHistory(graphHistorySP.getString("GraphHistory", null), "single");
                 } else {
-                    Log.d("GraphHistory", "bad");
                     graphHistory = new GraphHistory("single");
                 }
 

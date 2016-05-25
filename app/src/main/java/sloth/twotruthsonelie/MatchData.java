@@ -236,4 +236,17 @@ public class MatchData {
 
         return data;
     }
+
+    public Boolean didIWin(int player){
+        if (getScores(player) == getScores(Math.abs(player-1))){
+            return null;
+        }
+        else if (getScores(player) > getScores(Math.abs(player-1))){
+            return true;
+        }
+        else if (getScores(player) < getScores(Math.abs(player-1))){
+            return false;
+        }
+        return null;
+    }
 }
