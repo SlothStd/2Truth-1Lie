@@ -22,6 +22,7 @@
             android:weightSum="10">
 
             <LinearLayout
+                android:id="@+id/correct_wrong"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:orientation="horizontal"
@@ -29,6 +30,7 @@
                 android:layout_weight="1">
 
                 <TextView
+                    android:id="@+id/wrongTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Wrong"
@@ -37,6 +39,7 @@
                     android:layout_marginRight="50dp"/>
 
                 <TextView
+                    android:id="@+id/correctTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Correct"
@@ -345,7 +348,6 @@
                     <CheckBox
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:button="@drawable/custom_checkbox"
                         android:id="@+id/firstLie"
                         android:visibility="visible"
                         android:checked="false"/>
@@ -390,7 +392,6 @@
                     <CheckBox
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:button="@drawable/custom_checkbox"
                         android:id="@+id/secondLie"
                         android:checked="false"/>
 
@@ -434,7 +435,6 @@
                     <CheckBox
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:button="@drawable/custom_checkbox"
                         android:id="@+id/thirdLie"/>
 
                 </RelativeLayout>

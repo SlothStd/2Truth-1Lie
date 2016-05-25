@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.view.Display;
@@ -16,8 +18,13 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 public class OnePhone extends Activity {
 
@@ -28,25 +35,37 @@ public class OnePhone extends Activity {
     TextView player1TW, player2TW;
     Animation fade_in;
     Button proceed;
-    Integer current_round, player1, player2;
+    Integer current_round;
     CheckBox firstTruth, firstLie;
     CheckBox secondTruth, secondLie;
     CheckBox thirdTruth, thirdLie;
     Integer height;
-    MainActivity main = new MainActivity();
     GraphHistory graphHistory;
+
+    ArrayList<Integer> backgrounds = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.one_phone);
+
+        backgrounds.add(R.drawable.bckg1);
+        backgrounds.add(R.drawable.bckg2);
+        backgrounds.add(R.drawable.bckg3);
+        backgrounds.add(R.drawable.bckg4);
+        backgrounds.add(R.drawable.bckg5);
+        backgrounds.add(R.drawable.bckg6);
+        backgrounds.add(R.drawable.bckg7);
+
+        Random rand = new Random();
+        int radnNum = rand.nextInt(backgrounds.size());
+        findViewById(R.id.linearLayout).setBackgroundResource(backgrounds.get(radnNum));
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
 
         height = size.y;
-
-        setContentView(R.layout.one_phone);
 
         graphHistory = new GraphHistory("single");
 
@@ -62,6 +81,7 @@ public class OnePhone extends Activity {
 
 
         SharedPreferences currentR = getSharedPreferences("currentR", MODE_PRIVATE);
+
 
         current_round = currentR.getInt("currentR", 0);
         if ((current_round % 2) == 0) {
@@ -276,19 +296,33 @@ public class OnePhone extends Activity {
 
                 Intent nextPlayer = new Intent(OnePhone.this, NextPlayer.class);
                 if (fString.matches("") || sString.matches("") || tString.matches("")) {
-                    snackbarEmpty.setActionTextColor(getResources().getColor(R.color.purple_ish));
+
+                    snackbarEmpty.setActionTextColor(getResources().getColor(R.color.white));
+                    snackbarEmpty.getView().setBackgroundColor(getResources().getColor(R.color.blue));
+                    View view = snackbarEmpty.getView();
+                    TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
+                    tv.setTextColor(Color.WHITE);
                     snackbarEmpty.setDuration(Snackbar.LENGTH_SHORT);
                     snackbarEmpty.show();
+
                 } else if (!first && !second && !third) {
+
+                    snackbarEmpty2.setActionTextColor(getResources().getColor(R.color.white));
+                    snackbarEmpty2.getView().setBackgroundColor(getResources().getColor(R.color.coolRed));
+                    View view = snackbarEmpty2.getView();
+                    TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
+                    tv.setTextColor(Color.WHITE);
                     snackbarEmpty2.setDuration(Snackbar.LENGTH_SHORT);
                     snackbarEmpty2.show();
+
                 } else {
-                    Toast.makeText(getApplicationContext(), " " + first + " " + second + " " + third, Toast.LENGTH_LONG).show();
+
                     nextPlayer.putExtra("firstS", firstS.getText().toString());
                     nextPlayer.putExtra("secondS", secondS.getText().toString());
                     nextPlayer.putExtra("thirdS", thirdS.getText().toString());
                     startActivity(nextPlayer);
                     finish();
+
                 }
             }
         });
@@ -297,11 +331,13 @@ public class OnePhone extends Activity {
     @Override
     public void onBackPressed() {
 
-        AlertDialog.Builder cancleGame = new AlertDialog.Builder(OnePhone.this);
-        cancleGame.setMessage("Quit Game?");
-        cancleGame.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+        final CustomDialog custom_dialog = new CustomDialog();
+        custom_dialog.showDiaolg(OnePhone.this, "Exit", "Cancle", "Are you sure you want to exit? Your current game session will end.");
+        custom_dialog.positive.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(View v) {
+                custom_dialog.dialog.dismiss();
                 SharedPreferences points = getSharedPreferences("playerPoints", MODE_PRIVATE);
                 SharedPreferences.Editor editor = points.edit();
                 editor.clear().apply();
@@ -319,18 +355,9 @@ public class OnePhone extends Activity {
                 Intent intent = new Intent(OnePhone.this, MainActivity.class);
                 finish();
                 startActivity(intent);
-            }
-        });
-
-        cancleGame.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
 
             }
         });
-
-        AlertDialog dialog = cancleGame.create();
-        dialog.show();
 
     }
 

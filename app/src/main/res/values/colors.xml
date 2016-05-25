@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="black_overlay">#66000000</color>
+    <color name="back_notTooMuchTransparent">#76000000</color>
     <color name="white">#ffffff</color>
 
     <color name="purple_ish">#474f58</color>
@@ -11,8 +12,9 @@
     <color name="truthTransparent">#429CCC65</color>
     <color name="orange">#ff5722</color>
 
-    <color name="lie">#EF5350</color>
-    <color name="lieTransparent">#84EF5350</color>
+    <color name="lie">#DA5F6A</color>
+    <color name="lieTransparent">#84DA5F6A</color>
+    <color name="coolRed">#DA5F6A</color>
 
     <color name="blue">#56adf8</color>
     <color name="blueTransparent">#8456adf8</color>

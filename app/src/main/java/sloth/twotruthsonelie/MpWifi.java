@@ -14,6 +14,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -22,13 +24,16 @@ import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -124,8 +129,11 @@ public class MpWifi extends Activity implements
 
     CountDownTimer timer;
     ProgressBar loading1, loading2;
-
     ProgressDialog progress;
+
+    LinearLayout layout;
+    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,6 +151,13 @@ public class MpWifi extends Activity implements
         // Setup signin and signout buttons
         findViewById(R.id.sign_in_button).setOnClickListener(this);
         findViewById(R.id.sign_out_button).setOnClickListener(this);
+
+        params.setMargins(0,60,0,0);
+        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+        if (currentapiVersion >= Build.VERSION_CODES.KITKAT){
+            findViewById(R.id.correct_wrong).setLayoutParams(params);
+        } else {
+        }
 
         firstS = (EditText) findViewById(R.id.firstS);
         secondS = (EditText) findViewById(R.id.secondS);
@@ -1577,5 +1592,12 @@ public class MpWifi extends Activity implements
                 }
             }.start();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent toMenu = new Intent(MpWifi.this, MainActivity.class);
+        this.finish();
+        startActivity(toMenu);
     }
 }

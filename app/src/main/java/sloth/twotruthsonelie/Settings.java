@@ -4,9 +4,12 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -23,22 +26,35 @@ public class Settings extends PreferenceActivity {
         addPreferencesFromResource(R.xml.settings);
         setTheme(R.style.whiteText);
 
+        PreferenceScreen screen = getPreferenceScreen();
+
         ListView listView = getListView();
 
         listView.setBackgroundColor(Color.TRANSPARENT);
         listView.setCacheColorHint(getResources().getColor(R.color.white));
         listView.setBackgroundColor(getResources().getColor(R.color.purple_ish));
 
+        PreferenceCategory margin = (PreferenceCategory) findPreference("margin");
+        ListPreference rounds = (ListPreference) findPreference("setRounds");
+        rounds.setValueIndex(0);
+
+
+        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+        if (currentapiVersion >= Build.VERSION_CODES.KITKAT){
+
+        } else {
+            screen.removePreference(margin);
+        }
+
+
         Preference share = (Preference) findPreference("share");
         share.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
 
-                Toast.makeText(Settings.this, "rekt", Toast.LENGTH_SHORT).show();
-
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_TEXT, "YOLO TEST KAPPA 123");
+                intent.putExtra(Intent.EXTRA_TEXT, "IT worky");
                 intent.setType("text/plain");
                 intent.setPackage("com.facebook.orca");
                 try {
@@ -54,6 +70,9 @@ public class Settings extends PreferenceActivity {
         howTo.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
+
+                DialogHowTo dialog = new DialogHowTo();
+                dialog.Dialog(Settings.this);
 
                 return true;
             }

@@ -1,214 +1,180 @@
 <?xml version="1.0" encoding="utf-8"?>
-<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bckg7"
     android:orientation="vertical"
-    android:background="@drawable/kamene"
-    android:theme="@style/nevidno">
+    android:theme="@style/nevidno"
+    android:weightSum="4">
 
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_x="262dp"
-            android:layout_y="0dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true">
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_x="0dp"
-                android:layout_y="480dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true">
+    <TextView
+        android:id="@+id/player1"
+        android:layout_width="90dp"
+        android:layout_height="33dp"
+        android:layout_below="@+id/thirdTruth"
+        android:layout_marginLeft="-12dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/player_indicator"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="player 1"
+        android:textColor="#ffffff"
+        android:textSize="12sp"
+        android:visibility="gone" />
 
 
-                <Button
-                    android:layout_width="220dp"
-                    android:layout_height="60dp"
-                    android:background="@drawable/rounded_button"
-                    android:text="PROCEED"
-                    android:textColor="#fff"
-                    android:textSize="20sp"
-                    android:id="@+id/proceed"
-                    android:layout_below="@+id/thirdS"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="35dp" />
+    <TextView
+        android:id="@+id/player2"
+        android:layout_width="90dp"
+        android:layout_height="33dp"
+        android:layout_marginRight="-12dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/player_indicator"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="player 2"
+        android:textColor="#ffffff"
+        android:textSize="12sp"
+        android:visibility="gone"
+        android:layout_gravity="right" />
 
-                <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@color/truth"
-                    android:visibility="gone"
-                    android:id="@+id/thirdTruth"
-                    android:layout_marginRight="22dp"
-                    android:layout_marginEnd="22dp"
-                    android:layout_alignTop="@+id/thirdLie"
-                    android:layout_toLeftOf="@+id/proceed"
-                    android:layout_toStartOf="@+id/proceed" />
+    <CheckBox
+        android:id="@+id/thirdTruth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/thirdLie"
+        android:layout_marginEnd="22dp"
+        android:layout_marginRight="22dp"
+        android:layout_toLeftOf="@+id/proceed"
+        android:layout_toStartOf="@+id/proceed"
+        android:background="@color/truth"
+        android:visibility="gone" />
 
-                <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@color/truth"
-                    android:visibility="gone"
-                    android:id="@+id/secondTruth"
-                    android:layout_below="@+id/firstTruth"
-                    android:layout_alignLeft="@+id/thirdTruth"
-                    android:layout_alignStart="@+id/thirdTruth"
-                    android:layout_marginTop="119dp" />
+    <CheckBox
+        android:id="@+id/secondTruth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/thirdTruth"
+        android:layout_alignStart="@+id/thirdTruth"
+        android:layout_below="@+id/firstTruth"
+        android:layout_marginTop="119dp"
+        android:background="@color/truth"
+        android:visibility="gone" />
 
-                <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:background="@color/truth"
-                    android:id="@+id/firstTruth"
-                    android:layout_marginTop="103dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignLeft="@+id/secondTruth"
-                    android:layout_alignStart="@+id/secondTruth" />
+    <CheckBox
+        android:id="@+id/firstTruth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/secondTruth"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/secondTruth"
+        android:layout_marginTop="103dp"
+        android:background="@color/truth"
+        android:visibility="gone" />
 
-                <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:button="@drawable/custom_checkbox"
-                    android:id="@+id/thirdLie"
-                    android:layout_alignStart="@+id/secondLie"
-                    android:layout_alignTop="@+id/thirdS"
-                    android:layout_toRightOf="@+id/thirdS"
-                    android:visibility="gone"
-                    android:layout_marginTop="25dp" />
+    <CheckBox
+        android:id="@+id/thirdLie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/secondLie"
+        android:layout_alignTop="@+id/thirdS"
+        android:layout_marginTop="25dp"
+        android:layout_toRightOf="@+id/thirdS"
+        android:visibility="gone" />
 
-                <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:button="@drawable/custom_checkbox"
-                    android:id="@+id/firstLie"
-                    android:layout_alignTop="@+id/firstS"
-                    android:layout_toEndOf="@+id/firstS"
-                    android:layout_marginTop="25dp"
-                    android:layout_marginLeft="-85dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_toRightOf="@+id/firstS"
-                    android:visibility="gone"
-                    android:checked="false" />
+    <CheckBox
+        android:id="@+id/firstLie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/firstS"
+        android:layout_marginLeft="-85dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="25dp"
+        android:layout_toEndOf="@+id/firstS"
+        android:layout_toRightOf="@+id/firstS"
+        android:checked="false"
+        android:visibility="gone" />
 
-                <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:button="@drawable/custom_checkbox"
-                    android:id="@+id/secondLie"
-                    android:layout_alignStart="@+id/firstLie"
-                    android:layout_marginBottom="26dp"
-                    android:layout_alignTop="@+id/secondS"
-                    android:visibility="gone"
-                    android:layout_marginTop="25dp"
-                    android:layout_toRightOf="@+id/secondS" />
+    <CheckBox
+        android:id="@+id/secondLie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/secondS"
+        android:layout_marginBottom="26dp"
+        android:layout_marginTop="25dp"
+        android:layout_toRightOf="@+id/secondS"
+        android:visibility="gone" />
 
-                <EditText
-                    android:layout_width="fill_parent"
-                    android:layout_height="130dp"
-                    android:textColor="#ffffff"
-                    android:textSize="20sp"
-                    android:gravity="center_horizontal|top"
-                    android:background="@drawable/custom_edittext_truth"
-                    android:id="@+id/firstS"
-                    android:autoText="false"
-                    android:paddingTop="5dp"
-                    android:layout_alignStart="@+id/secondS"
-                    android:layout_marginTop="70dp"
-                    android:textAlignment="center"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginRight="20dp" />
+    <EditText
+        android:id="@+id/firstS"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:padding="5dp"
+        android:gravity="center_horizontal"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="15dp"
+        android:layout_weight="1"
+        android:background="@drawable/custom_edittext_truth"
+        android:paddingTop="5dp"
+        android:textAlignment="center"
+        android:textColor="#ffffff"
+        android:textSize="20sp" />
 
-                <EditText
-                    android:layout_width="fill_parent"
-                    android:layout_height="130dp"
-                    android:textColor="#ffffff"
-                    android:textSize="20sp"
-                    android:gravity="center_horizontal|top"
-                    android:background="@drawable/custom_edittext_truth"
-                    android:id="@+id/secondS"
-                    android:paddingTop="5dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_below="@+id/firstS"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginBottom="15dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="20dp"
-                    android:textAlignment="center"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginRight="20dp" />
+    <EditText
+        android:id="@+id/secondS"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:padding="5dp"
+        android:gravity="center_horizontal"
+        android:layout_weight="1"
+        android:background="@drawable/custom_edittext_truth"
+        android:paddingTop="5dp"
+        android:textAlignment="center"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
 
-                <EditText
-                    android:layout_width="fill_parent"
-                    android:layout_height="130dp"
-                    android:textColor="#ffffff"
-                    android:textSize="20sp"
-                    android:gravity="center_horizontal|top"
-                    android:background="@drawable/custom_edittext_truth"
-                    android:id="@+id/thirdS"
-                    android:paddingTop="5dp"
-                    android:layout_below="@+id/secondS"
-                    android:layout_marginTop="10dp"
-                    android:layout_alignLeft="@+id/secondS"
-                    android:textAlignment="center"
-                    android:layout_alignRight="@+id/secondS"
-                    android:layout_alignEnd="@+id/secondS"
-                    android:layout_marginLeft="15dp" />
+        />
 
-                <EditText
-                    android:layout_width="90dp"
-                    android:layout_height="33dp"
-                    android:id="@+id/player2"
-                    android:textColor="#ffffff"
-                    android:background="@drawable/player_indicator"
-                    android:text="player 2"
-                    android:textSize="12sp"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginTop="30dp"
-                    android:layout_marginRight="-8dp"
-                    android:visibility="gone" />
-
-                <EditText
-                    android:layout_width="90dp"
-                    android:layout_height="33dp"
-                    android:id="@+id/player1"
-                    android:layout_toLeftOf="@+id/proceed"
-                    android:layout_toRightOf="@+id/secondTruth"
-                    android:layout_toEndOf="@+id/secondTruth"
-                    android:textColor="#ffffff"
-                    android:background="@drawable/player_indicator"
-                    android:text="player 1"
-                    android:textSize="12sp"
-                    android:layout_below="@+id/thirdTruth"
-                    android:layout_marginTop="30dp"
-                    android:layout_marginLeft="-8dp"
-                    android:layout_alignParentStart="false"
-                    android:layout_alignParentLeft="false"
-                    android:layout_alignParentBottom="false"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:visibility="gone" />
-
-            </RelativeLayout>
+    <EditText
+        android:id="@+id/thirdS"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="15dp"
+        android:padding="5dp"
+        android:layout_marginRight="15dp"
+        android:layout_weight="1"
+        android:background="@drawable/custom_edittext_truth"
+        android:gravity="center_horizontal"
+        android:paddingTop="5dp"
+        android:textAlignment="center"
+        android:textColor="#ffffff"
+        android:textSize="20sp" />
 
 
-        </RelativeLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:layout_weight="1">
 
-    </RelativeLayout>
+        <Button
+            android:id="@+id/proceed"
+            android:layout_width="220dp"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:background="@drawable/rounded_button"
+            android:text="PROCEED"
+            android:textColor="#fff"
+            android:textSize="20sp" />
+    </LinearLayout>
 
 
-</AbsoluteLayout>
+
+
+</LinearLayout>

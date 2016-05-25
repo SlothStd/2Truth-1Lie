@@ -1,404 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/lighter_bg"
-    android:orientation="vertical">
-
-    <Button
-        android:id="@+id/kappa123"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="MP"
-        android:visibility="visible"/>
+    android:orientation="vertical"
+    android:weightSum="3">
 
     <ImageView
         android:id="@+id/appNameLogo"
-        android:layout_width="340dp"
+        android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="70dp"
-        android:background="@drawable/title"
+        android:layout_weight="1"
+        android:src="@drawable/title"
         android:visibility="visible" />
 
-    <Button
-        android:id="@+id/WiFi"
-        android:layout_width="200dp"
-        android:layout_height="60dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/circle_button"
-        android:text="Wifi"
-        android:textColor="#ffffff"
-        android:textSize="28sp"
-        android:visibility="gone" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/Onephone"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/single"
+            android:textColor="#fff"
+            android:textSize="28sp"
+            android:visibility="visible" />
+
+        <Button
+            android:id="@+id/Twophones"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/multi"
+            android:textColor="#fff"
+            android:textSize="28sp"
+            android:visibility="visible" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+    </LinearLayout>
 
     <Button
-        android:id="@+id/BT"
-        android:layout_width="200dp"
-        android:layout_height="60dp"
-        android:layout_below="@+id/WiFi"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/circle_button"
-        android:text="Bluetooth"
-        android:textColor="#fff"
-        android:textSize="28sp"
-        android:visibility="gone" />
-
-    <Button
-        android:id="@+id/Settings"
-        android:layout_width="41dp"
-        android:layout_height="41dp"
-        android:layout_alignLeft="@+id/progressBarSett"
-        android:layout_alignStart="@+id/progressBarSett"
-        android:layout_marginLeft="0dp"
-        android:stateListAnimator="@null"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/circle_button"
-        android:textColor="#fff"
-        android:textSize="28sp"
-        android:visibility="gone" />
-
-    <ProgressBar
-        android:id="@+id/progressBarSett"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="41dp"
-        android:layout_height="41dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/settings"
-        android:max="500"
-        android:progress="0"
-        android:progressDrawable="@drawable/red_progressbar"
-        android:visibility="gone" />
-
-    <Button
-        android:id="@+id/Twophones"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
-        android:stateListAnimator="@null"
-        android:layout_alignLeft="@+id/progressBarSett"
-        android:layout_alignRight="@+id/progressBarMulti"
-        android:layout_alignStart="@+id/progressBarMulti"
-        android:layout_below="@+id/appNameLogo"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="85dp"
-        android:background="@drawable/multi"
-        android:textColor="#fff"
-        android:textSize="28sp"
-        android:visibility="visible" />
-
-    <Button
-        android:id="@+id/Onephone"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
-        android:stateListAnimator="@null"
-        android:layout_alignEnd="@+id/progressBar"
-        android:layout_alignRight="@+id/progressBar"
-        android:layout_alignTop="@+id/Twophones"
-        android:layout_marginEnd="4.8dp"
-        android:layout_marginRight="4dp"
-        android:background="@drawable/single"
-        android:textColor="#fff"
-        android:textSize="28sp"
-        android:visibility="visible" />
-
-    <ProgressBar
-        android:id="@+id/progressBarMulti"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_alignRight="@+id/appNameLogo"
-        android:layout_alignTop="@+id/progressBar"
-        android:layout_marginEnd="35dp"
-        android:layout_marginRight="35dp"
-        android:layout_toLeftOf="@+id/progressBarSett"
-        android:layout_toStartOf="@+id/progressBarSett"
-        android:background="@drawable/multi"
-        android:max="500"
-        android:progress="0"
-        android:progressDrawable="@drawable/red_progressbar"
-        android:visibility="visible" />
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_below="@+id/appNameLogo"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="80dp"
-        android:layout_toLeftOf="@+id/progressBarMulti"
-        android:background="@drawable/play"
-        android:max="500"
-        android:progress="0"
-        android:progressDrawable="@drawable/red_progressbar"
-        android:visibility="visible" />
-
-    <RelativeLayout
-        android:id="@+id/level"
+        android:id="@+id/settings"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="0dp"
-        android:background="@drawable/layout_shadow"
-        android:visibility="gone">
-
-        <RelativeLayout
-            android:id="@+id/MAmulti"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_marginTop="0dp"
-            android:visibility="visible">
-
-            <View
-                android:id="@+id/anchor"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_centerInParent="true"
-                android:visibility="visible" />
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/progressBarLevel"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="25dp"
-                android:text="LEVEL"
-                android:textColor="@color/white"
-                android:textSize="15sp"
-                android:visibility="visible" />
-
-            <ProgressBar
-                android:id="@+id/progressBarLevel"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="15dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="40dp"
-                android:layout_marginTop="45dp"
-                android:max="500"
-                android:progress="0"
-                android:progressDrawable="@drawable/progressbar_level"
-                android:visibility="visible" />
-
-            <TextView
-                android:id="@+id/correct"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/progressBarLevel"
-                android:layout_marginRight="40dp"
-                android:layout_marginTop="20dp"
-                android:layout_toLeftOf="@+id/anchor"
-                android:text="CORRECT"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:visibility="visible" />
-
-            <TextView
-                android:id="@+id/wrong"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/progressBarLevel"
-                android:layout_marginLeft="0dp"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="20dp"
-                android:layout_toEndOf="@+id/anchor"
-                android:text="WRONG"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:visibility="visible" />
-
-            <ProgressBar
-                android:id="@+id/progressCorrect"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignLeft="@+id/correct"
-                android:layout_alignRight="@+id/correct"
-                android:layout_below="@+id/correct"
-                android:layout_marginBottom="20dp"
-                android:layout_marginLeft="-10dp"
-                android:layout_marginRight="-10dp"
-                android:layout_marginTop="15dp"
-                android:layout_toLeftOf="@+id/anchor"
-                android:max="500"
-                android:progress="0"
-                android:progressDrawable="@drawable/correct_wrong_circle"
-                android:visibility="visible" />
-
-            <ProgressBar
-                android:id="@+id/progressWrong"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignEnd="@+id/wrong"
-                android:layout_alignLeft="@+id/wrong"
-                android:layout_alignRight="@+id/wrong"
-                android:layout_alignStart="@+id/wrong"
-                android:layout_below="@+id/wrong"
-                android:layout_marginBottom="20dp"
-                android:layout_marginLeft="-18dp"
-                android:layout_marginRight="-18dp"
-                android:layout_marginTop="15dp"
-                android:max="500"
-                android:progress="0"
-                android:progressDrawable="@drawable/wrong_cricle"
-                android:visibility="visible" />
-
-            <TextView
-                android:id="@+id/editText"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_alignBottom="@+id/progressCorrect"
-                android:layout_alignEnd="@+id/progressCorrect"
-                android:layout_alignLeft="@+id/correct"
-                android:layout_alignRight="@+id/correct"
-                android:layout_alignStart="@+id/progressCorrect"
-                android:layout_alignTop="@+id/progressCorrect"
-                android:layout_below="@+id/correct"
-                android:layout_marginBottom="0dp"
-                android:layout_marginTop="0dp"
-                android:background="@android:color/transparent"
-                android:ems="10"
-                android:gravity="center"
-                android:inputType="number"
-                android:text="25"
-                android:textColor="@color/white"
-                android:textSize="40sp"
-                android:visibility="visible" />
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/progressWrong"
-                android:layout_alignLeft="@+id/progressWrong"
-                android:layout_alignRight="@+id/progressWrong"
-                android:layout_alignTop="@+id/progressWrong"
-                android:gravity="center"
-                android:text="15"
-                android:textColor="@color/white"
-                android:textSize="40sp"
-                android:visibility="visible" />
-
-        </RelativeLayout>
-
-    </RelativeLayout>
-
-    <Button
-        android:id="@+id/powerups"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:background="#05aaf4"
-        android:text="POWERUPS"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/blueTransparent"
+        android:gravity="center"
+        android:text="SETTINGS"
         android:textColor="@color/white"
-        android:textSize="20sp"
-        android:visibility="gone" />
-
-    <Button
-        android:id="@+id/playMULTI"
-        android:layout_width="105dp"
-        android:layout_height="105dp"
-        android:layout_below="@+id/level"
-        android:stateListAnimator="@null"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="90dp"
-        android:background="@drawable/multi_circle_button"
-        android:visibility="gone" />
-
-    <ProgressBar
-        android:id="@+id/progressBarPlayMULTI"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="109dp"
-        android:layout_height="109dp"
-        android:layout_below="@+id/level"
-        android:layout_marginLeft="-5dp"
-        android:layout_marginRight="-5dp"
-        android:layout_marginTop="88dp"
-        android:layout_toLeftOf="@+id/googlePlusMULTI"
-        android:layout_toRightOf="@+id/checkGamesMulti"
-        android:background="@drawable/play"
-        android:max="500"
-        android:progress="0"
-        android:progressDrawable="@drawable/orange_progressbar"
-        android:visibility="gone" />
-
-    <Button
-        android:id="@+id/checkGamesMulti"
-        android:layout_width="90dp"
-        android:layout_height="90dp"
-        android:layout_alignBottom="@+id/playMULTI"
-        android:stateListAnimator="@null"
-        android:layout_marginRight="20dp"
-        android:layout_toLeftOf="@+id/playMULTI"
-        android:layout_toStartOf="@+id/playMULTI"
-        android:background="@drawable/multi_circle_button"
-        android:visibility="gone" />
-
-    <ProgressBar
-        android:id="@+id/progressCheckMULTI"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="95dp"
-        android:layout_height="95dp"
-        android:layout_alignBottom="@+id/checkGamesMulti"
-        android:layout_alignLeft="@+id/checkGamesMulti"
-        android:layout_alignRight="@+id/checkGamesMulti"
-        android:layout_alignTop="@+id/checkGamesMulti"
-        android:layout_marginBottom="-4dp"
-        android:layout_marginLeft="-4dp"
-        android:layout_marginRight="-4dp"
-        android:layout_marginTop="-4dp"
-        android:background="@drawable/check_games"
-        android:max="500"
-        android:progress="0"
-        android:progressDrawable="@drawable/orange_progressbar"
-        android:visibility="gone" />
-
-    <Button
-        android:id="@+id/googlePlusMULTI"
-        android:layout_width="90dp"
-        android:layout_height="90dp"
-        android:layout_alignBottom="@+id/playMULTI"
-        android:stateListAnimator="@null"
-        android:layout_marginLeft="20dp"
-        android:layout_toEndOf="@+id/playMULTI"
-        android:layout_toRightOf="@+id/playMULTI"
-        android:background="@drawable/multi_circle_button"
-        android:visibility="gone" />
-
-    <ProgressBar
-        android:id="@+id/progressGooglePluskMULTI"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="95dp"
-        android:layout_height="95dp"
-        android:layout_alignBottom="@+id/googlePlusMULTI"
-        android:layout_alignLeft="@+id/googlePlusMULTI"
-        android:layout_alignRight="@+id/googlePlusMULTI"
-        android:layout_alignTop="@+id/googlePlusMULTI"
-        android:layout_marginBottom="-4dp"
-        android:layout_marginLeft="-4dp"
-        android:layout_marginRight="-4dp"
-        android:layout_marginTop="-4dp"
-        android:background="@drawable/google_plus"
-        android:max="500"
-        android:progress="0"
-        android:progressDrawable="@drawable/orange_progressbar"
-        android:visibility="gone" />
-
-</RelativeLayout>
+        android:textSize="20sp" />
+</LinearLayout>
