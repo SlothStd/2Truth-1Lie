@@ -2,8 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/MpWifi_main_layout">
+    android:id="@+id/MpWifi_main_layout"
+    android:background="@color/darker_bg">
 
+    <!-- Buttons -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -82,6 +84,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="75%"
+                    android:id="@+id/winRatioTv"
                     android:layout_centerInParent="true"
                     android:textSize="25sp"
                     android:textStyle="bold"
@@ -258,26 +261,24 @@
         </LinearLayout>
 
     </LinearLayout>
+    <!-- Buttons -->
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:weightSum="10">
+        android:weightSum="10"
+        android:id="@+id/gameScreenBg"
+        android:background="@android:color/transparent">
 
+        <!-- Score -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="horizontal"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="16dp">
-
-            <!-- Score -->
-            <ImageView
-                android:layout_width="64px"
-                android:layout_height="64px"
-                android:id="@+id/p_1_IV"/>
+            android:padding="8dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -307,157 +308,74 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="vertical"
-            android:weightSum="7"
+            android:weightSum="11"
             android:id="@+id/setTexts"
             android:layout_weight="9"
             android:visibility="gone">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <EditText
+                android:id="@+id/firstS"
+                android:layout_width="fill_parent"
                 android:layout_height="0dp"
+                android:padding="5dp"
+                android:gravity="center"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="15dp"
+                android:layout_weight="3"
+                android:background="@drawable/custom_edittext_truth"
+                android:paddingTop="5dp"
+                android:textColor="#ffffff"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/secondS"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:padding="5dp"
+                android:gravity="center"
+                android:layout_weight="3"
+                android:background="@drawable/custom_edittext_truth"
+                android:paddingTop="5dp"
+                android:textColor="#ffffff"
+                android:textSize="20sp"/>
+
+            <EditText
+                android:id="@+id/thirdS"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="15dp"
+                android:padding="5dp"
+                android:layout_marginRight="15dp"
+                android:layout_weight="3"
+                android:background="@drawable/custom_edittext_truth"
+                android:gravity="center"
+                android:paddingTop="5dp"
+                android:textColor="#ffffff"
+                android:textSize="20sp" />
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_gravity="center_horizontal|center_vertical"
                 android:layout_weight="2"
-                android:orientation="horizontal"
-                android:padding="6dp"
-                android:gravity="center_vertical"
-                android:weightSum="5">
-
-                <EditText
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="4"
-                    android:textColor="#ffffff"
-                    android:textSize="20sp"
-                    android:gravity="center_horizontal|top"
-                    android:background="@drawable/custom_edittext_truth"
-                    android:id="@+id/firstS"
-                    android:padding="5dp"/>
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center">
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        android:background="@color/truth"
-                        android:id="@+id/firstTruth"/>
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/firstLie"
-                        android:visibility="visible"
-                        android:checked="false"/>
-
-                </RelativeLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2"
-                android:orientation="horizontal"
-                android:padding="6dp"
-                android:gravity="center_vertical"
-                android:weightSum="5">
-
-                <EditText
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:textColor="#ffffff"
-                    android:textSize="20sp"
-                    android:gravity="center_horizontal|top"
-                    android:background="@drawable/custom_edittext_truth"
-                    android:id="@+id/secondS"
-                    android:padding="5dp"
-                    android:layout_weight="4"/>
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center">
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@color/truth"
-                        android:visibility="gone"
-                        android:id="@+id/secondTruth"/>
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/secondLie"
-                        android:checked="false"/>
-
-                </RelativeLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2"
-                android:orientation="horizontal"
-                android:padding="6dp"
-                android:gravity="center_vertical"
-                android:weightSum="5">
-
-                <EditText
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:textColor="#ffffff"
-                    android:textSize="20sp"
-                    android:gravity="center_horizontal|top"
-                    android:background="@drawable/custom_edittext_truth"
-                    android:id="@+id/thirdS"
-                    android:padding="5dp"
-                    android:layout_weight="4"/>
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center">
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@color/truth"
-                        android:visibility="gone"
-                        android:id="@+id/thirdTruth"/>
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/thirdLie"/>
-
-                </RelativeLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:paddingBottom="8dp">
 
                 <Button
-                    android:layout_width="match_parent"
+                    android:id="@+id/proceed"
+                    android:layout_width="220dp"
                     android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal|center_vertical"
                     android:background="@drawable/rounded_button"
                     android:text="PROCEED"
                     android:onClick="onDoneClicked"
-                    android:textColor="#000"
-                    android:textSize="20sp"
-                    android:id="@+id/proceed" />
-
+                    android:textColor="#fff"
+                    android:textSize="20sp" />
             </LinearLayout>
 
         </LinearLayout>
@@ -471,6 +389,7 @@
             android:orientation="vertical"
             android:layout_weight="9"
             android:weightSum="3"
+            android:padding="10dp"
             android:visibility="gone">
 
             <TextView
@@ -484,8 +403,6 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:paddingTop="5dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
                 android:gravity="center_horizontal"/>
 
 
@@ -500,9 +417,7 @@
                 android:background="@drawable/custom_edittext_truth"
                 android:paddingRight="10dp"
                 android:paddingTop="5dp"
-                android:layout_marginTop="40dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
                 android:gravity="center_horizontal" />
 
 
@@ -517,9 +432,7 @@
                 android:paddingRight="10dp"
                 android:paddingTop="5dp"
                 android:background="@drawable/custom_edittext_truth"
-                android:layout_marginTop="40dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
                 android:gravity="center_horizontal" />
 
         </LinearLayout>
@@ -528,8 +441,9 @@
         <!-- Not your turn Screen -->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="visible"
+            android:layout_height="0dp"
+            android:layout_weight="9"
+            android:visibility="gone"
             android:orientation="vertical"
             android:background="@color/darker_bg"
             android:gravity="center"
@@ -588,22 +502,149 @@
         <!-- Game finished Screen -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="9"
             android:visibility="gone"
             android:orientation="vertical"
             android:gravity="center"
-            android:id="@+id/gameFinished">
+            android:id="@+id/gameFinished"
+            android:weightSum="2">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/you_win_lose"
-                android:text="You win/lose"/>
-
-            <com.jjoe64.graphview.GraphView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:id="@+id/graphMP"/>
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="8dp">
+
+                <com.jjoe64.graphview.GraphView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/graphMP"/>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/player1TV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Player 1"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp"
+                    android:layout_above="@+id/leftProgress"
+                    android:layout_alignLeft="@+id/leftProgress"
+                    android:textAlignment="center"
+                    android:layout_alignRight="@+id/leftProgress" />
+
+                <TextView
+                    android:id="@+id/leftProgressPercentage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="100%"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp"
+                    android:layout_alignLeft="@+id/leftProgress"
+                    android:textAlignment="center"
+                    android:gravity="center"
+                    android:layout_alignRight="@+id/leftProgress"
+                    android:layout_alignTop="@+id/leftProgress"
+                    android:layout_alignBottom="@+id/leftProgress" />
+
+                <ProgressBar
+                    android:id="@+id/leftProgressBckg"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:progressDrawable="@drawable/scoreboard_progressbar_bckg"
+                    android:layout_centerHorizontal="true"
+                    android:layout_toLeftOf="@+id/buttomMiddle"
+                    android:layout_centerVertical="true"
+                    android:padding="1dp"
+                    android:layout_marginBottom="8dp"
+                    android:max="100"
+                    android:progress="100" />
+
+                <ProgressBar
+                    android:id="@+id/leftProgress"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:progressDrawable="@drawable/scoreboard_progressbar"
+                    android:layout_centerHorizontal="true"
+                    android:layout_toLeftOf="@+id/buttomMiddle"
+                    android:layout_centerVertical="true"
+                    android:padding="1dp"
+                    android:layout_marginBottom="8dp"
+                    android:progress="0" />
+
+
+                <TextView
+                    android:id="@+id/buttomMiddle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"/>
+
+                <TextView
+                    android:id="@+id/player2TV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Player 2"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp"
+                    android:layout_above="@+id/rightProgress"
+                    android:layout_alignLeft="@+id/rightProgress"
+                    android:textAlignment="center"
+                    android:layout_alignRight="@+id/rightProgress" />
+
+                <ProgressBar
+                    android:id="@+id/rightProgressBckg"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:layout_toRightOf="@+id/buttomMiddle"
+                    android:progressDrawable="@drawable/scoreboard_progressbar_bckg"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:padding="1dp"
+                    android:layout_marginBottom="8dp"
+                    android:max="100"
+                    android:progress="100" />
+
+                <TextView
+                    android:id="@+id/rightProgressPercentage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="100%"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp"
+                    android:layout_alignLeft="@+id/rightProgress"
+                    android:textAlignment="center"
+                    android:gravity="center"
+                    android:layout_alignRight="@+id/rightProgress"
+                    android:layout_alignTop="@+id/rightProgress"
+                    android:layout_alignBottom="@+id/rightProgress" />
+
+
+                <ProgressBar
+                    android:id="@+id/rightProgress"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:layout_toRightOf="@+id/buttomMiddle"
+                    android:progressDrawable="@drawable/scoreboard_progressbar"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:padding="1dp"
+                    android:layout_marginBottom="8dp"
+                    android:progress="0" />
+
+            </RelativeLayout>
 
         </LinearLayout>
         <!-- Game finished Screen -->

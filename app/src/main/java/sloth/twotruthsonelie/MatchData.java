@@ -28,6 +28,14 @@ public class MatchData {
         this.currentRound = currentRound;
     }
 
+    public MatchData(byte[] data){
+        getData(data);
+    }
+
+    public MatchData(String data){
+        getData(data);
+    }
+
     public MatchData() {
         this.sentenceAuthor = "";
         this.sentences = new ArrayList<>();
@@ -93,7 +101,7 @@ public class MatchData {
      *
      * ID~1|2|3~pos~score|score~round
      **/
-    public void getData(byte[] data){
+    private void getData(byte[] data){
         String string = new String(data, Charset.forName("UTF-16"));
         char[] chars = string.toCharArray();
 
@@ -174,7 +182,7 @@ public class MatchData {
         Log.d(TAG, "Received: " + string);
     }
 
-    public void getData(String data){
+    private void getData(String data){
         getData(data.getBytes(Charset.forName("UTF-16")));
     }
 
