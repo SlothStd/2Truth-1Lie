@@ -94,34 +94,34 @@ public class ScoreActivity extends Activity {
         int percentageInt2 = (int) percentage2;
         int percentageInt1 = (int) percentage1;
 
-        percentageLeft.setText(String.valueOf(percentageInt1) + "%");
-        percentageRight.setText(String.valueOf(percentageInt2) + "%");
+//        percentageLeft.setText(String.valueOf(percentageInt1) + "%");
+//        percentageRight.setText(String.valueOf(percentageInt2) + "%");
 
 
         progressBarRight.setMax(round);
         progressBarLeft.setMax(round);
 
-        timer = new CountDownTimer(500, 500) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-
-
-            }
-
-            @Override
-            public void onFinish() {
-
-                animation = ObjectAnimator.ofInt(progressBarLeft, "progress", 0, player1);
-                animation.setDuration(3000);
-                animation.setInterpolator(new AccelerateDecelerateInterpolator());
-                animation.start();
-
-                animation = ObjectAnimator.ofInt(progressBarRight, "progress", 0, player2);
-                animation.setDuration(3000);
-                animation.setInterpolator(new AccelerateDecelerateInterpolator());
-                animation.start();
-            }
-        }.start();
+//        timer = new CountDownTimer(500, 500) {
+//            @Override
+//            public void onTick(long millisUntilFinished) {
+//
+//
+//            }
+//
+//            @Override
+//            public void onFinish() {
+//
+//                animation = ObjectAnimator.ofInt(progressBarLeft, "progress", 0, player1);
+//                animation.setDuration(3000);
+//                animation.setInterpolator(new AccelerateDecelerateInterpolator());
+//                animation.start();
+//
+//                animation = ObjectAnimator.ofInt(progressBarRight, "progress", 0, player2);
+//                animation.setDuration(3000);
+//                animation.setInterpolator(new AccelerateDecelerateInterpolator());
+//                animation.start();
+//            }
+//        }.start();
     }
 
     public void setUpGraph(){

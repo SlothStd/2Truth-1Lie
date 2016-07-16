@@ -25,7 +25,6 @@ public class CustomDialog {
 
     public Button positive, negative;
     public Dialog dialog;
-    Map<String, Integer> map = new HashMap<String, Integer>();
 
     public void showDiaolg(Activity activity, String positiveButton, String negativeButton, String message) {
 
@@ -34,10 +33,6 @@ public class CustomDialog {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.custom_dialog);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-        ImageView image = (ImageView) dialog.findViewById(R.id.image);
-
-
 
         TextView text = (TextView) dialog.findViewById(R.id.dialogText);
         text.setText(message);

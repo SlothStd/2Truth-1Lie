@@ -57,28 +57,29 @@
                 android:layout_weight="8">
 
                 <ProgressBar
-                    android:id="@+id/fakeProgressJustBecauseIcan"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:progress="0"
-                    android:max="120000"
-                    android:progressDrawable="@drawable/fake_progress"
-                    android:layout_marginBottom="10dp" />
-
-                <ProgressBar
                     android:id="@+id/progressbarScore"
                     style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    android:progress="999990"
+                    android:progress="120000"
+                    android:max="120000"
+                    android:progressDrawable="@drawable/scoreboard_progressbar_bckg"
+                    android:layout_marginBottom="0dp" />
+
+                <ProgressBar
+                    android:id="@+id/fakeProgressJustBecauseIcan"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:progress="70000"
                     android:max="120000"
                     android:progressDrawable="@drawable/scoreboard_progressbar"
-                    android:layout_marginBottom="10dp" />
+                    android:layout_marginBottom="0dp" />
+
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -88,7 +89,7 @@
                     android:layout_centerInParent="true"
                     android:textSize="25sp"
                     android:textStyle="bold"
-                    android:textColor="@color/truth"/>
+                    android:textColor="@color/white"/>
 
             </RelativeLayout>
 
