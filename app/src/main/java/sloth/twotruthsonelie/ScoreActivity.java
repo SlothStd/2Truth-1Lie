@@ -15,7 +15,9 @@ import android.view.Display;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,11 +43,20 @@ public class ScoreActivity extends Activity {
     CountDownTimer timer;
     ObjectAnimator animation;
     GraphHistory graphHistory;
+    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.scoreboard_layout);
+
+        params.setMargins(0, 20, 0, 0);
+        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+        if (currentapiVersion >= Build.VERSION_CODES.KITKAT) {
+            findViewById(R.id.graphSP).setLayoutParams(params);
+        } else {
+        }
 
         if (hasSoftKeys()){
 
@@ -66,7 +77,9 @@ public class ScoreActivity extends Activity {
         setUpGraph();
 
         player1TW = (TextView) findViewById(R.id.player1TV);
+        player1TW.setTextColor(getResources().getColor(R.color.blue));
         player2TW = (TextView) findViewById(R.id.player2TV);
+        player2TW.setTextColor(getResources().getColor(R.color.white));
 
         progressBarLeft = (ProgressBar) findViewById(R.id.leftProgress);
         progressBarRight = (ProgressBar) findViewById(R.id.rightProgress);
@@ -94,34 +107,43 @@ public class ScoreActivity extends Activity {
         int percentageInt2 = (int) percentage2;
         int percentageInt1 = (int) percentage1;
 
-//        percentageLeft.setText(String.valueOf(percentageInt1) + "%");
-//        percentageRight.setText(String.valueOf(percentageInt2) + "%");
+        try {
+            percentageLeft.setText(String.valueOf(percentageInt1) + "%");
+        } catch (NullPointerException e) {
+            percentageLeft.setText("0%");
+        }
+
+        try {
+            percentageRight.setText(String.valueOf(percentageInt2) + "%");
+        } catch (NullPointerException e ) {
+            percentageRight.setText("0%");
+        }
 
 
         progressBarRight.setMax(round);
         progressBarLeft.setMax(round);
 
-//        timer = new CountDownTimer(500, 500) {
-//            @Override
-//            public void onTick(long millisUntilFinished) {
-//
-//
-//            }
-//
-//            @Override
-//            public void onFinish() {
-//
-//                animation = ObjectAnimator.ofInt(progressBarLeft, "progress", 0, player1);
-//                animation.setDuration(3000);
-//                animation.setInterpolator(new AccelerateDecelerateInterpolator());
-//                animation.start();
-//
-//                animation = ObjectAnimator.ofInt(progressBarRight, "progress", 0, player2);
-//                animation.setDuration(3000);
-//                animation.setInterpolator(new AccelerateDecelerateInterpolator());
-//                animation.start();
-//            }
-//        }.start();
+        timer = new CountDownTimer(500, 500) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+
+            }
+
+            @Override
+            public void onFinish() {
+
+                animation = ObjectAnimator.ofInt(progressBarLeft, "progress", 0, player1);
+                animation.setDuration(3000);
+                animation.setInterpolator(new AccelerateDecelerateInterpolator());
+                animation.start();
+
+                animation = ObjectAnimator.ofInt(progressBarRight, "progress", 0, player2);
+                animation.setDuration(3000);
+                animation.setInterpolator(new AccelerateDecelerateInterpolator());
+                animation.start();
+            }
+        }.start();
     }
 
     public void setUpGraph(){
@@ -202,8 +224,8 @@ public class ScoreActivity extends Activity {
                 new DataPoint(2, 1)
         });
 
-        series1.setColor(getResources().getColor(R.color.truth));
-        series2.setColor(getResources().getColor(R.color.lie));
+        series1.setColor(getResources().getColor(R.color.blue));
+        series2.setColor(getResources().getColor(R.color.white));
 
         graph.addSeries(series1);
         graph.addSeries(series2);

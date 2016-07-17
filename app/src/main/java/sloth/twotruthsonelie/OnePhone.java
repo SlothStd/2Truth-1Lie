@@ -49,7 +49,6 @@ public class OnePhone extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.one_phone);
 
-        backgrounds.add(R.drawable.bckg1);
         backgrounds.add(R.drawable.bckg2);
         backgrounds.add(R.drawable.bckg3);
         backgrounds.add(R.drawable.bckg4);
