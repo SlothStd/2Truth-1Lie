@@ -75,8 +75,7 @@
                     android:layout_height="match_parent"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    android:progress="70000"
-                    android:max="120000"
+                    android:max="1000000"
                     android:progressDrawable="@drawable/multi_progressbar"
                     android:layout_marginBottom="0dp" />
 

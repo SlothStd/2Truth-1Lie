@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -24,6 +25,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -122,8 +124,11 @@ public class MpWifi extends Activity implements
     int totalWins, totalLoses;
 
     CountDownTimer timer;
-    ProgressBar loading1, loading2;
+    ProgressBar loading1, loading2, score;
     ProgressDialog progress;
+    ObjectAnimator animation;
+    CountDownTimer timer2;
+    int points;
 
     LinearLayout layout;
     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -133,6 +138,31 @@ public class MpWifi extends Activity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mp_wifi);
+
+        score = (ProgressBar) findViewById(R.id.fakeProgressJustBecauseIcan);
+        score.setRotation(-90);
+        score.setMax(1000000); //100*10k ↓
+        points = 700000; //daj ten int *10k aby bola animacia smooth
+
+        timer2 = new CountDownTimer(1000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+                score.setProgress(0);
+
+            }
+
+            @Override
+            public void onFinish() {
+
+                animation = new ObjectAnimator().ofInt(score, "progress", 0, points); //alebo nahrať "points" so svojim intom
+                animation.setDuration(2000);
+                animation.setInterpolator(new AccelerateDecelerateInterpolator());
+                animation.start();
+
+            }
+        }.start();
+
 
         // Create the Google API Client with access to Plus and Games
         mGoogleApiClient = new GoogleApiClient.Builder(this)
