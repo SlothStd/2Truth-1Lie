@@ -2,16 +2,20 @@ package sloth.twotruthsonelie;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -23,13 +27,15 @@ public class NextPlayer extends Activity {
 
     String firstS, secondS, thirdS, roundsS;
     TextView firstTW, secondTW, thirdTW, playerGuessing;
-    Button switchPlayer;
+    Button switchPlayer, positive, negative;
     Integer round, current_round, player1, player2;
     Boolean firstLie, secondLie, thirdLie;
     Animation animFadeIn;
     Typeface canter;
     GraphHistory graphHistory;
     boolean wasTrue;
+    public Dialog dialogGame;
+    DialogHowTo dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,21 +174,15 @@ public class NextPlayer extends Activity {
     public void areYouSureDialogF() {
 
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setMessage("Are you sure?");
-
-        setTitleColor(getResources().getColor(R.color.truth));
-
-
-        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+        Dialog();
+        positive.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(View v) {
+                dialogGame.dismiss();
 
                 firstTW.setBackground(getResources().getDrawable(R.drawable.custom_edittext_clicked));
 
                 SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
-
                 firstLie = preferences.getBoolean("firstLie", false);
                 secondLie = preferences.getBoolean("secondLie", false);
                 thirdLie = preferences.getBoolean("thirdLie", false);
@@ -262,35 +262,29 @@ public class NextPlayer extends Activity {
 
                     switchPlayer.setVisibility(View.VISIBLE);
                     thirdTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
+
                 }
+
             }
         });
 
-        builder.setNegativeButton("BACK", new DialogInterface.OnClickListener() {
+        negative.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
+            public void onClick(View v) {
+                dialogGame.dismiss();
             }
         });
 
-        builder.show();
     }
 
 
     public void areYouSureDialogS() {
 
-
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setMessage("Are you sure?");
-
-        setTitleColor(getResources().getColor(R.color.truth));
-
-
-        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+        Dialog();
+        positive.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-
+            public void onClick(View v) {
+                dialogGame.dismiss();
                 secondTW.setBackground(getResources().getDrawable(R.drawable.custom_edittext_clicked));
 
                 SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
@@ -342,13 +336,13 @@ public class NextPlayer extends Activity {
                     new CountDownTimer(2000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
-//                            
-//                            
+//
+//
                         }
 
                         public void onFinish() {
-//                            
-//                           
+//
+//
                         }
                     }.start();
 
@@ -365,13 +359,13 @@ public class NextPlayer extends Activity {
                     new CountDownTimer(2000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
-//                            
-//                            
+//
+//
                         }
 
                         public void onFinish() {
-//                            
-//                           
+//
+//
                         }
                     }.start();
 
@@ -385,29 +379,23 @@ public class NextPlayer extends Activity {
             }
         });
 
-        builder.setNegativeButton("BACK", new DialogInterface.OnClickListener() {
+        negative.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
+            public void onClick(View v) {
+                dialogGame.dismiss();
             }
         });
 
-        builder.show();
     }
 
 
     public void areYouSureDialogT() {
 
-
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setMessage("Are you sure?");
-        setTitleColor(getResources().getColor(R.color.truth));
-
-        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+        Dialog();
+        positive.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-
+            public void onClick(View v) {
+                dialogGame.dismiss();
                 thirdTW.setBackground(getResources().getDrawable(R.drawable.custom_edittext_clicked));
 
                 SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
@@ -430,6 +418,7 @@ public class NextPlayer extends Activity {
                     } catch (NullPointerException e) {
                         player1 = 0;
                     }
+
                     try {
                         player2 = points.getInt("player2", 0);
                     } catch (NullPointerException e) {
@@ -478,13 +467,13 @@ public class NextPlayer extends Activity {
                     new CountDownTimer(2000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
-//                            
-//                            
+//
+//
                         }
 
                         public void onFinish() {
-//                            
-//                           
+//
+//
                         }
                     }.start();
 
@@ -498,14 +487,12 @@ public class NextPlayer extends Activity {
             }
         });
 
-        builder.setNegativeButton("BACK", new DialogInterface.OnClickListener() {
+        negative.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
+            public void onClick(View v) {
+                dialogGame.dismiss();
             }
         });
-
-        builder.show();
     }
 
     @Override
@@ -540,6 +527,19 @@ public class NextPlayer extends Activity {
 
     }
 
+    private void Dialog() {
+
+        dialogGame = new Dialog(NextPlayer.this);
+        dialogGame.setCancelable(true);
+        dialogGame.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogGame.setContentView(R.layout.custom_dialog_game);
+        dialogGame.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialogGame.show();
+
+        positive = (Button) dialogGame.findViewById(R.id.Yes);
+        negative = (Button) dialogGame.findViewById(R.id.No);
+
+    }
 
     public void resetGraph() {
         getSharedPreferences("SingleGraphHistory", Context.MODE_PRIVATE).edit().clear().apply();
@@ -547,5 +547,6 @@ public class NextPlayer extends Activity {
 
 
 }
+
 
 
