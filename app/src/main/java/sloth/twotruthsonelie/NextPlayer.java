@@ -19,6 +19,7 @@ import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +27,7 @@ import android.widget.Toast;
 public class NextPlayer extends Activity {
 
     String firstS, secondS, thirdS, roundsS;
-    TextView firstTW, secondTW, thirdTW, playerGuessing;
+    TextView firstTW, secondTW, thirdTW, isGuessing;
     Button switchPlayer, positive, negative;
     Integer round, current_round, player1, player2;
     Boolean firstLie, secondLie, thirdLie;
@@ -35,7 +36,8 @@ public class NextPlayer extends Activity {
     GraphHistory graphHistory;
     boolean wasTrue;
     public Dialog dialogGame;
-    DialogHowTo dialog;
+    private ProgressBar loading1, loading2;
+    private CountDownTimer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +47,7 @@ public class NextPlayer extends Activity {
         animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
         canter = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/canter.otf");
 
-        playerGuessing = (TextView) findViewById(R.id.playerGuessing);
-        playerGuessing.setTypeface(canter);
+        isGuessing = (TextView) findViewById(R.id.IsGuessingTW);
 
         firstTW = (TextView) findViewById(R.id.firstTW);
         firstTW.setTypeface(canter);
@@ -56,6 +57,11 @@ public class NextPlayer extends Activity {
 
         thirdTW = (TextView) findViewById(R.id.thirdTW);
         thirdTW.setTypeface(canter);
+
+        loading1 = (ProgressBar) findViewById(R.id.progress1);
+        loading2 = (ProgressBar) findViewById(R.id.progress2);
+
+        progressLoading();
 
         switchPlayer = (Button) findViewById(R.id.switch_player);
 
@@ -215,6 +221,9 @@ public class NextPlayer extends Activity {
                     }
 
                     switchPlayer.setVisibility(View.VISIBLE);
+                    isGuessing.setVisibility(View.GONE);
+                    loading1.setVisibility(View.GONE);
+                    loading2.setVisibility(View.GONE);
                     firstTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
 
                     firstTW.setClickable(false);
@@ -237,6 +246,9 @@ public class NextPlayer extends Activity {
                     }.start();
 
                     switchPlayer.setVisibility(View.VISIBLE);
+                    isGuessing.setVisibility(View.GONE);
+                    loading1.setVisibility(View.GONE);
+                    loading2.setVisibility(View.GONE);
                     secondTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
 
                     firstTW.setClickable(false);
@@ -261,6 +273,9 @@ public class NextPlayer extends Activity {
                     thirdTW.setClickable(false);
 
                     switchPlayer.setVisibility(View.VISIBLE);
+                    isGuessing.setVisibility(View.GONE);
+                    loading1.setVisibility(View.GONE);
+                    loading2.setVisibility(View.GONE);
                     thirdTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
 
                 }
@@ -324,6 +339,9 @@ public class NextPlayer extends Activity {
                     }
 
                     switchPlayer.setVisibility(View.VISIBLE);
+                    isGuessing.setVisibility(View.GONE);
+                    loading1.setVisibility(View.GONE);
+                    loading2.setVisibility(View.GONE);
                     secondTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
 
                     firstTW.setClickable(false);
@@ -336,17 +354,16 @@ public class NextPlayer extends Activity {
                     new CountDownTimer(2000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
-//
-//
                         }
 
                         public void onFinish() {
-//
-//
                         }
                     }.start();
 
                     switchPlayer.setVisibility(View.VISIBLE);
+                    isGuessing.setVisibility(View.GONE);
+                    loading1.setVisibility(View.GONE);
+                    loading2.setVisibility(View.GONE);
                     firstTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
 
                     firstTW.setClickable(false);
@@ -369,11 +386,14 @@ public class NextPlayer extends Activity {
                         }
                     }.start();
 
+                    switchPlayer.setVisibility(View.VISIBLE);
                     firstTW.setClickable(false);
                     thirdTW.setClickable(false);
                     thirdTW.setClickable(false);
 
-                    switchPlayer.setVisibility(View.VISIBLE);
+                    isGuessing.setVisibility(View.GONE);
+                    loading1.setVisibility(View.GONE);
+                    loading2.setVisibility(View.GONE);
                     thirdTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
                 }
             }
@@ -434,8 +454,10 @@ public class NextPlayer extends Activity {
                         editor.putInt("player1", player1).apply();
                     }
 
-//                    Toast.makeText(NextPlayer.this, "CORRECT!", Toast.LENGTH_SHORT).show();
                     switchPlayer.setVisibility(View.VISIBLE);
+                    isGuessing.setVisibility(View.GONE);
+                    loading1.setVisibility(View.GONE);
+                    loading2.setVisibility(View.GONE);
                     thirdTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
 
                     firstTW.setClickable(false);
@@ -455,6 +477,9 @@ public class NextPlayer extends Activity {
                     }.start();
 
                     switchPlayer.setVisibility(View.VISIBLE);
+                    isGuessing.setVisibility(View.GONE);
+                    loading1.setVisibility(View.GONE);
+                    loading2.setVisibility(View.GONE);
                     firstTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
 
                     firstTW.setClickable(false);
@@ -467,13 +492,9 @@ public class NextPlayer extends Activity {
                     new CountDownTimer(2000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
-//
-//
                         }
 
                         public void onFinish() {
-//
-//
                         }
                     }.start();
 
@@ -481,7 +502,11 @@ public class NextPlayer extends Activity {
                     secondTW.setClickable(false);
                     thirdTW.setClickable(false);
 
+
                     switchPlayer.setVisibility(View.VISIBLE);
+                    isGuessing.setVisibility(View.GONE);
+                    loading1.setVisibility(View.GONE);
+                    loading2.setVisibility(View.GONE);
                     secondTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
                 }
             }
@@ -544,6 +569,34 @@ public class NextPlayer extends Activity {
     public void resetGraph() {
         getSharedPreferences("SingleGraphHistory", Context.MODE_PRIVATE).edit().clear().apply();
     }
+
+
+    public void progressLoading() {
+
+        if (true) {
+
+            timer = new CountDownTimer(100, 10) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+
+                    float rotation = loading1.getRotation();
+                    loading1.setRotation(rotation + 5);
+
+                    float rotation2 = loading2.getRotation();
+                    loading2.setRotation(rotation2 - 5);
+                }
+
+                @Override
+                public void onFinish() {
+
+                    progressLoading();
+
+                }
+            }.start();
+
+        }
+    }
+
 
 
 }

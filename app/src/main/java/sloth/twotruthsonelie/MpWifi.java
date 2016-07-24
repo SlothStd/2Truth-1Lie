@@ -1352,7 +1352,7 @@ public class MpWifi extends Activity implements
             firstTW = (TextView) findViewById(R.id.firstTW);
             secondTW = (TextView) findViewById(R.id.secondTW);
             thirdTW = (TextView) findViewById(R.id.thirdTW);
-            switchPlayer = (Button) findViewById(R.id.switch_player);
+//            switchPlayer = (Button) findViewById(R.id.switch_player);
 
             firstS = matchData.getSentences().get(0);
             secondS = matchData.getSentences().get(1);

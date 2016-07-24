@@ -30,10 +30,10 @@
         android:weightSum="2" >
 
         <Button
-            android:id="@+id/Yes"
+            android:id="@+id/No"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Yes"
+            android:text="No"
             android:layout_marginLeft="150dp"
             android:layout_marginRight="0.5dp"
             android:textSize="15sp"
@@ -42,10 +42,10 @@
             android:layout_weight="1"/>
 
         <Button
-            android:id="@+id/No"
+            android:id="@+id/Yes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No"
+            android:text="Yes"
             android:layout_marginLeft="0.5dp"
             android:layout_marginRight="10dp"
             android:textSize="15sp"
