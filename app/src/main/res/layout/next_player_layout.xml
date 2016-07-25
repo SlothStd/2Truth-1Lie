@@ -4,63 +4,130 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/darker_bg"
-    android:weightSum="5">
+    android:weightSum="3">
 
-
-    <TextView
-        android:id="@+id/playerGuessing"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:orientation="vertical"
         android:layout_weight="1"
-        android:text="Player Guessing"
-        android:textSize="65sp"
+        android:weightSum="2"
+        android:background="@color/materialPurple">
 
-        android:gravity="bottom"
-        android:layout_gravity="center_horizontal|bottom"
-        android:textColor="@color/white"
-        android:layout_marginTop="30dp" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingTop="30dp"
+            android:src="@drawable/avatar"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/switch_player"
+                android:layout_width="155dp"
+                android:layout_height="50dp"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:gravity="center"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/custom_button_game"
+                android:visibility="gone"
+                android:text="switch players"/>
+
+        <TextView
+            android:id="@+id/IsGuessingTW"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center_horizontal|center_vertical"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:text="Is guessing..." />
+
+            <ProgressBar
+                android:id="@+id/progress1"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="37dp"
+                android:layout_height="37dp"
+                android:layout_marginTop="10dp"
+                android:padding="1dp"
+                android:layout_below="@id/IsGuessingTW"
+                android:progressDrawable="@drawable/green_progressbar"
+                android:layout_centerHorizontal="true"
+                android:max="500"
+                android:progress="250" />
+
+            <ProgressBar
+                android:id="@+id/progress2"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:progressDrawable="@drawable/red_progressbar"
+                android:layout_alignBottom="@+id/progress1"
+                android:layout_centerHorizontal="true"
+                android:padding="1dp"
+                android:layout_marginBottom="8dp"
+                android:max="500"
+                android:progress="250" />
+
+        </RelativeLayout>
+
+        </LinearLayout>
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:layout_weight="2"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:weightSum="3">
 
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_alignParentStart="true"
-        android:background="@drawable/custom_edittext_truth"
-        android:id="@+id/firstTW"
-        android:padding="7dp"
-        android:gravity="center_horizontal|center_vertical"
-        android:layout_weight="1"
-        android:textColor="#ffffff"
-        android:textSize="25sp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:layout_above="@+id/secondTW"
-        android:layout_alignParentLeft="true"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="40dp" />
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_alignParentStart="true"
+                android:maxLines="200"
+                android:scrollbars="vertical"
+                android:background="@color/white"
+                android:id="@+id/firstTW"
+                android:padding="7dp"
+                android:gravity="center_horizontal|center_vertical"
+                android:layout_weight="1"
+                android:textColor="#000"
+                android:textSize="15sp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:layout_above="@+id/secondTW"
+                android:layout_alignParentLeft="true" />
 
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_alignParentStart="true"
-        android:layout_weight="1"
-        android:id="@+id/secondTW"
-        android:paddingLeft="10dp"
-        android:textColor="#ffffff"
-        android:textSize="25sp"
-        android:background="@drawable/custom_edittext_truth"
-        android:paddingRight="10dp"
-        android:paddingTop="5dp"
-        android:layout_above="@+id/thirdTW"
-        android:layout_alignParentLeft="true"
-        android:layout_marginRight="10dp"
-        android:padding="7dp"
-        android:gravity="center_horizontal|center_vertical"
-        android:layout_marginLeft="10dp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginTop="20dp" />
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_alignParentStart="true"
+                android:maxLines="200"
+                android:scrollbars="vertical"
+                android:layout_weight="1"
+                android:id="@+id/secondTW"
+                android:paddingLeft="10dp"
+                android:textColor="#000"
+                android:textSize="15sp"
+                android:background="@color/white"
+                android:paddingRight="10dp"
+                android:paddingTop="5dp"
+                android:layout_above="@+id/thirdTW"
+                android:layout_alignParentLeft="true"
+                android:padding="7dp"
+                android:gravity="center_horizontal|center_vertical"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="20dp" />
 
 
     <TextView
@@ -68,41 +135,21 @@
         android:layout_height="0dp"
         android:id="@+id/thirdTW"
         android:paddingLeft="10dp"
-        android:textColor="#ffffff"
-        android:textSize="25sp"
+        android:textColor="#000"
+        android:textSize="15sp"
+        android:maxLines="200"
+        android:scrollbars="vertical"
         android:paddingRight="10dp"
         android:padding="7dp"
         android:gravity="center_horizontal|center_vertical"
         android:layout_weight="1"
         android:paddingTop="5dp"
-        android:background="@drawable/custom_edittext_truth"
+        android:background="@color/white"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
         android:layout_marginTop="20dp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center">
-
-        <Button
-            android:layout_width="220dp"
-            android:layout_height="60dp"
-            android:text="Switch Players"
-            android:textColor="#ffffff"
-            android:layout_marginBottom="10dp"
-            android:textSize="20sp"
-            android:visibility="visible"
-            android:background="@drawable/rounded_button"
-            android:id="@+id/switch_player"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center_horizontal|bottom" />
-
-    </LinearLayout>
+        </LinearLayout>
 
 </LinearLayout>

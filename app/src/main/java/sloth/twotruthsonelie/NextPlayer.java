@@ -2,19 +2,25 @@ package sloth.twotruthsonelie;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,34 +28,41 @@ import android.widget.Toast;
 public class NextPlayer extends Activity {
 
     String firstS, secondS, thirdS, roundsS;
-    TextView firstTW, secondTW, thirdTW, playerGuessing;
-    Button switchPlayer;
+    TextView firstTW, secondTW, thirdTW, isGuessing;
+    Button switchPlayer, positive, negative;
     Integer round, current_round, player1, player2;
     Boolean firstLie, secondLie, thirdLie;
     Animation animFadeIn;
     Typeface canter;
     GraphHistory graphHistory;
     boolean wasTrue;
+    public Dialog dialogGame;
+    private ProgressBar loading1, loading2;
+    private CountDownTimer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.next_player_layout);
 
-        animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
+        animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_slower);
         canter = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/canter.otf");
 
-        playerGuessing = (TextView) findViewById(R.id.playerGuessing);
-        playerGuessing.setTypeface(canter);
+        isGuessing = (TextView) findViewById(R.id.IsGuessingTW);
 
         firstTW = (TextView) findViewById(R.id.firstTW);
-        firstTW.setTypeface(canter);
+        firstTW.setMovementMethod(new ScrollingMovementMethod());
 
         secondTW = (TextView) findViewById(R.id.secondTW);
-        secondTW.setTypeface(canter);
+        secondTW.setMovementMethod(new ScrollingMovementMethod());
 
         thirdTW = (TextView) findViewById(R.id.thirdTW);
-        thirdTW.setTypeface(canter);
+        thirdTW.setMovementMethod(new ScrollingMovementMethod());
+
+        loading1 = (ProgressBar) findViewById(R.id.progress1);
+        loading2 = (ProgressBar) findViewById(R.id.progress2);
+
+        progressLoading();
 
         switchPlayer = (Button) findViewById(R.id.switch_player);
 
@@ -168,21 +181,20 @@ public class NextPlayer extends Activity {
     public void areYouSureDialogF() {
 
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setMessage("Are you sure?");
-
-        setTitleColor(getResources().getColor(R.color.truth));
-
-
-        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+        Dialog();
+        positive.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(View v) {
+                dialogGame.dismiss();
 
+                secondTW.setBackground(getResources().getDrawable(R.drawable.custom_edittext_clicked));
+                secondTW.setTextColor(getResources().getColor(R.color.white));
+                thirdTW.setBackground(getResources().getDrawable(R.drawable.custom_edittext_clicked));
+                thirdTW.setTextColor(getResources().getColor(R.color.white));
                 firstTW.setBackground(getResources().getDrawable(R.drawable.custom_edittext_clicked));
+                firstTW.setTextColor(getResources().getColor(R.color.white));
 
                 SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
-
                 firstLie = preferences.getBoolean("firstLie", false);
                 secondLie = preferences.getBoolean("secondLie", false);
                 thirdLie = preferences.getBoolean("thirdLie", false);
@@ -215,6 +227,10 @@ public class NextPlayer extends Activity {
                     }
 
                     switchPlayer.setVisibility(View.VISIBLE);
+                    switchPlayer.setAnimation(animFadeIn);
+                    isGuessing.setVisibility(View.GONE);
+                    loading1.setVisibility(View.GONE);
+                    loading2.setVisibility(View.GONE);
                     firstTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
 
                     firstTW.setClickable(false);
@@ -237,6 +253,10 @@ public class NextPlayer extends Activity {
                     }.start();
 
                     switchPlayer.setVisibility(View.VISIBLE);
+                    switchPlayer.setAnimation(animFadeIn);
+                    isGuessing.setVisibility(View.GONE);
+                    loading1.setVisibility(View.GONE);
+                    loading2.setVisibility(View.GONE);
                     secondTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
 
                     firstTW.setClickable(false);
@@ -261,37 +281,41 @@ public class NextPlayer extends Activity {
                     thirdTW.setClickable(false);
 
                     switchPlayer.setVisibility(View.VISIBLE);
+                    switchPlayer.setAnimation(animFadeIn);
+                    isGuessing.setVisibility(View.GONE);
+                    loading1.setVisibility(View.GONE);
+                    loading2.setVisibility(View.GONE);
                     thirdTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
+
                 }
+
             }
         });
 
-        builder.setNegativeButton("BACK", new DialogInterface.OnClickListener() {
+        negative.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
+            public void onClick(View v) {
+                dialogGame.dismiss();
             }
         });
 
-        builder.show();
     }
 
 
     public void areYouSureDialogS() {
 
-
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setMessage("Are you sure?");
-
-        setTitleColor(getResources().getColor(R.color.truth));
-
-
-        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+        Dialog();
+        positive.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(View v) {
+                dialogGame.dismiss();
 
                 secondTW.setBackground(getResources().getDrawable(R.drawable.custom_edittext_clicked));
+                secondTW.setTextColor(getResources().getColor(R.color.white));
+                thirdTW.setBackground(getResources().getDrawable(R.drawable.custom_edittext_clicked));
+                thirdTW.setTextColor(getResources().getColor(R.color.white));
+                firstTW.setBackground(getResources().getDrawable(R.drawable.custom_edittext_clicked));
+                firstTW.setTextColor(getResources().getColor(R.color.white));
 
                 SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
 
@@ -330,6 +354,10 @@ public class NextPlayer extends Activity {
                     }
 
                     switchPlayer.setVisibility(View.VISIBLE);
+                    switchPlayer.setAnimation(animFadeIn);
+                    isGuessing.setVisibility(View.GONE);
+                    loading1.setVisibility(View.GONE);
+                    loading2.setVisibility(View.GONE);
                     secondTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
 
                     firstTW.setClickable(false);
@@ -342,17 +370,17 @@ public class NextPlayer extends Activity {
                     new CountDownTimer(2000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
-//                            
-//                            
                         }
 
                         public void onFinish() {
-//                            
-//                           
                         }
                     }.start();
 
                     switchPlayer.setVisibility(View.VISIBLE);
+                    switchPlayer.setAnimation(animFadeIn);
+                    isGuessing.setVisibility(View.GONE);
+                    loading1.setVisibility(View.GONE);
+                    loading2.setVisibility(View.GONE);
                     firstTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
 
                     firstTW.setClickable(false);
@@ -365,50 +393,54 @@ public class NextPlayer extends Activity {
                     new CountDownTimer(2000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
-//                            
-//                            
+//
+//
                         }
 
                         public void onFinish() {
-//                            
-//                           
+//
+//
                         }
                     }.start();
 
+                    switchPlayer.setVisibility(View.VISIBLE);
+                    switchPlayer.setAnimation(animFadeIn);
                     firstTW.setClickable(false);
                     thirdTW.setClickable(false);
                     thirdTW.setClickable(false);
 
-                    switchPlayer.setVisibility(View.VISIBLE);
+                    isGuessing.setVisibility(View.GONE);
+                    loading1.setVisibility(View.GONE);
+                    loading2.setVisibility(View.GONE);
                     thirdTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
                 }
             }
         });
 
-        builder.setNegativeButton("BACK", new DialogInterface.OnClickListener() {
+        negative.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
+            public void onClick(View v) {
+                dialogGame.dismiss();
             }
         });
 
-        builder.show();
     }
 
 
     public void areYouSureDialogT() {
 
-
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setMessage("Are you sure?");
-        setTitleColor(getResources().getColor(R.color.truth));
-
-        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+        Dialog();
+        positive.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(View v) {
+                dialogGame.dismiss();
 
+                secondTW.setBackground(getResources().getDrawable(R.drawable.custom_edittext_clicked));
+                secondTW.setTextColor(getResources().getColor(R.color.white));
                 thirdTW.setBackground(getResources().getDrawable(R.drawable.custom_edittext_clicked));
+                thirdTW.setTextColor(getResources().getColor(R.color.white));
+                firstTW.setBackground(getResources().getDrawable(R.drawable.custom_edittext_clicked));
+                firstTW.setTextColor(getResources().getColor(R.color.white));
 
                 SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
 
@@ -430,6 +462,7 @@ public class NextPlayer extends Activity {
                     } catch (NullPointerException e) {
                         player1 = 0;
                     }
+
                     try {
                         player2 = points.getInt("player2", 0);
                     } catch (NullPointerException e) {
@@ -445,8 +478,11 @@ public class NextPlayer extends Activity {
                         editor.putInt("player1", player1).apply();
                     }
 
-//                    Toast.makeText(NextPlayer.this, "CORRECT!", Toast.LENGTH_SHORT).show();
                     switchPlayer.setVisibility(View.VISIBLE);
+                    switchPlayer.setAnimation(animFadeIn);
+                    isGuessing.setVisibility(View.GONE);
+                    loading1.setVisibility(View.GONE);
+                    loading2.setVisibility(View.GONE);
                     thirdTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
 
                     firstTW.setClickable(false);
@@ -466,6 +502,10 @@ public class NextPlayer extends Activity {
                     }.start();
 
                     switchPlayer.setVisibility(View.VISIBLE);
+                    switchPlayer.setAnimation(animFadeIn);
+                    isGuessing.setVisibility(View.GONE);
+                    loading1.setVisibility(View.GONE);
+                    loading2.setVisibility(View.GONE);
                     firstTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
 
                     firstTW.setClickable(false);
@@ -478,13 +518,9 @@ public class NextPlayer extends Activity {
                     new CountDownTimer(2000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
-//                            
-//                            
                         }
 
                         public void onFinish() {
-//                            
-//                           
                         }
                     }.start();
 
@@ -492,20 +528,23 @@ public class NextPlayer extends Activity {
                     secondTW.setClickable(false);
                     thirdTW.setClickable(false);
 
+
                     switchPlayer.setVisibility(View.VISIBLE);
+                    switchPlayer.setAnimation(animFadeIn);
+                    isGuessing.setVisibility(View.GONE);
+                    loading1.setVisibility(View.GONE);
+                    loading2.setVisibility(View.GONE);
                     secondTW.setBackgroundDrawable(getResources().getDrawable(R.drawable.custom_edittex_lie));
                 }
             }
         });
 
-        builder.setNegativeButton("BACK", new DialogInterface.OnClickListener() {
+        negative.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
+            public void onClick(View v) {
+                dialogGame.dismiss();
             }
         });
-
-        builder.show();
     }
 
     @Override
@@ -540,12 +579,54 @@ public class NextPlayer extends Activity {
 
     }
 
+    private void Dialog() {
+
+        dialogGame = new Dialog(NextPlayer.this);
+        dialogGame.setCancelable(true);
+        dialogGame.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogGame.setContentView(R.layout.custom_dialog_game);
+        dialogGame.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialogGame.show();
+
+        positive = (Button) dialogGame.findViewById(R.id.Yes);
+        negative = (Button) dialogGame.findViewById(R.id.No);
+
+    }
 
     public void resetGraph() {
         getSharedPreferences("SingleGraphHistory", Context.MODE_PRIVATE).edit().clear().apply();
     }
 
 
+    public void progressLoading() {
+
+        if (true) {
+
+            timer = new CountDownTimer(100, 10) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+
+                    float rotation = loading1.getRotation();
+                    loading1.setRotation(rotation + 5);
+
+                    float rotation2 = loading2.getRotation();
+                    loading2.setRotation(rotation2 - 5);
+                }
+
+                @Override
+                public void onFinish() {
+
+                    progressLoading();
+
+                }
+            }.start();
+
+        }
+    }
+
+
+
 }
+
 
 

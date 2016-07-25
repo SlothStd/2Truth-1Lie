@@ -34,7 +34,7 @@
         android:id="@+id/buttons"
         android:weightSum="5"
         android:background="@color/darker_bg"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -78,28 +78,28 @@
                 android:layout_weight="8">
 
                 <ProgressBar
-                    android:id="@+id/fakeProgressJustBecauseIcan"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:progress="0"
-                    android:max="120000"
-                    android:progressDrawable="@drawable/fake_progress"
-                    android:layout_marginBottom="10dp" />
-
-                <ProgressBar
                     android:id="@+id/progressbarScore"
                     style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    android:progress="999990"
+                    android:progress="120000"
                     android:max="120000"
-                    android:progressDrawable="@drawable/scoreboard_progressbar"
-                    android:layout_marginBottom="10dp" />
+                    android:progressDrawable="@drawable/multi_progressbar_bckg"
+                    android:layout_marginBottom="0dp" />
+
+                <ProgressBar
+                    android:id="@+id/fakeProgressJustBecauseIcan"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:max="1000000"
+                    android:progressDrawable="@drawable/multi_progressbar"
+                    android:layout_marginBottom="0dp" />
+
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -107,18 +107,17 @@
                     android:text="75%"
                     android:id="@+id/winRatioTv"
                     android:layout_centerInParent="true"
-                    android:textSize="25sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/truth"/>
+                    android:textSize="35sp"
+                    android:textColor="@color/white"/>
 
             </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:gravity="center"
                 android:orientation="vertical"
-                android:layout_weight="1"
-                android:gravity="center">
+                android:layout_weight="1">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -140,6 +139,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linearButtons"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2"
@@ -161,7 +161,7 @@
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="match_parent"
-                    android:background="@color/white"
+                    android:src="@drawable/play"
                     android:layout_marginRight="16dp"/>
 
                 <LinearLayout
@@ -202,7 +202,7 @@
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="match_parent"
-                    android:background="@color/white"
+                    android:src="@drawable/check_games"
                     android:layout_marginRight="16dp"/>
 
                 <LinearLayout
@@ -251,7 +251,7 @@
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="match_parent"
-                    android:background="@color/white"
+                    android:src="@drawable/signed_in"
                     android:layout_marginRight="16dp"/>
 
                 <LinearLayout
@@ -499,27 +499,12 @@
                 android:gravity="center"
                 android:id="@+id/notYourTurn">
 
-
-                <ProgressBar
-                    android:id="@+id/loading1"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="47dp"
-                    android:layout_height="47dp"
-                    android:padding="1dp"
-                    android:progressDrawable="@drawable/green_progressbar"
-                    android:layout_above="@+id/turnText"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="10dp"
-                    android:max="500"
-                    android:progress="250" />
-
                 <ProgressBar
                     android:id="@+id/loading2"
                     style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:progressDrawable="@drawable/red_progressbar"
-                    android:layout_alignBottom="@+id/loading1"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:progressDrawable="@drawable/multi_progressbar"
                     android:layout_centerHorizontal="true"
                     android:padding="1dp"
                     android:layout_marginBottom="8dp"
@@ -549,12 +534,13 @@
             </RelativeLayout>
             <!-- Not your turn Screen -->
 
+
             <!-- Game finished Screen -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="14"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:id="@+id/gameFinished"
                 android:gravity="center">
 
@@ -677,229 +663,6 @@
 
                 </LinearLayout>
 
-<!--                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1">
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:visibility="visible"
-                        android:paddingTop="28dp"
-                        android:id="@+id/final_whiteLineAndRedBg">
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="6dp"
-                            android:background="@color/white"/>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@color/lie"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="56dp"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_weight="2"
-                            android:paddingRight="0dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="22"
-                                android:textColor="@color/white"
-                                android:textSize="50dp"/>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="4dp"
-                                android:text="points"
-                                android:textColor="@color/white"
-                                android:textSize="20dp"/>
-
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"/>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_weight="2"
-                            android:gravity="center_horizontal"
-                            android:paddingRight="0dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="19"
-                                android:textColor="@color/white"
-                                android:textSize="50dp"/>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="4dp"
-                                android:text="points"
-                                android:textColor="@color/white"
-                                android:textSize="20dp"/>
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                </RelativeLayout>
--->
-<!--
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:padding="8dp">
-
-                    <com.jjoe64.graphview.GraphView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/graphMP"/>
-
-                </LinearLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1">
-
-                    <TextView
-                        android:id="@+id/player1TV"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Player 1"
-                        android:textColor="#ffffff"
-                        android:textSize="20sp"
-                        android:layout_above="@+id/leftProgress"
-                        android:layout_alignLeft="@+id/leftProgress"
-                        android:gravity="center"
-                        android:layout_alignRight="@+id/leftProgress" />
-
-                    <TextView
-                        android:id="@+id/leftProgressPercentage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="100%"
-                        android:textColor="#ffffff"
-                        android:textSize="20sp"
-                        android:layout_alignLeft="@+id/leftProgress"
-                        android:gravity="center"
-                        android:layout_alignRight="@+id/leftProgress"
-                        android:layout_alignTop="@+id/leftProgress"
-                        android:layout_alignBottom="@+id/leftProgress" />
-
-                    <ProgressBar
-                        android:id="@+id/leftProgressBckg"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
-                        android:progressDrawable="@drawable/scoreboard_progressbar_bckg"
-                        android:layout_centerHorizontal="true"
-                        android:layout_toLeftOf="@+id/buttomMiddle"
-                        android:layout_centerVertical="true"
-                        android:padding="1dp"
-                        android:layout_marginBottom="8dp"
-                        android:max="100"
-                        android:progress="100" />
-
-                    <ProgressBar
-                        android:id="@+id/leftProgress"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
-                        android:progressDrawable="@drawable/scoreboard_progressbar"
-                        android:layout_centerHorizontal="true"
-                        android:layout_toLeftOf="@+id/buttomMiddle"
-                        android:layout_centerVertical="true"
-                        android:padding="1dp"
-                        android:layout_marginBottom="8dp"
-                        android:progress="0" />
-
-
-                    <TextView
-                        android:id="@+id/buttomMiddle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"/>
-
-                    <TextView
-                        android:id="@+id/player2TV"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Player 2"
-                        android:textColor="#ffffff"
-                        android:textSize="20sp"
-                        android:layout_above="@+id/rightProgress"
-                        android:layout_alignLeft="@+id/rightProgress"
-                        android:gravity="center"
-                        android:layout_alignRight="@+id/rightProgress" />
-
-                    <ProgressBar
-                        android:id="@+id/rightProgressBckg"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
-                        android:layout_toRightOf="@+id/buttomMiddle"
-                        android:progressDrawable="@drawable/scoreboard_progressbar_bckg"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:padding="1dp"
-                        android:layout_marginBottom="8dp"
-                        android:max="100"
-                        android:progress="100" />
-
-                    <TextView
-                        android:id="@+id/rightProgressPercentage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="100%"
-                        android:textColor="#ffffff"
-                        android:textSize="20sp"
-                        android:layout_alignLeft="@+id/rightProgress"
-                        android:gravity="center"
-                        android:layout_alignRight="@+id/rightProgress"
-                        android:layout_alignTop="@+id/rightProgress"
-                        android:layout_alignBottom="@+id/rightProgress" />
-
-                    <ProgressBar
-                        android:id="@+id/rightProgress"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
-                        android:layout_toRightOf="@+id/buttomMiddle"
-                        android:progressDrawable="@drawable/scoreboard_progressbar"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:padding="1dp"
-                        android:layout_marginBottom="8dp"
-                        android:progress="0" />
-
-                </RelativeLayout>
--->
             </RelativeLayout>
             <!-- Game finished Screen -->
 

@@ -7,6 +7,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
+
+import static sloth.twotruthsonelie.R.id.gotIt;
 
 /**
  * Created by Danoo on 24-May-16.
