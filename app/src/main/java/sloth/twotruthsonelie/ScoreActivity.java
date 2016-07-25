@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -15,6 +16,7 @@ import android.view.KeyEvent;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -28,6 +30,7 @@ public class ScoreActivity extends Activity {
 
     TextView player1Level, player2Level, playerOnePoints, playerTwoPoints;
     Integer player1, player2;
+    ImageView scoreboardBckg, circularBckg1, circularBckg2;
     ProgressBar player1Progress, player2Progress;
     ObjectAnimator animation;
 
@@ -35,6 +38,10 @@ public class ScoreActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.scoreboard_layout);
+
+        scoreboardBckg = (ImageView) findViewById(R.id.score_board_bg);
+        circularBckg2 = (ImageView) findViewById(R.id.circle_bckg2);
+        circularBckg1 = (ImageView) findViewById(R.id.circle_bckg1);
 
         player1Progress = (ProgressBar) findViewById(R.id.player1_progress);
         player1Progress.setProgress(0);
@@ -67,11 +74,23 @@ public class ScoreActivity extends Activity {
         }
 
 
+        ///////////////////////////////////TOTOOOOOOOO a DOLE////////////////////////////////
         SharedPreferences points = getSharedPreferences("playerPoints", MODE_PRIVATE);
-        SharedPreferences.Editor editor = points.edit();
 
         player1 = points.getInt("player1", 0);
         player2 = points.getInt("player2", 0);
+
+        if (player1 == player2) {
+            scoreboardBckg.setImageResource(R.drawable.scoreboard_green);
+            circularBckg2.setImageResource(R.drawable.green_circle_bckg);
+        }
+
+        if (player2 > player1) {
+            float rotation = scoreboardBckg.getRotation();
+            scoreboardBckg.setRotation(rotation + 180);
+            circularBckg1.setImageResource(R.drawable.red_circle_bckg);
+            circularBckg2.setImageResource(R.drawable.green_circle_bckg);
+        }
 
         try {
             playerOnePoints.setText(String.valueOf(player1));
@@ -92,7 +111,11 @@ public class ScoreActivity extends Activity {
             playerTwoPoints.setText("0");
         }
 
-        CountDownTimer timer = new CountDownTimer(1000, 1000) {
+        //tu si dopln int na levelprogress do progressbarov (to uz mas nastavene iba tieto inty si uprav)
+        final int player1LevelProgress = 7 * 10000; // krat 10k kvoli smooth animacii
+        final int player2LevelProgress = 10 * 10000;
+
+        CountDownTimer timer = new CountDownTimer(1300, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
 
@@ -100,14 +123,14 @@ public class ScoreActivity extends Activity {
 
             @Override
             public void onFinish() {
-                animation = new ObjectAnimator().ofInt(player1Progress, "progress", 0, 70000);
+                animation = new ObjectAnimator().ofInt(player1Progress, "progress", 0, player1LevelProgress);
                 animation.setDuration(2000);
                 animation.setInterpolator(new AccelerateDecelerateInterpolator());
                 animation.start();
             }
         }.start();
 
-        CountDownTimer timer2 = new CountDownTimer(1000, 1000) {
+        CountDownTimer timer2 = new CountDownTimer(1300, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
 
@@ -115,12 +138,14 @@ public class ScoreActivity extends Activity {
 
             @Override
             public void onFinish() {
-                animation = new ObjectAnimator().ofInt(player2Progress, "progress", 0, 100000);
+                animation = new ObjectAnimator().ofInt(player2Progress, "progress", 0, player2LevelProgress);
                 animation.setDuration(2000);
                 animation.setInterpolator(new AccelerateDecelerateInterpolator());
                 animation.start();
             }
         }.start();
+
+        ////////////////////////////////////////////POTIALTO///////////////////////////
 
 
     }
