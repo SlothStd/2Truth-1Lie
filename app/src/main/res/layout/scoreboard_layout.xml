@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/darker_bg"
     android:weightSum="2"
     android:id="@+id/scores_main">
@@ -19,10 +20,24 @@
         android:gravity="center"
         android:paddingTop="30dp">
 
-        <ImageView
+        <FrameLayout
+            android:id="@+id/celok"
             android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:src="@drawable/multi"/>
+            android:layout_height="120dp">
+
+            <ImageView
+                android:id="@+id/user_avatar1"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/logo" />
+
+            <ImageView
+                android:id="@+id/circle_bckg1"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/green_circle_bckg" />
+        </FrameLayout>
+
 
         <TextView
             android:layout_width="wrap_content"
@@ -109,10 +124,23 @@
         android:gravity="center"
         android:paddingBottom="50dp">
 
-        <ImageView
+        <FrameLayout
+            android:id="@+id/celok2"
             android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:src="@drawable/single"/>
+            android:layout_height="120dp">
+
+            <ImageView
+                android:id="@+id/user_avatar2"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/logo" />
+
+            <ImageView
+                android:id="@+id/circle_bckg2"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/red_circle_bckg" />
+        </FrameLayout>
 
         <TextView
             android:layout_width="wrap_content"
