@@ -56,15 +56,13 @@
 
             <TextView
                 android:id="@+id/player1_level"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_gravity="bottom|right"
-                android:layout_marginBottom="3dp"
-                android:textSize="15sp"
+                android:textSize="14sp"
                 android:textColor="@color/white"
                 android:text="5"
                 android:gravity="center"
-                android:layout_marginRight="5dp"
                 android:background="@drawable/circle"/>
 
 
@@ -198,15 +196,13 @@
 
             <TextView
                 android:id="@+id/player2_level"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_gravity="bottom|right"
-                android:layout_marginBottom="3dp"
-                android:textSize="15sp"
+                android:textSize="14sp"
                 android:textColor="@color/white"
-                android:text="5"
+                android:text="100%"
                 android:gravity="center"
-                android:layout_marginRight="5dp"
                 android:background="@drawable/circle"/>
 
 

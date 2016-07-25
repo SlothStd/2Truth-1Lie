@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -44,17 +45,14 @@ public class ScoreActivity extends Activity {
         circularBckg1 = (ImageView) findViewById(R.id.circle_bckg1);
 
         player1Progress = (ProgressBar) findViewById(R.id.player1_progress);
-        player1Progress.setProgress(0);
-        player1Progress.setMax(100000);
         player2Progress = (ProgressBar) findViewById(R.id.player2_progress);
-        player2Progress.setProgress(0);
-        player2Progress.setMax(100000);
 
         player1Level = (TextView) findViewById(R.id.player1_level);
         player2Level = (TextView) findViewById(R.id.player2_level);
 
         playerOnePoints = (TextView) findViewById(R.id.playerOnePoints);
         playerTwoPoints = (TextView) findViewById(R.id.playerTwoPoints);
+
 
         float rotation1 = player1Progress.getRotation();
         player1Progress.setRotation(rotation1 + 40);
@@ -79,6 +77,31 @@ public class ScoreActivity extends Activity {
 
         player1 = points.getInt("player1", 0);
         player2 = points.getInt("player2", 0);
+
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String roundsPrefs = SP.getString("setRounds", "0");
+        int rounds = Integer.parseInt(roundsPrefs);
+
+        double playerOne = (double) player1 / rounds;
+        double playerTwo = (double) player2 / rounds;
+
+        playerOne = playerOne * 100;
+        playerTwo = playerTwo * 100;
+
+        int playerOnePercentage = (int) playerOne;
+        int playerTwoPercentage = (int) playerTwo;
+
+        try {
+            player1Level.setText(playerOnePercentage + "%");
+        } catch (NullPointerException e) {
+            player1Level.setText("0%");
+        }
+        try {
+            player2Level.setText(playerTwoPercentage + "%");
+        } catch (NullPointerException e) {
+            player2Level.setText("0%");
+        }
+
 
         if (player1 == player2) {
             scoreboardBckg.setImageResource(R.drawable.scoreboard_green);
@@ -111,9 +134,14 @@ public class ScoreActivity extends Activity {
             playerTwoPoints.setText("0");
         }
 
+        player1Progress.setMax(rounds * 10000);
+        player1Progress.setProgress(0);
+        player2Progress.setMax(rounds * 10000);
+        player2Progress.setProgress(0);
+
         //tu si dopln int na levelprogress do progressbarov (to uz mas nastavene iba tieto inty si uprav)
-        final int player1LevelProgress = 7 * 10000; // krat 10k kvoli smooth animacii
-        final int player2LevelProgress = 10 * 10000;
+        final int player1LevelProgress = player1 * 10000; // krat 10k kvoli smooth animacii
+        final int player2LevelProgress = player2 * 10000;
 
         CountDownTimer timer = new CountDownTimer(1300, 1000) {
             @Override
