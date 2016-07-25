@@ -32,6 +32,7 @@ public class Settings extends PreferenceActivity {
     private EditText player1, player2;
     private Button set, cancle;
     SharedPreferences prefs;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,7 @@ public class Settings extends PreferenceActivity {
 
         PreferenceScreen screen = getPreferenceScreen();
         prefs = getSharedPreferences("playerNames", MODE_PRIVATE);
+        editor = prefs.edit();
 
         ListView listView = getListView();
 
@@ -120,22 +122,20 @@ public class Settings extends PreferenceActivity {
         set = (Button) dialog.findViewById(R.id.Set);
 
         try {
-            player1.setHint(prefs.getString("playerOneName", null));
+            player1.setText(prefs.getString("playerOneName", null));
         } catch (NullPointerException e) {
-            player1.setHint("Player 1");
+            player1.setText("Player 1");
         }
 
         try {
-            player2.setHint(prefs.getString("playerTwoName", null));
+            player2.setText(prefs.getString("playerTwoName", null));
         } catch (NullPointerException e) {
-            player2.setHint("Player 2");
+            player2.setText("Player 2");
         }
 
         set.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                SharedPreferences.Editor editor = prefs.edit();
 
                 String playerOneName = player1.getText().toString();
                 String playerTwoName = player2.getText().toString();
@@ -152,6 +152,7 @@ public class Settings extends PreferenceActivity {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+
             }
         });
 
