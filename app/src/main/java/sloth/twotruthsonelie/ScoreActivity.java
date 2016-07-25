@@ -16,6 +16,8 @@ import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.ViewConfiguration;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,7 +48,7 @@ public class ScoreActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.scoreboard_layout);
-
+/*
         if (hasSoftKeys()){
 
             final float scale = getResources().getDisplayMetrics().density;
@@ -121,11 +123,11 @@ public class ScoreActivity extends Activity {
                 animation.setInterpolator(new AccelerateDecelerateInterpolator());
                 animation.start();
             }
-        }.start();
+        }.start();*/
     }
 
     public void setUpGraph(){
-        SharedPreferences prefs = getSharedPreferences("SingleGraphHistory", Context.MODE_PRIVATE);
+        /*SharedPreferences prefs = getSharedPreferences("SingleGraphHistory", Context.MODE_PRIVATE);
         if (!prefs.getString("GraphHistory", "err").equals("err")) {
             graphHistory = new GraphHistory(prefs.getString("GraphHistory", null), "single");
         } else {
@@ -170,7 +172,7 @@ public class ScoreActivity extends Activity {
         graph.getGridLabelRenderer().setHorizontalLabelsColor(getResources().getColor(android.R.color.white));
         graph.getGridLabelRenderer().setVerticalLabelsColor(getResources().getColor(android.R.color.white));
 
-        /* ? */ graph.getGridLabelRenderer().setGridColor(getResources().getColor(android.R.color.white));
+        graph.getGridLabelRenderer().setGridColor(getResources().getColor(android.R.color.white));
 
         graph.getGridLabelRenderer().setLabelFormatter(new LabelFormatter() {
             @Override
@@ -184,11 +186,11 @@ public class ScoreActivity extends Activity {
             @Override
             public void setViewport(Viewport viewport) {
             }
-        });
+        });*/
     }
 
     public void customGraph(){
-        GraphView graph = (GraphView) findViewById(R.id.graphSP);
+        /*GraphView graph = (GraphView) findViewById(R.id.graphSP);
         graph.removeAllSeries();
 
         LineGraphSeries<DataPoint> series1 = new LineGraphSeries<>(new DataPoint[]{
@@ -234,7 +236,7 @@ public class ScoreActivity extends Activity {
         graph.getGridLabelRenderer().setHorizontalLabelsColor(getResources().getColor(android.R.color.white));
         graph.getGridLabelRenderer().setVerticalLabelsColor(getResources().getColor(android.R.color.white));
 
-        /* ? */ graph.getGridLabelRenderer().setGridColor(getResources().getColor(android.R.color.white));
+        graph.getGridLabelRenderer().setGridColor(getResources().getColor(android.R.color.white));
 
         graph.getGridLabelRenderer().setLabelFormatter(new LabelFormatter() {
             @Override
@@ -248,7 +250,7 @@ public class ScoreActivity extends Activity {
             @Override
             public void setViewport(Viewport viewport) {
             }
-        });
+        });*/
     }
 
     public void resetGraph(){

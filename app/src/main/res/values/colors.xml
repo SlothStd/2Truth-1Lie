@@ -6,6 +6,7 @@
     <color name="black_overlay">#66000000</color>
     <color name="back_notTooMuchTransparent">#76000000</color>
     <color name="white">#ffffff</color>
+    <color name="greyText">#bcbcbc</color>
 
     <color name="purple_ish">#474f58</color>
     <color name="truth">#9CCC65</color>

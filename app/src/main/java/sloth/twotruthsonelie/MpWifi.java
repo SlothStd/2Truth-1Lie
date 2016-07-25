@@ -1,5 +1,6 @@
 package sloth.twotruthsonelie;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -11,6 +12,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -106,6 +110,7 @@ public class MpWifi extends Activity implements
     private ArrayList<String> IDs;
     private int player;
     private String myDisplayName, hisDisplayName;
+    private String myPhoto, hisPhoto;
 
     private GraphHistory graphHistory;
 
@@ -137,6 +142,11 @@ public class MpWifi extends Activity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mp_wifi);
 
+        if (true){
+            finalLineRotate();
+            return;
+        }
+
         // Create the Google API Client with access to Plus and Games
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -163,12 +173,39 @@ public class MpWifi extends Activity implements
 
         loading1 = (ProgressBar) findViewById(R.id.loading1);
         loading2 = (ProgressBar) findViewById(R.id.loading2);
+    }
+
+    /*public void test(){
+        ProgressBar progressBar1 = (ProgressBar) findViewById(R.id.vertical_progressbar1);
+        ProgressBar progressBar2 = (ProgressBar) findViewById(R.id.vertical_progressbar2);
+
+        progressBar1.setProgress(50);
+        progressBar1.setSecondaryProgress(70);
+
+        progressBar2.setProgress(75);
+        progressBar2.setSecondaryProgress(95);
+    }*/
+
+    public void finalLineRotate(){
 
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
+        if (true) return;
+
+        if (hasSoftKeys()){
+
+            final float scale = getResources().getDisplayMetrics().density;
+            int top = (int) (24 * scale + 0.5f);
+            int bottom = (int) (48 * scale + 0.5f);
+
+            findViewById(R.id.MpWifi_main_layout).setPadding(0, top, 0, bottom);
+        }else {
+            findViewById(R.id.MpWifi_main_layout).setPadding(0, 0, 0, 0);
+        }
 
         updateLevels();
 
@@ -181,17 +218,6 @@ public class MpWifi extends Activity implements
         }
 
         loadSP();
-
-        if (hasSoftKeys()){
-
-            final float scale = getResources().getDisplayMetrics().density;
-            int top = (int) (24 * scale + 0.5f);
-            int bottom = (int) (48 * scale + 0.5f);
-
-            findViewById(R.id.MpWifi_main_layout).setPadding(0, top, 0, bottom);
-        }else {
-            findViewById(R.id.MpWifi_main_layout).setPadding(0, 0, 0, 0);
-        }
 
         try{
             double perc = totalWins;
@@ -206,6 +232,8 @@ public class MpWifi extends Activity implements
 
         Log.d(TAG, "onStart(): Connecting to Google APIs");
         mGoogleApiClient.connect();
+
+        gameState = -1;
     }
 
     public void loadSP(){
@@ -230,6 +258,8 @@ public class MpWifi extends Activity implements
     @Override
     protected void onStop() {
         super.onStop();
+
+        if (true) return;
 
         saveSP();
 
@@ -825,6 +855,12 @@ public class MpWifi extends Activity implements
         myDisplayName = mMatch.getParticipant(myID).getDisplayName();
         hisDisplayName = mMatch.getParticipant(hisID).getDisplayName();
 
+        myPhoto = mMatch.getParticipant(myID).getIconImageUrl();
+        hisPhoto = mMatch.getParticipant(hisID).getIconImageUrl();
+
+        new LoadProfileImage((ImageView) findViewById(R.id.profile_pic_1)).execute(myPhoto);
+        new LoadProfileImage((ImageView) findViewById(R.id.profile_pic_2)).execute(hisPhoto);
+
         ((TextView) findViewById(R.id.p_1_TV)).setText(myDisplayName);
         ((TextView) findViewById(R.id.p_2_TV)).setText(hisDisplayName);
         ((TextView) findViewById(R.id.scoreTV)).setText(matchData.getScores().get(player) + " - " + matchData.getScores().get(Math.abs(player - 1)));
@@ -1257,7 +1293,7 @@ public class MpWifi extends Activity implements
     }
 
     public void setUpGraph(){
-        GraphView graph = (GraphView) findViewById(R.id.graphMP);
+    /*    GraphView graph = (GraphView) findViewById(R.id.graphMP);
         graph.removeAllSeries();
 
         LineGraphSeries<DataPoint> series1 = new LineGraphSeries<>(graphHistory.getMyDataPoints());
@@ -1295,7 +1331,7 @@ public class MpWifi extends Activity implements
         graph.getGridLabelRenderer().setHorizontalLabelsColor(getResources().getColor(android.R.color.white));
         graph.getGridLabelRenderer().setVerticalLabelsColor(getResources().getColor(android.R.color.white));
 
-        /* ? */ graph.getGridLabelRenderer().setGridColor(getResources().getColor(android.R.color.white));
+        graph.getGridLabelRenderer().setGridColor(getResources().getColor(android.R.color.white));
 
         graph.getGridLabelRenderer().setLabelFormatter(new LabelFormatter() {
             @Override
@@ -1309,10 +1345,10 @@ public class MpWifi extends Activity implements
             @Override
             public void setViewport(Viewport viewport) {
             }
-        });
+        });*/
     }
 
-    public class Guessing{
+    private class Guessing{
 
         String firstS = "", secondS = "", thirdS = "";
         TextView firstTW, secondTW, thirdTW;
@@ -1501,7 +1537,31 @@ public class MpWifi extends Activity implements
             return;
         }
 
-        gameState = -1;
-        setViewVisibility();
+        this.recreate();
+    }
+
+    private class LoadProfileImage extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public LoadProfileImage(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
     }
 }
