@@ -565,12 +565,6 @@ public class MpWifi extends Activity implements
     public void randomBg() {
         ArrayList<Integer> backgrounds = new ArrayList<>();
 
-        backgrounds.add(R.drawable.bckg2);
-        backgrounds.add(R.drawable.bckg3);
-        backgrounds.add(R.drawable.bckg4);
-        backgrounds.add(R.drawable.bckg5);
-        backgrounds.add(R.drawable.bckg6);
-        backgrounds.add(R.drawable.bckg7);
 
         Random rand = new Random();
         int randNum = rand.nextInt(backgrounds.size());

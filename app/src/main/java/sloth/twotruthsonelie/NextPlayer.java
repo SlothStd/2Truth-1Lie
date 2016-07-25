@@ -13,6 +13,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -44,19 +45,19 @@ public class NextPlayer extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.next_player_layout);
 
-        animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
+        animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_slower);
         canter = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/canter.otf");
 
         isGuessing = (TextView) findViewById(R.id.IsGuessingTW);
 
         firstTW = (TextView) findViewById(R.id.firstTW);
-        firstTW.setTypeface(canter);
+        firstTW.setMovementMethod(new ScrollingMovementMethod());
 
         secondTW = (TextView) findViewById(R.id.secondTW);
-        secondTW.setTypeface(canter);
+        secondTW.setMovementMethod(new ScrollingMovementMethod());
 
         thirdTW = (TextView) findViewById(R.id.thirdTW);
-        thirdTW.setTypeface(canter);
+        thirdTW.setMovementMethod(new ScrollingMovementMethod());
 
         loading1 = (ProgressBar) findViewById(R.id.progress1);
         loading2 = (ProgressBar) findViewById(R.id.progress2);
@@ -186,7 +187,12 @@ public class NextPlayer extends Activity {
             public void onClick(View v) {
                 dialogGame.dismiss();
 
+                secondTW.setBackground(getResources().getDrawable(R.drawable.custom_edittext_clicked));
+                secondTW.setTextColor(getResources().getColor(R.color.white));
+                thirdTW.setBackground(getResources().getDrawable(R.drawable.custom_edittext_clicked));
+                thirdTW.setTextColor(getResources().getColor(R.color.white));
                 firstTW.setBackground(getResources().getDrawable(R.drawable.custom_edittext_clicked));
+                firstTW.setTextColor(getResources().getColor(R.color.white));
 
                 SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
                 firstLie = preferences.getBoolean("firstLie", false);
@@ -221,6 +227,7 @@ public class NextPlayer extends Activity {
                     }
 
                     switchPlayer.setVisibility(View.VISIBLE);
+                    switchPlayer.setAnimation(animFadeIn);
                     isGuessing.setVisibility(View.GONE);
                     loading1.setVisibility(View.GONE);
                     loading2.setVisibility(View.GONE);
@@ -246,6 +253,7 @@ public class NextPlayer extends Activity {
                     }.start();
 
                     switchPlayer.setVisibility(View.VISIBLE);
+                    switchPlayer.setAnimation(animFadeIn);
                     isGuessing.setVisibility(View.GONE);
                     loading1.setVisibility(View.GONE);
                     loading2.setVisibility(View.GONE);
@@ -273,6 +281,7 @@ public class NextPlayer extends Activity {
                     thirdTW.setClickable(false);
 
                     switchPlayer.setVisibility(View.VISIBLE);
+                    switchPlayer.setAnimation(animFadeIn);
                     isGuessing.setVisibility(View.GONE);
                     loading1.setVisibility(View.GONE);
                     loading2.setVisibility(View.GONE);
@@ -300,7 +309,13 @@ public class NextPlayer extends Activity {
             @Override
             public void onClick(View v) {
                 dialogGame.dismiss();
+
                 secondTW.setBackground(getResources().getDrawable(R.drawable.custom_edittext_clicked));
+                secondTW.setTextColor(getResources().getColor(R.color.white));
+                thirdTW.setBackground(getResources().getDrawable(R.drawable.custom_edittext_clicked));
+                thirdTW.setTextColor(getResources().getColor(R.color.white));
+                firstTW.setBackground(getResources().getDrawable(R.drawable.custom_edittext_clicked));
+                firstTW.setTextColor(getResources().getColor(R.color.white));
 
                 SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
 
@@ -339,6 +354,7 @@ public class NextPlayer extends Activity {
                     }
 
                     switchPlayer.setVisibility(View.VISIBLE);
+                    switchPlayer.setAnimation(animFadeIn);
                     isGuessing.setVisibility(View.GONE);
                     loading1.setVisibility(View.GONE);
                     loading2.setVisibility(View.GONE);
@@ -361,6 +377,7 @@ public class NextPlayer extends Activity {
                     }.start();
 
                     switchPlayer.setVisibility(View.VISIBLE);
+                    switchPlayer.setAnimation(animFadeIn);
                     isGuessing.setVisibility(View.GONE);
                     loading1.setVisibility(View.GONE);
                     loading2.setVisibility(View.GONE);
@@ -387,6 +404,7 @@ public class NextPlayer extends Activity {
                     }.start();
 
                     switchPlayer.setVisibility(View.VISIBLE);
+                    switchPlayer.setAnimation(animFadeIn);
                     firstTW.setClickable(false);
                     thirdTW.setClickable(false);
                     thirdTW.setClickable(false);
@@ -416,7 +434,13 @@ public class NextPlayer extends Activity {
             @Override
             public void onClick(View v) {
                 dialogGame.dismiss();
+
+                secondTW.setBackground(getResources().getDrawable(R.drawable.custom_edittext_clicked));
+                secondTW.setTextColor(getResources().getColor(R.color.white));
                 thirdTW.setBackground(getResources().getDrawable(R.drawable.custom_edittext_clicked));
+                thirdTW.setTextColor(getResources().getColor(R.color.white));
+                firstTW.setBackground(getResources().getDrawable(R.drawable.custom_edittext_clicked));
+                firstTW.setTextColor(getResources().getColor(R.color.white));
 
                 SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
 
@@ -455,6 +479,7 @@ public class NextPlayer extends Activity {
                     }
 
                     switchPlayer.setVisibility(View.VISIBLE);
+                    switchPlayer.setAnimation(animFadeIn);
                     isGuessing.setVisibility(View.GONE);
                     loading1.setVisibility(View.GONE);
                     loading2.setVisibility(View.GONE);
@@ -477,6 +502,7 @@ public class NextPlayer extends Activity {
                     }.start();
 
                     switchPlayer.setVisibility(View.VISIBLE);
+                    switchPlayer.setAnimation(animFadeIn);
                     isGuessing.setVisibility(View.GONE);
                     loading1.setVisibility(View.GONE);
                     loading2.setVisibility(View.GONE);
@@ -504,6 +530,7 @@ public class NextPlayer extends Activity {
 
 
                     switchPlayer.setVisibility(View.VISIBLE);
+                    switchPlayer.setAnimation(animFadeIn);
                     isGuessing.setVisibility(View.GONE);
                     loading1.setVisibility(View.GONE);
                     loading2.setVisibility(View.GONE);

@@ -22,9 +22,7 @@
         android:layout_gravity="center"
         android:layout_height="wrap_content"
         android:padding="13dp"
-        android:text=" -Make friends in real life \n -Add friends to your circles on
-        google plus \n -be awesome \n -make sure ou got your wifi
-         turned on "
+        android:text="-Make sure you got your wifi turned on \n-Make friends in real life \n-Add them to to your Google+ circles (we don't like the system either, but there's no way around it) \n-Click the Play button and choose which friend you want to play with or use Automatch \n-Take your turn and wait for your friend to take theirs \n-Enjoy!"
         android:textSize="19sp"
         android:textColor="#000"
         />

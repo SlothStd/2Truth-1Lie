@@ -9,10 +9,13 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.view.Display;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -23,6 +26,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -32,33 +37,61 @@ public class OnePhone extends Activity {
     String fString, sString, tString;
     Snackbar snackbarEmpty2, snackbarEmpty;
     Boolean first, second, third;
-    TextView player1TW, player2TW;
+    TextView proceed, player1points, player2points, playerOneName, playerTwoName;
     Animation fade_in;
-    Button proceed;
     Integer current_round;
     CheckBox firstTruth, firstLie;
     CheckBox secondTruth, secondLie;
     CheckBox thirdTruth, thirdLie;
     Integer height;
+    LinearLayout.LayoutParams params;
+    LinearLayout linearLayout;
     GraphHistory graphHistory;
 
-    ArrayList<Integer> backgrounds = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.one_phone);
 
-        backgrounds.add(R.drawable.bckg2);
-        backgrounds.add(R.drawable.bckg3);
-        backgrounds.add(R.drawable.bckg4);
-        backgrounds.add(R.drawable.bckg5);
-        backgrounds.add(R.drawable.bckg6);
-        backgrounds.add(R.drawable.bckg7);
+        player1points = (TextView) findViewById(R.id.player1points);
+        player2points = (TextView) findViewById(R.id.player2points);
 
-        Random rand = new Random();
-        int radnNum = rand.nextInt(backgrounds.size());
-        findViewById(R.id.linearLayout).setBackgroundResource(backgrounds.get(radnNum));
+        playerOneName = (TextView) findViewById(R.id.player1TV);
+        playerTwoName = (TextView) findViewById(R.id.player2TV);
+
+        SharedPreferences prefs = getSharedPreferences("playerNames", MODE_PRIVATE);
+        try {
+            playerOneName.setText(prefs.getString("playerOneName", null));
+        } catch (NullPointerException e) {
+            playerOneName.setText("Player 1");
+        }
+        try {
+            playerTwoName.setText(prefs.getString("playerTwoName", null));
+        } catch (NullPointerException e) {
+            playerTwoName.setText("Player 2");
+        }
+
+        SharedPreferences points = getSharedPreferences("playerPoints", MODE_PRIVATE);
+        int player1 = points.getInt("player1", 0);
+        int player2 = points.getInt("player2", 0);
+
+        try {
+            player1points.setText(String.valueOf(player1));
+        } catch (NullPointerException e) {
+            player1points.setText("0");
+        }
+
+        try {
+            player2points.setText(String.valueOf(player2));
+        } catch (NullPointerException e) {
+            player2points.setText("0");
+        }
+
+        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+        if (currentapiVersion >= Build.VERSION_CODES.KITKAT) {
+            (findViewById(R.id.gameInfo)).setPadding(0, 30, 0, 0);
+        }
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -72,24 +105,12 @@ public class OnePhone extends Activity {
         secondS = (EditText) findViewById(R.id.secondS);
         thirdS = (EditText) findViewById(R.id.thirdS);
 
-        fade_in = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
-        player1TW = (TextView) findViewById(R.id.player1);
-        player2TW = (TextView) findViewById(R.id.player2);
+        fade_in = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_slower);
 
-        proceed = (Button) findViewById(R.id.proceed);
+        proceed = (TextView) findViewById(R.id.proceed);
 
 
         SharedPreferences currentR = getSharedPreferences("currentR", MODE_PRIVATE);
-
-
-        current_round = currentR.getInt("currentR", 0);
-        if ((current_round % 2) == 0) {
-            player1TW.setVisibility(View.VISIBLE);
-            player1TW.setAnimation(fade_in);
-        } else {
-            player2TW.setVisibility(View.VISIBLE);
-            player2TW.setAnimation(fade_in);
-        }
 
         /////////////////////////FIRST////////////////////////////
 
@@ -97,17 +118,23 @@ public class OnePhone extends Activity {
             @Override
             public boolean onLongClick(View v) {
 
+                proceed.setVisibility(View.VISIBLE);
+                proceed.setAnimation(fade_in);
+
                 SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
                 SharedPreferences.Editor editor = preferences.edit();
 
                 secondLie.setChecked(false);
                 secondS.setBackgroundResource(R.drawable.custom_edittext_truth);
+                secondS.setTextColor(getResources().getColor(R.color.black));
 
                 thirdLie.setChecked(false);
                 thirdS.setBackgroundResource(R.drawable.custom_edittext_truth);
+                thirdS.setTextColor(getResources().getColor(R.color.black));
 
                 firstLie.setChecked(true);
                 firstS.setBackgroundResource(R.drawable.custom_edittex_lie);
+                firstS.setTextColor(getResources().getColor(R.color.white));
                 firstTruth.setChecked(false);
 
                 editor.putBoolean("firstLie", false).apply();
@@ -129,12 +156,15 @@ public class OnePhone extends Activity {
 
                 secondLie.setChecked(false);
                 secondS.setBackgroundResource(R.drawable.custom_edittext_truth);
+                secondS.setTextColor(getResources().getColor(R.color.black));
 
                 thirdLie.setChecked(false);
                 thirdS.setBackgroundResource(R.drawable.custom_edittext_truth);
+                thirdS.setTextColor(getResources().getColor(R.color.black));
 
                 firstLie.setChecked(true);
                 firstS.setBackgroundResource(R.drawable.custom_edittex_lie);
+                firstS.setTextColor(getResources().getColor(R.color.white));
                 firstTruth.setChecked(false);
 
                 editor.putBoolean("firstLie", false).apply();
@@ -158,17 +188,24 @@ public class OnePhone extends Activity {
         secondS.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+
+                proceed.setVisibility(View.VISIBLE);
+                proceed.setAnimation(fade_in);
+
                 SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
                 SharedPreferences.Editor editor = preferences.edit();
 
                 firstLie.setChecked(false);
                 firstS.setBackgroundResource(R.drawable.custom_edittext_truth);
+                firstS.setTextColor(getResources().getColor(R.color.black));
 
                 thirdLie.setChecked(false);
                 thirdS.setBackgroundResource(R.drawable.custom_edittext_truth);
+                thirdS.setTextColor(getResources().getColor(R.color.black));
 
                 secondLie.setChecked(true);
                 secondS.setBackgroundResource(R.drawable.custom_edittex_lie);
+                secondS.setTextColor(getResources().getColor(R.color.white));
                 secondTruth.setChecked(false);
 
                 editor.putBoolean("secondLie", false).apply();
@@ -188,12 +225,15 @@ public class OnePhone extends Activity {
 
                 firstLie.setChecked(false);
                 firstS.setBackgroundResource(R.drawable.custom_edittext_truth);
+                firstS.setTextColor(getResources().getColor(R.color.black));
 
                 thirdLie.setChecked(false);
                 thirdS.setBackgroundResource(R.drawable.custom_edittext_truth);
+                thirdS.setTextColor(getResources().getColor(R.color.black));
 
                 secondLie.setChecked(true);
                 secondS.setBackgroundResource(R.drawable.custom_edittex_lie);
+                secondS.setTextColor(getResources().getColor(R.color.white));
                 secondTruth.setChecked(false);
 
                 editor.putBoolean("secondLie", false).apply();
@@ -218,17 +258,23 @@ public class OnePhone extends Activity {
             @Override
             public boolean onLongClick(View v) {
 
+                proceed.setVisibility(View.VISIBLE);
+                proceed.setAnimation(fade_in);
+
                 SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
                 SharedPreferences.Editor editor = preferences.edit();
 
                 firstLie.setChecked(false);
                 firstS.setBackgroundResource(R.drawable.custom_edittext_truth);
+                firstS.setTextColor(getResources().getColor(R.color.black));
 
                 secondLie.setChecked(false);
                 secondS.setBackgroundResource(R.drawable.custom_edittext_truth);
+                secondS.setTextColor(getResources().getColor(R.color.black));
 
                 thirdLie.setChecked(true);
                 thirdS.setBackgroundResource(R.drawable.custom_edittex_lie);
+                thirdS.setTextColor(getResources().getColor(R.color.white));
                 thirdTruth.setChecked(false);
 
                 editor.putBoolean("thirdLie", false).apply();
@@ -249,12 +295,15 @@ public class OnePhone extends Activity {
 
                 firstLie.setChecked(false);
                 firstS.setBackgroundResource(R.drawable.custom_edittext_truth);
+                firstS.setTextColor(getResources().getColor(R.color.black));
 
                 secondLie.setChecked(false);
                 secondS.setBackgroundResource(R.drawable.custom_edittext_truth);
+                secondS.setTextColor(getResources().getColor(R.color.black));
 
                 thirdLie.setChecked(true);
                 thirdS.setBackgroundResource(R.drawable.custom_edittex_lie);
+                thirdS.setTextColor(getResources().getColor(R.color.white));
                 thirdTruth.setChecked(false);
 
                 editor.putBoolean("thirdLie", false).apply();

@@ -15,6 +15,12 @@
         android:entryValues="@array/rounds"
         android:defaultValue="" />
 
+    <PreferenceScreen android:key="names"
+        android:title="Player names"
+        android:summary="Set names for singleplayer" >
+        android:textColor="@color/white"
+    </PreferenceScreen>
+
     <PreferenceScreen android:key="howTo"
         android:title="Friends"
         android:summary="How to play with friends" >
