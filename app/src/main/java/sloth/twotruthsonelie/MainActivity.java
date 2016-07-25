@@ -56,6 +56,8 @@ public class MainActivity extends Activity {
             startActivity(multi);
         }
 
+
+
         if (hasSoftKeys()){
 
             final float scale = getResources().getDisplayMetrics().density;
@@ -85,7 +87,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                Intent singleplayer = new Intent(MainActivity.this, ScoreActivity.class);
+                Intent singleplayer = new Intent(MainActivity.this, OnePhone.class);
                 startActivity(singleplayer);
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 MainActivity.this.finish();

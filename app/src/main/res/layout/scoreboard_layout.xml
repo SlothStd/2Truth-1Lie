@@ -36,6 +36,38 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:src="@drawable/green_circle_bckg" />
+
+            <ProgressBar
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:progressDrawable="@drawable/level_progress_bckg"
+                android:max="10"
+                android:progress="10"/>
+
+            <ProgressBar
+                android:id="@+id/player1_progress"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:progressDrawable="@drawable/level_progress"
+                android:max="10"
+                android:progress="3" />
+
+            <TextView
+                android:id="@+id/player1_level"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="bottom|right"
+                android:layout_marginBottom="3dp"
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                android:text="5"
+                android:gravity="center"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/circle"/>
+
+
         </FrameLayout>
 
 
@@ -61,9 +93,10 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_alignParentLeft="true"
-            android:paddingLeft="12dp">
+            android:paddingLeft="17dp">
 
             <TextView
+                android:id="@+id/playerOnePoints"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="22"
@@ -71,6 +104,7 @@
                 android:textSize="50dp"/>
 
             <TextView
+                android:id="@+id/points1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="4dp"
@@ -94,10 +128,11 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_horizontal"
-            android:paddingRight="12dp"
+            android:paddingRight="17dp"
             android:layout_alignParentRight="true">
 
             <TextView
+                android:id="@+id/playerTwoPoints"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="19"
@@ -105,12 +140,15 @@
                 android:textSize="50dp"/>
 
             <TextView
+                android:id="@+id/points2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="4dp"
                 android:text="points"
                 android:textColor="@color/white"
                 android:textSize="20dp"/>
+
+
 
         </LinearLayout>
 
@@ -140,8 +178,39 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:src="@drawable/red_circle_bckg" />
-        </FrameLayout>
 
+            <ProgressBar
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:progressDrawable="@drawable/level_progress_bckg"
+                android:max="10"
+                android:progress="10"/>
+
+            <ProgressBar
+                android:id="@+id/player2_progress"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:progressDrawable="@drawable/level_progress"
+                android:max="10"
+                android:progress="3" />
+
+            <TextView
+                android:id="@+id/player2_level"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="bottom|right"
+                android:layout_marginBottom="3dp"
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                android:text="5"
+                android:gravity="center"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/circle"/>
+
+
+        </FrameLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
