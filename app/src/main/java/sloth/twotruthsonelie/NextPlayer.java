@@ -20,6 +20,7 @@ import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +36,7 @@ public class NextPlayer extends Activity {
     Animation animFadeIn;
     Typeface canter;
     GraphHistory graphHistory;
+    ImageView  playerGuessing;
     boolean wasTrue;
     public Dialog dialogGame;
     private ProgressBar loading1, loading2;
@@ -47,6 +49,14 @@ public class NextPlayer extends Activity {
 
         animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_slower);
         canter = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/canter.otf");
+
+        playerGuessing = (ImageView) findViewById(R.id.playerGuessing);
+        SharedPreferences currentR = getSharedPreferences("currentR", MODE_PRIVATE);
+        if (currentR.getInt("currentR", 0) % 2 == 0) {
+            playerGuessing.setImageResource(R.drawable.user2);
+        } else {
+            playerGuessing.setImageResource(R.drawable.user1);
+        }
 
         isGuessing = (TextView) findViewById(R.id.IsGuessingTW);
 
@@ -551,7 +561,7 @@ public class NextPlayer extends Activity {
     public void onBackPressed() {
 
         final CustomDialog custom_dialog = new CustomDialog();
-        custom_dialog.showDiaolg(NextPlayer.this, "Exit", "Cancle", "Are you sure you want to exit?");
+        custom_dialog.showDiaolg(NextPlayer.this, "Exit", "Cancel", "Are you sure you want to exit?");
         custom_dialog.positive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

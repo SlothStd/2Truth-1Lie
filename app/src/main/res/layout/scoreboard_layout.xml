@@ -29,13 +29,14 @@
                 android:id="@+id/user_avatar1"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:src="@drawable/logo" />
+                android:src="@drawable/user1" />
 
             <ImageView
                 android:id="@+id/circle_bckg1"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:src="@drawable/green_circle_bckg" />
+
 
             <ProgressBar
                 android:layout_width="match_parent"
@@ -70,10 +71,11 @@
 
 
         <TextView
+            android:id="@+id/player1SBname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
-            android:text="SurlierBacchus"
+            android:text="SurlierBacchus123"
             android:textColor="@color/white"
             android:textSize="20dp"
             android:layout_marginTop="6dp"/>
@@ -169,7 +171,7 @@
                 android:id="@+id/user_avatar2"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:src="@drawable/logo" />
+                android:src="@drawable/user2" />
 
             <ImageView
                 android:id="@+id/circle_bckg2"
@@ -208,6 +210,7 @@
 
         </FrameLayout>
         <TextView
+            android:id="@+id/player2SBname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"

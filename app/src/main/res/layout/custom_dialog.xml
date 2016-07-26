@@ -38,24 +38,26 @@
         android:weightSum="2" >
 
         <Button
-            android:id="@+id/dialogPositive"
+            android:id="@+id/dialogNegative"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Got It"
+            android:text="Cancel"
             android:layout_marginLeft="150dp"
             android:layout_marginRight="0.5dp"
+            android:layout_marginBottom="5dp"
             android:textSize="15sp"
             android:textColor="@color/coolRed"
             android:background="@android:color/transparent"
             android:layout_weight="1"/>
 
         <Button
-            android:id="@+id/dialogNegative"
+            android:id="@+id/dialogPositive"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancle"
+            android:text="Got It"
             android:layout_marginLeft="0.5dp"
             android:layout_marginRight="10dp"
+            android:layout_marginBottom="5dp"
             android:textSize="15sp"
             android:textColor="@color/coolRed"
             android:background="@android:color/transparent"
