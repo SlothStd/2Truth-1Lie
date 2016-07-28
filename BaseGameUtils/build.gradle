@@ -7,7 +7,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.google.gms:google-services:2.0.0-alpha3'
+        classpath 'com.google.gms:google-services:3.0.0'
         classpath 'com.android.tools.build:gradle:2.1.2'
     }
 }
@@ -21,7 +21,7 @@ dependencies {
         ext.support_library_version = '20.0.+'
     }
     if (!project.hasProperty('gms_library_version')) {
-        ext.gms_library_version = '8.1.0'
+        ext.gms_library_version = '9.2.1'
     }
 
     compile "com.android.support:appcompat-v7:${appcompat_library_version}"
