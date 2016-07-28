@@ -3,7 +3,6 @@ package sloth.twotruthsonelie;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Random;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
@@ -56,23 +55,19 @@ import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMultiplayer;
 import com.google.android.gms.games.multiplayer.Multiplayer;
 import com.google.android.gms.plus.Plus;
 import com.google.example.games.basegameutils.BaseGameUtils;
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.LabelFormatter;
-import com.jjoe64.graphview.Viewport;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
 
 /**
  * Created by Robo on 28-Jan-16.
  * E:\Program Files\Android Studio\SDK\platform-tools
- * adb install C:\AndroidStudio\2Truth-1Lie\app\app-release.apk
+ * adb install -r C:\AndroidStudio\2Truth-1Lie\app\app-release.apk
  */
 public class MpWifi extends Activity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         OnInvitationReceivedListener,
         OnTurnBasedMatchUpdateReceivedListener,
-        View.OnClickListener {
+        View.OnClickListener,
+        View.OnKeyListener{
 
     public static final String TAG = "2T1L MpWifi";
 
@@ -129,11 +124,15 @@ public class MpWifi extends Activity implements
     int totalWins, totalLoses;
 
     CountDownTimer timer;
-    ProgressBar loading1, loading2, score;
+    ProgressBar score;
     ProgressDialog progress;
     ObjectAnimator animation;
     CountDownTimer timer2;
     int points;
+    ProgressBar player1Progress, player2Progress;
+    CheckBox firstTruth, firstLie;
+    CheckBox secondTruth, secondLie;
+    CheckBox thirdTruth, thirdLie;
 
     LinearLayout layout;
     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -191,16 +190,11 @@ public class MpWifi extends Activity implements
         secondS = (EditText) findViewById(R.id.secondS);
         thirdS = (EditText) findViewById(R.id.thirdS);
         danyhoDivneCheckboxy();
-
-        //loading1 = (ProgressBar) findViewById(R.id.loading1);
-        loading2 = (ProgressBar) findViewById(R.id.loading2);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        if (true) return;
 
         if (hasSoftKeys()) {
 
@@ -213,7 +207,7 @@ public class MpWifi extends Activity implements
             findViewById(R.id.MpWifi_main_layout).setPadding(0, 0, 0, 0);
         }
 
-        updateLevels();
+        updateLevels(0);
 
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         try {
@@ -263,8 +257,6 @@ public class MpWifi extends Activity implements
     @Override
     protected void onStop() {
         super.onStop();
-
-        if (true) return;
 
         saveSP();
 
@@ -359,6 +351,11 @@ public class MpWifi extends Activity implements
     // Displays your inbox. You will get back onActivityResult where
     // you will need to figure out what you clicked on.
     public void onCheckGamesClicked(View view) {
+        if (!mGoogleApiClient.isConnected()){
+            showWarning("Please sign in", "Sign in with your Google account to use this online feature");
+            return;
+        }
+
         Intent intent = Games.TurnBasedMultiplayer.getInboxIntent(mGoogleApiClient);
         startActivityForResult(intent, RC_LOOK_AT_MATCHES);
     }
@@ -366,6 +363,11 @@ public class MpWifi extends Activity implements
     // Open the create-game UI. You will get back an onActivityResult
     // and figure out what to do.
     public void onStartMatchClicked(View view) {
+        if (!mGoogleApiClient.isConnected()){
+            showWarning("Please sign in", "Sign in with your Google account to use this online feature");
+            return;
+        }
+
         Intent intent =
                 Games.TurnBasedMultiplayer.getSelectOpponentsIntent(mGoogleApiClient, 1, 1, true);
         startActivityForResult(intent, RC_SELECT_PLAYERS);
@@ -460,6 +462,10 @@ public class MpWifi extends Activity implements
                     }
                 });
 
+        ((TextView) findViewById(R.id.firstTW_wait_mp)).setText(sentences.get(0));
+        ((TextView) findViewById(R.id.secondTW_wait_mp)).setText(sentences.get(1));
+        ((TextView) findViewById(R.id.thirdTW_wait_mp)).setText(sentences.get(2));
+
         firstS.setText("");
         secondS.setText("");
         thirdS.setText("");
@@ -506,6 +512,16 @@ public class MpWifi extends Activity implements
 
         getPlayerIDs();
 
+        int top = 0, bottom = 0;
+        if (hasSoftKeys()) {
+
+            final float scale = getResources().getDisplayMetrics().density;
+            top = (int) (24 * scale + 0.5f);
+            bottom = (int) (48 * scale + 0.5f);
+
+            findViewById(R.id.MpWifi_main_layout).setPadding(0, top, 0, bottom);
+        }
+
         switch (gameState) {
             case -1: //Buttons
 
@@ -514,6 +530,13 @@ public class MpWifi extends Activity implements
                 findViewById(R.id.chooseTexts).setVisibility(View.GONE);
                 findViewById(R.id.notYourTurn).setVisibility(View.GONE);
                 findViewById(R.id.gameFinished).setVisibility(View.GONE);
+
+                if (hasSoftKeys()) {
+
+                    findViewById(R.id.MpWifi_main_layout).setPadding(0, top, 0, bottom);
+                } else {
+                    findViewById(R.id.MpWifi_main_layout).setPadding(0, 0, 0, 0);
+                }
 
                 Log.d(TAG, "Buttons");
 
@@ -526,9 +549,17 @@ public class MpWifi extends Activity implements
                 findViewById(R.id.notYourTurn).setVisibility(View.VISIBLE);
                 findViewById(R.id.gameFinished).setVisibility(View.GONE);
 
-                metoda1();
+                if (hasSoftKeys()) {
+
+                    findViewById(R.id.MpWifi_main_layout).setPadding(0, 0, 0, bottom);
+                    findViewById(R.id.gameInfo_mp).setPadding(0, top, 0, 0);
+                } else {
+                    findViewById(R.id.MpWifi_main_layout).setPadding(0, 0, 0, 0);
+                }
 
                 Log.d(TAG, "Not your turn");
+
+                tocenie();
 
                 break;
 
@@ -539,7 +570,17 @@ public class MpWifi extends Activity implements
                 findViewById(R.id.notYourTurn).setVisibility(View.GONE);
                 findViewById(R.id.gameFinished).setVisibility(View.GONE);
 
-                randomBg();
+                if (hasSoftKeys()) {
+
+                    findViewById(R.id.MpWifi_main_layout).setPadding(0, 0, 0, bottom);
+                    findViewById(R.id.gameInfo_mp).setPadding(0, top, 0, 0);
+                } else {
+                    findViewById(R.id.MpWifi_main_layout).setPadding(0, 0, 0, 0);
+                }
+
+                findViewById(R.id.firstS).setOnKeyListener(this);
+                findViewById(R.id.secondS).setOnKeyListener(this);
+                findViewById(R.id.thirdS).setOnKeyListener(this);
 
                 Log.d(TAG, "Setting");
 
@@ -552,7 +593,17 @@ public class MpWifi extends Activity implements
                 findViewById(R.id.notYourTurn).setVisibility(View.GONE);
                 findViewById(R.id.gameFinished).setVisibility(View.GONE);
 
+                if (hasSoftKeys()) {
+
+                    findViewById(R.id.MpWifi_main_layout).setPadding(0, 0, 0, bottom);
+                    findViewById(R.id.guess_info_mp).setPadding(0, top, 0, 0);
+                } else {
+                    findViewById(R.id.MpWifi_main_layout).setPadding(0, 0, 0, 0);
+                }
+
                 Log.d(TAG, "Guessing");
+
+                tocenie();
 
                 new Guessing().start();
 
@@ -565,20 +616,14 @@ public class MpWifi extends Activity implements
                 findViewById(R.id.notYourTurn).setVisibility(View.GONE);
                 findViewById(R.id.gameFinished).setVisibility(View.VISIBLE);
 
+                findViewById(R.id.MpWifi_main_layout).setPadding(0, 0, 0, 0);
+
                 finishGame();
 
                 break;
         }
     }
 
-    public void randomBg() {
-        ArrayList<Integer> backgrounds = new ArrayList<>();
-
-
-        Random rand = new Random();
-        int randNum = rand.nextInt(backgrounds.size());
-        findViewById(R.id.MpWifi_main_layout).setBackgroundResource(backgrounds.get(randNum));
-    }
 
     // Switch to gameplay view.
     public void setGameplayUI() {
@@ -669,28 +714,22 @@ public class MpWifi extends Activity implements
                     });
         }
 
-        ((TextView) findViewById(R.id.scoreTV)).setText("");
-        ((TextView) findViewById(R.id.p_2_TV)).setText(matchData.getScores(0) + " - " + matchData.getScores(1));
-
         SharedPreferences prefs = getSharedPreferences("Levels", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
         int xp = prefs.getInt("xp", 0);
 
         if (matchData.didIWin(player) == null) {
-            ((TextView) findViewById(R.id.p_1_TV)).setText(R.string.its_a_tie);
 
             xp += gameFinishedXp;
             xp += tieBonus;
             xp += (matchData.getScores(player) * roundWinBonus);
         } else if (matchData.didIWin(player)) {
-            ((TextView) findViewById(R.id.p_1_TV)).setText(R.string.you_win);
 
             xp += gameFinishedXp;
             xp += winBonus;
             xp += (matchData.getScores(player) * roundWinBonus);
         } else {
-            ((TextView) findViewById(R.id.p_1_TV)).setText(R.string.you_lose);
 
             xp += gameFinishedXp;
             xp += (matchData.getScores(player) * roundWinBonus);
@@ -702,6 +741,71 @@ public class MpWifi extends Activity implements
         totalLoses += (roundCount / 2) - graphHistory.myWinCount();
 
         Log.d(TAG, String.valueOf(xp));
+
+
+        ((TextView) findViewById(R.id.finish_name1)).setText(myDisplayName);
+        ((TextView) findViewById(R.id.finish_name2)).setText(hisDisplayName);
+
+        TextView playerOnePoints, playerTwoPoints;
+        int player1, player2;
+        ImageView scoreboardBckg, circularBckg1, circularBckg2;
+
+        scoreboardBckg = (ImageView) findViewById(R.id.score_board_bg);
+        circularBckg2 = (ImageView) findViewById(R.id.circle_bckg2);
+        circularBckg1 = (ImageView) findViewById(R.id.circle_bckg1);
+
+        player1Progress = (ProgressBar) findViewById(R.id.player1_progress_mp);
+        player1Progress.setProgress(0);
+        player1Progress.setMax(100000);
+        player2Progress = (ProgressBar) findViewById(R.id.player2_progress_mp);
+        player2Progress.setProgress(0);
+        player2Progress.setMax(100000);
+
+        playerOnePoints = (TextView) findViewById(R.id.playerOnePoints_mp);
+        playerTwoPoints = (TextView) findViewById(R.id.playerTwoPoints_mp);
+
+        float rotation1 = player1Progress.getRotation();
+        player1Progress.setRotation(rotation1 + 40);
+        float rotation2 = player2Progress.getRotation();
+        player2Progress.setRotation(rotation2 + 40);
+
+        player1 = matchData.getScores(0);
+        player2 = matchData.getScores(1);
+
+        updateLevels(1);
+
+        if (player1 == player2) {
+            scoreboardBckg.setImageResource(R.drawable.scoreboard_green);
+            circularBckg2.setImageResource(R.drawable.green_circle_bckg);
+        }
+
+        if (player2 > player1) {
+            float rotation = scoreboardBckg.getRotation();
+            scoreboardBckg.setRotation(rotation + 180);
+            circularBckg1.setImageResource(R.drawable.red_circle_bckg);
+            circularBckg2.setImageResource(R.drawable.green_circle_bckg);
+        }
+
+        try {
+            playerOnePoints.setText(String.valueOf(player1));
+            if (player1 == 1) {
+                TextView textView1 = (TextView)findViewById(R.id.points1);
+                textView1.setText("point");
+            }
+        } catch (NullPointerException e) {
+            playerOnePoints.setText("0");
+        }
+        try {
+            playerTwoPoints.setText(String.valueOf(player2));
+            if (player2 == 1) {
+                TextView textView2 = (TextView)findViewById(R.id.points2);
+                textView2.setText("point");
+            }
+        } catch (NullPointerException e) {
+            playerTwoPoints.setText("0");
+        }
+
+
     }
 
     // Rematch dialog
@@ -849,15 +953,19 @@ public class MpWifi extends Activity implements
         myPhoto = mMatch.getParticipant(myID).getIconImageUrl();
         hisPhoto = mMatch.getParticipant(hisID).getIconImageUrl();
 
-        new LoadProfileImage((ImageView) findViewById(R.id.profile_pic_1)).execute(myPhoto);
-        new LoadProfileImage((ImageView) findViewById(R.id.profile_pic_2)).execute(hisPhoto);
+        ((TextView) findViewById(R.id.player1TV_mp)).setText(myDisplayName);
+        ((TextView) findViewById(R.id.player2TV_mp)).setText(hisDisplayName);
+        ((TextView) findViewById(R.id.player1points_mp)).setText(String.valueOf(matchData.getScores().get(player)));
+        ((TextView) findViewById(R.id.player2points_mp)).setText(String.valueOf(matchData.getScores().get(Math.abs(player - 1))));
 
-        ((TextView) findViewById(R.id.p_1_TV)).setText(myDisplayName);
-        ((TextView) findViewById(R.id.p_2_TV)).setText(hisDisplayName);
-        ((TextView) findViewById(R.id.scoreTV)).setText(matchData.getScores().get(player) + " - " + matchData.getScores().get(Math.abs(player - 1)));
+        new LoadProfileImage((ImageView) findViewById(R.id.avatar1_mp)).execute(myPhoto);
+        new LoadProfileImage((ImageView) findViewById(R.id.avatar2_mp)).execute(hisPhoto);
+
+        new LoadProfileImage((ImageView) findViewById(R.id.not_your_turn_avatar)).execute(hisPhoto);
+        new LoadProfileImage((ImageView) findViewById(R.id.user_avatar1_guess)).execute(myPhoto);
     }
 
-    public void updateLevels() {
+    public void updateLevels(int ktore) {
         SharedPreferences preferences = getSharedPreferences("Levels", Context.MODE_PRIVATE);
         int xp = preferences.getInt("xp", 0),
                 a = 50,
@@ -872,12 +980,73 @@ public class MpWifi extends Activity implements
             a += a + (Math.round(0.1 * a));
         }
 
-        ((TextView) findViewById(R.id.levelTextView)).setText("Level " + String.valueOf(level));
+        switch (ktore){
+            case 0: // V maine MpWifi
+                ((TextView) findViewById(R.id.levelTextView)).setText("Level " + String.valueOf(level));
 
-        ProgressBar progressBar = (ProgressBar) findViewById(R.id.levelProgress);
+                ProgressBar progressBar = (ProgressBar) findViewById(R.id.levelProgress);
 
-        progressBar.setMax(a);
-        progressBar.setProgress(xp - previous);
+                progressBar.setMax(a);
+                progressBar.setProgress(xp - previous);
+                break;
+
+            case 1: // Na konci hry
+
+                int hisXp = matchData.getHisXp();
+                int hisLevel = 1;
+                int hisA = 50;
+                previous = 0;
+
+                while (a <= xp) {
+                    level++;
+
+                    previous = a;
+
+                    a += a + (Math.round(0.1 * a));
+                }
+
+                TextView player1Level = (TextView) findViewById(R.id.player1_level_mp);
+                player1Level.setText(String.valueOf(level));
+
+                TextView player2Level = (TextView) findViewById(R.id.player2_level_mp);
+                player2Level.setText(String.valueOf(hisLevel));
+
+                //tu si dopln int na levelprogress do progressbarov (to uz mas nastavene iba tieto inty si uprav)
+                final int player1LevelProgress = ((xp / a) * 10) * 10000; // krat 10k kvoli smooth animacii
+                final int player2LevelProgress = ((hisXp / hisA) * 10) * 10000;
+
+                CountDownTimer timer = new CountDownTimer(1300, 1000) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        animation = new ObjectAnimator().ofInt(player1Progress, "progress", 0, player1LevelProgress);
+                        animation.setDuration(2000);
+                        animation.setInterpolator(new AccelerateDecelerateInterpolator());
+                        animation.start();
+                    }
+                }.start();
+
+                CountDownTimer timer2 = new CountDownTimer(1300, 1000) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        animation = new ObjectAnimator().ofInt(player2Progress, "progress", 0, player2LevelProgress);
+                        animation.setDuration(2000);
+                        animation.setInterpolator(new AccelerateDecelerateInterpolator());
+                        animation.start();
+                    }
+                }.start();
+        }
+
+
     }
 
     // If you choose to rematch, then call it and wait for a response.
@@ -1191,13 +1360,31 @@ public class MpWifi extends Activity implements
     }
 
     public void danyhoDivneCheckboxy() {
+        final TextView proceed = (TextView) findViewById(R.id.proceed);
+        final Animation fade_in = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_slower);
+
+        /////////////////////////FIRST////////////////////////////
+
         firstS.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
 
+                proceed.setVisibility(View.VISIBLE);
+                proceed.setAnimation(fade_in);
+
+
+                secondLie.setChecked(false);
                 secondS.setBackgroundResource(R.drawable.custom_edittext_truth);
+                secondS.setTextColor(getResources().getColor(R.color.black));
+
+                thirdLie.setChecked(false);
                 thirdS.setBackgroundResource(R.drawable.custom_edittext_truth);
+                thirdS.setTextColor(getResources().getColor(R.color.black));
+
+                firstLie.setChecked(true);
                 firstS.setBackgroundResource(R.drawable.custom_edittex_lie);
+                firstS.setTextColor(getResources().getColor(R.color.white));
+                firstTruth.setChecked(false);
 
                 matchData.setLiePos(0);
 
@@ -1205,33 +1392,211 @@ public class MpWifi extends Activity implements
             }
         });
 
+
+        firstLie = (CheckBox) findViewById(R.id.firstLie);
+        firstLie.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                secondLie.setChecked(false);
+                secondS.setBackgroundResource(R.drawable.custom_edittext_truth);
+                secondS.setTextColor(getResources().getColor(R.color.black));
+
+                thirdLie.setChecked(false);
+                thirdS.setBackgroundResource(R.drawable.custom_edittext_truth);
+                thirdS.setTextColor(getResources().getColor(R.color.black));
+
+                firstLie.setChecked(true);
+                firstS.setBackgroundResource(R.drawable.custom_edittex_lie);
+                firstS.setTextColor(getResources().getColor(R.color.white));
+                firstTruth.setChecked(false);
+
+                matchData.setLiePos(0);
+            }
+        });
+
+        firstTruth = (CheckBox) findViewById(R.id.firstTruth);
+        firstTruth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firstTruth.setChecked(true);
+                firstS.setBackgroundResource(R.drawable.custom_edittext_truth);
+                firstLie.setChecked(false);
+            }
+        });
+
+        /////////////////////////SECOND//////////////////////////////
+
         secondS.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
 
+                proceed.setVisibility(View.VISIBLE);
+                proceed.setAnimation(fade_in);
+
+                firstLie.setChecked(false);
                 firstS.setBackgroundResource(R.drawable.custom_edittext_truth);
+                firstS.setTextColor(getResources().getColor(R.color.black));
+
+                thirdLie.setChecked(false);
                 thirdS.setBackgroundResource(R.drawable.custom_edittext_truth);
+                thirdS.setTextColor(getResources().getColor(R.color.black));
+
+                secondLie.setChecked(true);
                 secondS.setBackgroundResource(R.drawable.custom_edittex_lie);
+                secondS.setTextColor(getResources().getColor(R.color.white));
+                secondTruth.setChecked(false);
 
                 matchData.setLiePos(1);
-
                 return true;
             }
         });
+
+        secondLie = (CheckBox) findViewById(R.id.secondLie);
+        secondLie.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                firstLie.setChecked(false);
+                firstS.setBackgroundResource(R.drawable.custom_edittext_truth);
+                firstS.setTextColor(getResources().getColor(R.color.black));
+
+                thirdLie.setChecked(false);
+                thirdS.setBackgroundResource(R.drawable.custom_edittext_truth);
+                thirdS.setTextColor(getResources().getColor(R.color.black));
+
+                secondLie.setChecked(true);
+                secondS.setBackgroundResource(R.drawable.custom_edittex_lie);
+                secondS.setTextColor(getResources().getColor(R.color.white));
+                secondTruth.setChecked(false);
+
+                matchData.setLiePos(1);
+            }
+        });
+
+        secondTruth = (CheckBox) findViewById(R.id.secondTruth);
+        secondTruth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                secondTruth.setChecked(true);
+                secondS.setBackgroundResource(R.drawable.custom_edittext_truth);
+                secondLie.setChecked(false);
+            }
+        });
+
+        /////////////////////////THIRD/////////////////////////////////
 
         thirdS.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
 
-                secondS.setBackgroundResource(R.drawable.custom_edittext_truth);
+                proceed.setVisibility(View.VISIBLE);
+                proceed.setAnimation(fade_in);
+
+                firstLie.setChecked(false);
                 firstS.setBackgroundResource(R.drawable.custom_edittext_truth);
+                firstS.setTextColor(getResources().getColor(R.color.black));
+
+                secondLie.setChecked(false);
+                secondS.setBackgroundResource(R.drawable.custom_edittext_truth);
+                secondS.setTextColor(getResources().getColor(R.color.black));
+
+                thirdLie.setChecked(true);
                 thirdS.setBackgroundResource(R.drawable.custom_edittex_lie);
+                thirdS.setTextColor(getResources().getColor(R.color.white));
+                thirdTruth.setChecked(false);
 
                 matchData.setLiePos(2);
 
                 return true;
             }
         });
+
+        thirdLie = (CheckBox) findViewById(R.id.thirdLie);
+        thirdLie.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                firstLie.setChecked(false);
+                firstS.setBackgroundResource(R.drawable.custom_edittext_truth);
+                firstS.setTextColor(getResources().getColor(R.color.black));
+
+                secondLie.setChecked(false);
+                secondS.setBackgroundResource(R.drawable.custom_edittext_truth);
+                secondS.setTextColor(getResources().getColor(R.color.black));
+
+                thirdLie.setChecked(true);
+                thirdS.setBackgroundResource(R.drawable.custom_edittex_lie);
+                thirdS.setTextColor(getResources().getColor(R.color.white));
+                thirdTruth.setChecked(false);
+
+                matchData.setLiePos(2);
+            }
+        });
+
+        thirdTruth = (CheckBox) findViewById(R.id.thirdTruth);
+        thirdTruth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                thirdTruth.setChecked(true);
+                thirdS.setBackgroundColor(getResources().getColor(R.color.truth));
+                thirdLie.setChecked(false);
+            }
+        });
+
+        proceed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onDoneClicked(v);
+
+                firstLie.setChecked(false);
+                firstS.setBackgroundResource(R.drawable.custom_edittext_truth);
+                firstS.setTextColor(getResources().getColor(R.color.black));
+
+                secondLie.setChecked(false);
+                secondS.setBackgroundResource(R.drawable.custom_edittext_truth);
+                secondS.setTextColor(getResources().getColor(R.color.black));
+
+                thirdLie.setChecked(false);
+                thirdS.setBackgroundResource(R.drawable.custom_edittext_truth);
+                thirdS.setTextColor(getResources().getColor(R.color.black));
+
+                proceed.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+        if ((event.getAction() == KeyEvent.ACTION_DOWN)
+                && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+
+            switch (v.getId()) {
+                case R.id.firstS:
+
+                    findViewById(R.id.firstS).clearFocus();
+                    findViewById(R.id.secondS).requestFocus();
+
+                    return true;
+
+                case R.id.secondS:
+
+                    findViewById(R.id.secondS).clearFocus();
+                    findViewById(R.id.thirdS).requestFocus();
+
+                    return true;
+
+                case R.id.thirdS:
+
+                    findViewById(R.id.thirdS).clearFocus();
+                    findViewById(R.id.firstS).requestFocus();
+
+                    return true;
+            }
+        }
+
+        return false;
     }
 
     private class Guessing{
@@ -1389,13 +1754,16 @@ public class MpWifi extends Activity implements
         return hasSoftwareKeys;
     }
 
-    public void metoda1() {
+    public void tocenie() {
 
         if (true) {
 
             timer = new CountDownTimer(100, 10) {
                 @Override
                 public void onTick(long millisUntilFinished) {
+
+                    ProgressBar loading1 = (ProgressBar) findViewById(R.id.progress1);
+                    ProgressBar loading2 = (ProgressBar) findViewById(R.id.progress2);
 
                     float rotation = loading1.getRotation();
                     loading1.setRotation(rotation + 3);
@@ -1407,7 +1775,7 @@ public class MpWifi extends Activity implements
                 @Override
                 public void onFinish() {
 
-                    metoda1();
+                    tocenie();
 
                 }
             }.start();

@@ -61,7 +61,6 @@ public class ScoreActivity extends Activity {
         float rotation2 = player2Progress.getRotation();
         player2Progress.setRotation(rotation2 + 40);
 
-
         if (hasSoftKeys()) {
 
             final float scale = getResources().getDisplayMetrics().density;

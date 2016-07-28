@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -31,7 +32,7 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class OnePhone extends Activity {
+public class OnePhone extends Activity implements View.OnKeyListener {
 
     EditText firstS, secondS, thirdS;
     String fString, sString, tString;
@@ -104,6 +105,10 @@ public class OnePhone extends Activity {
         firstS = (EditText) findViewById(R.id.firstS);
         secondS = (EditText) findViewById(R.id.secondS);
         thirdS = (EditText) findViewById(R.id.thirdS);
+
+        findViewById(R.id.firstS).setOnKeyListener(this);
+        findViewById(R.id.secondS).setOnKeyListener(this);
+        findViewById(R.id.thirdS).setOnKeyListener(this);
 
         fade_in = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_slower);
 
@@ -411,5 +416,37 @@ public class OnePhone extends Activity {
 
     public void resetGraph(){
         getSharedPreferences("SingleGraphHistory", Context.MODE_PRIVATE).edit().clear().apply();
+    }
+
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+        if ((event.getAction() == KeyEvent.ACTION_DOWN)
+                && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+
+            switch (v.getId()) {
+                case R.id.firstS:
+
+                    findViewById(R.id.firstS).clearFocus();
+                    findViewById(R.id.secondS).requestFocus();
+
+                    return true;
+
+                case R.id.secondS:
+
+                    findViewById(R.id.secondS).clearFocus();
+                    findViewById(R.id.thirdS).requestFocus();
+
+                    return true;
+
+                case R.id.thirdS:
+
+                    findViewById(R.id.thirdS).clearFocus();
+                    findViewById(R.id.firstS).requestFocus();
+
+                    return true;
+            }
+        }
+
+        return false;
     }
 }

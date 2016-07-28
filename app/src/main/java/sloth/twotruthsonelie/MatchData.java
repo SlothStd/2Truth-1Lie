@@ -2,11 +2,10 @@ package sloth.twotruthsonelie;
 
 import android.util.Log;
 
-import java.nio.IntBuffer;
-import java.nio.channels.InterruptibleChannel;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Vector;
 
 /**
  * Created by Robo on 29-Apr-16.
@@ -19,6 +18,7 @@ public class MatchData {
     private int liePos;
     private ArrayList<Integer> scores;
     private int currentRound;
+    private int hisXp;
 
     public MatchData(String sentenceAuthor, ArrayList<String> sentences, int liePos, ArrayList<Integer> scores, int currentRound) {
         this.sentenceAuthor = sentenceAuthor;
@@ -42,6 +42,7 @@ public class MatchData {
         this.liePos = -1;
         this.scores = new ArrayList<>(Arrays.asList(new Integer[]{0, 0}));
         this.currentRound = 0;
+        this.hisXp = 0;
     }
 
     public String getSentenceAuthor() {
@@ -90,6 +91,14 @@ public class MatchData {
 
     public void setCurrentRound(int currentRound) {
         this.currentRound = currentRound;
+    }
+
+    public int getHisXp() {
+        return hisXp;
+    }
+
+    public void setHisXp(int hisXp) {
+        this.hisXp = hisXp;
     }
 
     /**
@@ -179,6 +188,16 @@ public class MatchData {
         setCurrentRound(Integer.parseInt(temp));
         temp = "";
 
+        for (; i < chars.length; i++) {
+            if (chars[i] == '~') {
+                i++;
+                break;
+            }
+            temp = temp + String.valueOf(chars[i]);
+        }
+        setHisXp(Integer.parseInt(temp));
+        temp = "";
+
         Log.d(TAG, "Received: " + string);
     }
 
@@ -187,6 +206,10 @@ public class MatchData {
     }
 
     public byte[] convertData(){
+        return convertDataToString().getBytes(Charset.forName("UTF-16"));
+    }
+
+    public String convertDataToString(){
 
         String data;
 
@@ -215,30 +238,7 @@ public class MatchData {
 
         data = data + "~" + currentRound;
 
-        Log.d(TAG, "Sent: " + data);
-
-        return data.getBytes(Charset.forName("UTF-16"));
-    }
-
-    public String convertDataToString(){
-
-        String data;
-
-        data = sentenceAuthor;
-
-        try {
-            data = data + "~" + (sentences.get(0));
-            data = data + "|" + (sentences.get(1));
-            data = data + "|" + (sentences.get(2));
-        }catch (IndexOutOfBoundsException e){
-            data = data + "~";
-        }
-
-        data = data + "~" + liePos;
-
-        data = data + "~" + scores.get(0) + "|" + scores.get(1);
-
-        data = data + "~" + currentRound;
+        data = data + "~" + hisXp;
 
         Log.d(TAG, "Sent: " + data);
 
