@@ -29,13 +29,14 @@
                 android:id="@+id/user_avatar1"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:src="@drawable/logo" />
+                android:src="@drawable/user1" />
 
             <ImageView
                 android:id="@+id/circle_bckg1"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:src="@drawable/green_circle_bckg" />
+
 
             <ProgressBar
                 android:layout_width="match_parent"
@@ -56,15 +57,13 @@
 
             <TextView
                 android:id="@+id/player1_level"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_gravity="bottom|right"
-                android:layout_marginBottom="3dp"
-                android:textSize="15sp"
+                android:textSize="14sp"
                 android:textColor="@color/white"
                 android:text="5"
                 android:gravity="center"
-                android:layout_marginRight="5dp"
                 android:background="@drawable/circle"/>
 
 
@@ -72,10 +71,11 @@
 
 
         <TextView
+            android:id="@+id/player1SBname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
-            android:text="SurlierBacchus"
+            android:text="SurlierBacchus123"
             android:textColor="@color/white"
             android:textSize="20dp"
             android:layout_marginTop="6dp"/>
@@ -171,7 +171,7 @@
                 android:id="@+id/user_avatar2"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:src="@drawable/logo" />
+                android:src="@drawable/user2" />
 
             <ImageView
                 android:id="@+id/circle_bckg2"
@@ -198,20 +198,19 @@
 
             <TextView
                 android:id="@+id/player2_level"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_gravity="bottom|right"
-                android:layout_marginBottom="3dp"
-                android:textSize="15sp"
+                android:textSize="14sp"
                 android:textColor="@color/white"
-                android:text="5"
+                android:text="100%"
                 android:gravity="center"
-                android:layout_marginRight="5dp"
                 android:background="@drawable/circle"/>
 
 
         </FrameLayout>
         <TextView
+            android:id="@+id/player2SBname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"

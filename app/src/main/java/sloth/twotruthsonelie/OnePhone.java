@@ -36,7 +36,7 @@ public class OnePhone extends Activity implements View.OnKeyListener {
 
     EditText firstS, secondS, thirdS;
     String fString, sString, tString;
-    Snackbar snackbarEmpty2, snackbarEmpty;
+    Snackbar snackbarEmpty2, snackbarEmpty, snackInfo;
     Boolean first, second, third;
     TextView proceed, player1points, player2points, playerOneName, playerTwoName;
     Animation fade_in;
@@ -45,6 +45,7 @@ public class OnePhone extends Activity implements View.OnKeyListener {
     CheckBox secondTruth, secondLie;
     CheckBox thirdTruth, thirdLie;
     Integer height;
+    boolean dontshow = false;
     LinearLayout.LayoutParams params;
     LinearLayout linearLayout;
     GraphHistory graphHistory;
@@ -61,16 +62,38 @@ public class OnePhone extends Activity implements View.OnKeyListener {
         playerOneName = (TextView) findViewById(R.id.player1TV);
         playerTwoName = (TextView) findViewById(R.id.player2TV);
 
-        SharedPreferences prefs = getSharedPreferences("playerNames", MODE_PRIVATE);
-        try {
-            playerOneName.setText(prefs.getString("playerOneName", null));
-        } catch (NullPointerException e) {
-            playerOneName.setText("Player 1");
-        }
-        try {
-            playerTwoName.setText(prefs.getString("playerTwoName", null));
-        } catch (NullPointerException e) {
-            playerTwoName.setText("Player 2");
+        final SharedPreferences prefs = getSharedPreferences("playerNames", MODE_PRIVATE);
+        final SharedPreferences pressedPrefs = getSharedPreferences("Pressed", MODE_PRIVATE);
+
+            playerOneName.setText(prefs.getString("playerOneName", "Player 1"));
+            playerTwoName.setText(prefs.getString("playerTwoName", "Player 2"));
+
+        if (!pressedPrefs.getBoolean("pressed", false)) {
+            snackInfo = Snackbar.make(findViewById(android.R.id.content), "To choose a lie long click a sentence", Snackbar.LENGTH_INDEFINITE);
+            snackInfo.getView().setBackgroundColor(getResources().getColor(R.color.lie));
+            View view = snackInfo.getView();
+            TextView textView = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
+            textView.setTextColor(getResources().getColor(R.color.white));
+            snackInfo.setDuration(Snackbar.LENGTH_LONG);
+            snackInfo.setActionTextColor(getResources().getColor(R.color.white));
+            snackInfo.setAction("GOT IT", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    final SharedPreferences pressedPrefs = getSharedPreferences("Pressed", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = pressedPrefs.edit();
+
+                    snackInfo.dismiss();
+                    dontshow = true;
+                    editor.putBoolean("pressed", dontshow).apply();
+
+                }
+            });
+
+            snackInfo.show();
+
+        } else {
+
         }
 
         SharedPreferences points = getSharedPreferences("playerPoints", MODE_PRIVATE);
@@ -386,7 +409,7 @@ public class OnePhone extends Activity implements View.OnKeyListener {
 
 
         final CustomDialog custom_dialog = new CustomDialog();
-        custom_dialog.showDiaolg(OnePhone.this, "Exit", "Cancle", "Are you sure you want to exit? Your current game session will end.");
+        custom_dialog.showDiaolg(OnePhone.this, "Exit", "Cancel", "Are you sure you want to exit? Your current game session will end.");
         custom_dialog.positive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

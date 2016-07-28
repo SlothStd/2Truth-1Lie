@@ -60,11 +60,13 @@
                 android:layout_width="65dp"
                 android:layout_height="65dp"
                 android:layout_weight="2"
-                android:src="@drawable/avatar"/>
+                android:src="@drawable/user1"/>
 
             <TextView
                 android:id="@+id/player1TV"
                 android:layout_width="0dp"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:layout_weight="7"
@@ -147,7 +149,7 @@
                     android:layout_width="65dp"
                     android:layout_height="65dp"
                     android:layout_weight="2"
-                    android:src="@drawable/avatar"/>
+                    android:src="@drawable/user2"/>
 
                 <TextView
                     android:id="@+id/player2TV"
@@ -155,6 +157,8 @@
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:layout_weight="7"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     android:text="Player 2" />
