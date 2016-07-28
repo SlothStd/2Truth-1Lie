@@ -1416,6 +1416,7 @@ public class MpWifi extends Activity implements
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         if (gameState == -1) {
             Intent toMenu = new Intent(MpWifi.this, MainActivity.class);
             this.finish();
@@ -1423,7 +1424,6 @@ public class MpWifi extends Activity implements
             return;
         }
 
-        this.recreate();
     }
 
     private class LoadProfileImage extends AsyncTask<String, Void, Bitmap> {

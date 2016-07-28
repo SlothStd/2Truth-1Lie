@@ -59,6 +59,7 @@
                 android:layout_below="@id/IsGuessingTW"
                 android:progressDrawable="@drawable/green_progressbar"
                 android:layout_centerHorizontal="true"
+                android:padding="1dp"
                 android:max="500"
                 android:progress="250" />
 
@@ -71,6 +72,7 @@
                 android:layout_alignBottom="@+id/progress1"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="8dp"
+                android:padding="1dp"
                 android:max="500"
                 android:progress="250" />
 

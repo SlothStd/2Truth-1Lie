@@ -64,8 +64,8 @@ public class OnePhone extends Activity {
         final SharedPreferences prefs = getSharedPreferences("playerNames", MODE_PRIVATE);
         final SharedPreferences pressedPrefs = getSharedPreferences("Pressed", MODE_PRIVATE);
 
-            playerOneName.setText(prefs.getString("playerOneName", "Player 1"));
-            playerTwoName.setText(prefs.getString("playerTwoName", "Player 2"));
+        playerOneName.setText(prefs.getString("playerOneName", "Player 1"));
+        playerTwoName.setText(prefs.getString("playerTwoName", "Player 2"));
 
         if (!pressedPrefs.getBoolean("pressed", false)) {
             snackInfo = Snackbar.make(findViewById(android.R.id.content), "To choose a lie long click a sentence", Snackbar.LENGTH_INDEFINITE);
@@ -432,7 +432,7 @@ public class OnePhone extends Activity {
 
     }
 
-    public void resetGraph(){
+    public void resetGraph() {
         getSharedPreferences("SingleGraphHistory", Context.MODE_PRIVATE).edit().clear().apply();
     }
 }

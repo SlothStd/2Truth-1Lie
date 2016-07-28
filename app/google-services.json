@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "349710796742",
+    "project_id": "truths-1-lie-59588619"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:349710796742:android:9a8d54d5150f786d",
+        "android_client_info": {
+          "package_name": "sloth.twotruthsonelie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "349710796742-tqfijpulr75u8kc59kfe33o5drsno01h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "sloth.twotruthsonelie",
+            "certificate_hash": "BDF70ACF3C97644CECEB8362340C9B14537B8061"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2Q0ArhhIIGFnoeRzZqw_ceNp8DnAvORQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-72837975-2"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -32,7 +32,7 @@ import org.w3c.dom.Text;
 public class ScoreActivity extends Activity {
 
     TextView player1Level, player2Level, playerOnePoints,
-             playerTwoPoints, player1Name, player2Name;
+            playerTwoPoints, player1Name, player2Name;
     Integer player1, player2;
     ImageView scoreboardBckg, circularBckg1, circularBckg2;
     ProgressBar player1Progress, player2Progress;
@@ -63,8 +63,8 @@ public class ScoreActivity extends Activity {
         player1Name = (TextView) findViewById(R.id.player1SBname);
         player2Name = (TextView) findViewById(R.id.player2SBname);
         SharedPreferences prefs = getSharedPreferences("playerNames", MODE_PRIVATE);
-            player1Name.setText(prefs.getString("playerOneName", "Player 1"));
-            player2Name.setText(prefs.getString("playerTwoName", "Player 2"));
+        player1Name.setText(prefs.getString("playerOneName", "Player 1"));
+        player2Name.setText(prefs.getString("playerTwoName", "Player 2"));
 
         player1Level = (TextView) findViewById(R.id.player1_level);
         player2Level = (TextView) findViewById(R.id.player2_level);
@@ -137,7 +137,7 @@ public class ScoreActivity extends Activity {
         try {
             playerOnePoints.setText(String.valueOf(player1));
             if (player1 == 1) {
-                TextView textView1 = (TextView)findViewById(R.id.points1);
+                TextView textView1 = (TextView) findViewById(R.id.points1);
                 textView1.setText("point");
             }
         } catch (NullPointerException e) {
@@ -146,7 +146,7 @@ public class ScoreActivity extends Activity {
         try {
             playerTwoPoints.setText(String.valueOf(player2));
             if (player2 == 1) {
-                TextView textView2 = (TextView)findViewById(R.id.points2);
+                TextView textView2 = (TextView) findViewById(R.id.points2);
                 textView2.setText("point");
             }
         } catch (NullPointerException e) {
@@ -216,10 +216,10 @@ public class ScoreActivity extends Activity {
         startActivity(toMenu);
     }
 
-    public boolean hasSoftKeys(){
+    public boolean hasSoftKeys() {
         boolean hasSoftwareKeys = true;
 
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.JELLY_BEAN_MR1){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             Display d = this.getWindowManager().getDefaultDisplay();
 
             DisplayMetrics realDisplayMetrics = new DisplayMetrics();
@@ -234,8 +234,8 @@ public class ScoreActivity extends Activity {
             int displayHeight = displayMetrics.heightPixels;
             int displayWidth = displayMetrics.widthPixels;
 
-            hasSoftwareKeys =  (realWidth - displayWidth) > 0 || (realHeight - displayHeight) > 0;
-        }else{
+            hasSoftwareKeys = (realWidth - displayWidth) > 0 || (realHeight - displayHeight) > 0;
+        } else {
             boolean hasMenuKey = ViewConfiguration.get(this).hasPermanentMenuKey();
             boolean hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
             hasSoftwareKeys = !hasMenuKey && !hasBackKey;

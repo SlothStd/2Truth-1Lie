@@ -36,7 +36,7 @@ public class NextPlayer extends Activity {
     Animation animFadeIn;
     Typeface canter;
     GraphHistory graphHistory;
-    ImageView  playerGuessing;
+    ImageView playerGuessing;
     boolean wasTrue;
     public Dialog dialogGame;
     private ProgressBar loading1, loading2;
@@ -633,7 +633,6 @@ public class NextPlayer extends Activity {
 
         }
     }
-
 
 
 }

@@ -3,6 +3,7 @@
     <string name="app_id">349710796742</string>
     <string name="SHA1">BD:F7:0A:CF:3C:97:64:4C:EC:EB:83:62:34:0C:9B:14:53:7B:80:61</string>
     <string name="clientID">349710796742-tqfijpulr75u8kc59kfe33o5drsno01h.apps.googleusercontent.com</string>
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
 
     <string name="signin_failure">Unable to sign in.</string>
     <string name="signin_other_error">There was an issue with sign-in. Please try again later.</string>
