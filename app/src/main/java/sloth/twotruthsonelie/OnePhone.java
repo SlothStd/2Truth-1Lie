@@ -13,9 +13,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
+import android.util.DisplayMetrics;
 import android.view.Display;
+import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -112,9 +115,14 @@ public class OnePhone extends Activity implements View.OnKeyListener {
             player2points.setText("0");
         }
 
-        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-        if (currentapiVersion >= Build.VERSION_CODES.KITKAT) {
-            (findViewById(R.id.gameInfo)).setPadding(0, 30, 0, 0);
+        if (hasSoftKeys()) {
+
+            final float scale = getResources().getDisplayMetrics().density;
+            int top = (int) (24 * scale + 0.5f);
+            int bottom = (int) (48 * scale + 0.5f);
+
+            findViewById(R.id.linearLayout).setPadding(0, 0, 0, bottom);
+            findViewById(R.id.gameInfo).setPadding(0, top, 0, 0);
         }
 
         Display display = getWindowManager().getDefaultDisplay();
@@ -439,6 +447,33 @@ public class OnePhone extends Activity implements View.OnKeyListener {
 
     public void resetGraph() {
         getSharedPreferences("SingleGraphHistory", Context.MODE_PRIVATE).edit().clear().apply();
+    }
+
+    public boolean hasSoftKeys() {
+        boolean hasSoftwareKeys = true;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            Display d = this.getWindowManager().getDefaultDisplay();
+
+            DisplayMetrics realDisplayMetrics = new DisplayMetrics();
+            d.getRealMetrics(realDisplayMetrics);
+
+            int realHeight = realDisplayMetrics.heightPixels;
+            int realWidth = realDisplayMetrics.widthPixels;
+
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            d.getMetrics(displayMetrics);
+
+            int displayHeight = displayMetrics.heightPixels;
+            int displayWidth = displayMetrics.widthPixels;
+
+            hasSoftwareKeys = (realWidth - displayWidth) > 0 || (realHeight - displayHeight) > 0;
+        } else {
+            boolean hasMenuKey = ViewConfiguration.get(this).hasPermanentMenuKey();
+            boolean hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
+            hasSoftwareKeys = !hasMenuKey && !hasBackKey;
+        }
+        return hasSoftwareKeys;
     }
 
     @Override

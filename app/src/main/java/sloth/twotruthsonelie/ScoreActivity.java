@@ -41,6 +41,11 @@ public class ScoreActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.scoreboard_layout);
+
+
+        findViewById(R.id.scores_main).setPadding(0, 0, 0, 0);
+
         int currentapiVersion = android.os.Build.VERSION.SDK_INT;
         if (currentapiVersion >= Build.VERSION_CODES.KITKAT) {
 
@@ -50,8 +55,6 @@ public class ScoreActivity extends Activity {
             this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         }
-
-        setContentView(R.layout.scoreboard_layout);
 
         scoreboardBckg = (ImageView) findViewById(R.id.score_board_bg);
         circularBckg2 = (ImageView) findViewById(R.id.circle_bckg2);

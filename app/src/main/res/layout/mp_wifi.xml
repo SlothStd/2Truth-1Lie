@@ -362,7 +362,7 @@
                                     android:id="@+id/avatar1_mp"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:src="@drawable/avatar" /> <!-- tu budes nastavovat obrazok hraca -->
+                                    android:src="@drawable/user1" /> <!-- tu budes nastavovat obrazok hraca -->
 
                                 <ImageView
                                     android:layout_width="match_parent"
@@ -460,7 +460,7 @@
                                     android:id="@+id/avatar2_mp"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:src="@drawable/avatar" /> <!-- tu budes nastavovat obrazok hraca -->
+                                    android:src="@drawable/user1" /> <!-- tu budes nastavovat obrazok hraca -->
 
                                 <ImageView
                                     android:layout_width="match_parent"
@@ -665,13 +665,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:paddingTop="30dp">
+                        android:paddingTop="10dp">
 
                         <ImageView
                             android:id="@+id/user_avatar1_guess"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:src="@drawable/avatar" /> <!-- tu budes nastavovat obrazok hraca -->
+                            android:src="@drawable/user1" /> <!-- tu budes nastavovat obrazok hraca -->
 
                         <ImageView
                             android:id="@+id/circle_bckg1_guess"
@@ -818,13 +818,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:paddingTop="30dp">
+                        android:paddingTop="10dp">
 
                         <ImageView
                             android:id="@+id/not_your_turn_avatar"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:src="@drawable/avatar" /> <!-- tu budes nastavovat obrazok hraca -->
+                            android:src="@drawable/user1" /> <!-- tu budes nastavovat obrazok hraca -->
 
                         <ImageView
                             android:layout_width="match_parent"

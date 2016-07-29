@@ -143,30 +143,6 @@ public class MpWifi extends Activity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mp_wifi);
 
-        score = (ProgressBar) findViewById(R.id.fakeProgressJustBecauseIcan);
-        score.setRotation(-90);
-        score.setMax(1000000); //100*10k ↓
-        points = 700000; //daj ten int *10k aby bola animacia smooth
-
-        timer2 = new CountDownTimer(1000, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-
-                score.setProgress(0);
-
-            }
-
-            @Override
-            public void onFinish() {
-
-                animation = new ObjectAnimator().ofInt(score, "progress", 0, points); //alebo nahrať "points" so svojim intom
-                animation.setDuration(2000);
-                animation.setInterpolator(new AccelerateDecelerateInterpolator());
-                animation.start();
-
-            }
-        }.start();
-
         // Create the Google API Client with access to Plus and Games
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -219,8 +195,9 @@ public class MpWifi extends Activity implements
 
         loadSP();
 
+        double perc = 0;
         try {
-            double perc = totalWins;
+            perc = totalWins;
             perc /= (totalWins + totalLoses);
             perc *= 100;
 
@@ -228,6 +205,30 @@ public class MpWifi extends Activity implements
         } catch (ArithmeticException e) {
             ((TextView) findViewById(R.id.winRatioTv)).setText("");
         }
+
+        score = (ProgressBar) findViewById(R.id.fakeProgressJustBecauseIcan);
+        score.setRotation(-90);
+        score.setMax(1000000); //100*10k ↓
+        points = (int) perc *10000; //daj ten int *10k aby bola animacia smooth
+
+        timer2 = new CountDownTimer(1000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+                score.setProgress(0);
+
+            }
+
+            @Override
+            public void onFinish() {
+
+                animation = new ObjectAnimator().ofInt(score, "progress", 0, points); //alebo nahrať "points" so svojim intom
+                animation.setDuration(2000);
+                animation.setInterpolator(new AccelerateDecelerateInterpolator());
+                animation.start();
+
+            }
+        }.start();
 
         Log.d(TAG, "onStart(): Connecting to Google APIs");
         mGoogleApiClient.connect();

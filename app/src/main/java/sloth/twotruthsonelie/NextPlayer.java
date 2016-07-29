@@ -10,12 +10,18 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.text.method.ScrollingMovementMethod;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
+import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -56,6 +62,16 @@ public class NextPlayer extends Activity {
             playerGuessing.setImageResource(R.drawable.user2);
         } else {
             playerGuessing.setImageResource(R.drawable.user1);
+        }
+
+        if (hasSoftKeys()) {
+
+            final float scale = getResources().getDisplayMetrics().density;
+            int top = (int) (24 * scale + 0.5f);
+            int bottom = (int) (48 * scale + 0.5f);
+
+            findViewById(R.id.linearLayout).setPadding(0, 0, 0, bottom);
+            findViewById(R.id.gameInfo).setPadding(0, top, 0, 0);
         }
 
         isGuessing = (TextView) findViewById(R.id.IsGuessingTW);
@@ -634,7 +650,32 @@ public class NextPlayer extends Activity {
         }
     }
 
+    public boolean hasSoftKeys() {
+        boolean hasSoftwareKeys = true;
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            Display d = this.getWindowManager().getDefaultDisplay();
+
+            DisplayMetrics realDisplayMetrics = new DisplayMetrics();
+            d.getRealMetrics(realDisplayMetrics);
+
+            int realHeight = realDisplayMetrics.heightPixels;
+            int realWidth = realDisplayMetrics.widthPixels;
+
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            d.getMetrics(displayMetrics);
+
+            int displayHeight = displayMetrics.heightPixels;
+            int displayWidth = displayMetrics.widthPixels;
+
+            hasSoftwareKeys = (realWidth - displayWidth) > 0 || (realHeight - displayHeight) > 0;
+        } else {
+            boolean hasMenuKey = ViewConfiguration.get(this).hasPermanentMenuKey();
+            boolean hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
+            hasSoftwareKeys = !hasMenuKey && !hasBackKey;
+        }
+        return hasSoftwareKeys;
+    }
 }
 
 
