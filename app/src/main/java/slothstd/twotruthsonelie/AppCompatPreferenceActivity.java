@@ -1,4 +1,4 @@
-package sloth.twotruthsonelie;
+package slothstd.twotruthsonelie;
 
 import android.content.res.Configuration;
 import android.os.Bundle;

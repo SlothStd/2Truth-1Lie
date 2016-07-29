@@ -1,11 +1,10 @@
-package sloth.twotruthsonelie;
+package slothstd.twotruthsonelie;
 
 import android.util.Log;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Vector;
 
 /**
  * Created by Robo on 29-Apr-16.

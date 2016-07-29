@@ -1,6 +1,5 @@
-package sloth.twotruthsonelie;
+package slothstd.twotruthsonelie;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,16 +12,12 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by Daniel on 1/28/2016.

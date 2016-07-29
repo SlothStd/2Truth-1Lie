@@ -1,4 +1,4 @@
-package sloth.twotruthsonelie;
+package slothstd.twotruthsonelie;
 
 import android.util.Log;
 import com.jjoe64.graphview.series.DataPoint;

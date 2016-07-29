@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="sloth.twotruthsonelie">
+    package="slothstd.twotruthsonelie">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -21,7 +21,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".MainActivity"
+            android:name="slothstd.twotruthsonelie.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/nevidno">
@@ -32,35 +32,35 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".OnePhone"
+            android:name="slothstd.twotruthsonelie.OnePhone"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/nevidno">
 
         </activity>
         <activity
-            android:name=".NextPlayer"
+            android:name="slothstd.twotruthsonelie.NextPlayer"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/nevidno">
 
         </activity>
         <activity
-            android:name=".Settings"
+            android:name="slothstd.twotruthsonelie.Settings"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/nevidno">
 
         </activity>
         <activity
-            android:name=".ScoreActivity"
+            android:name="slothstd.twotruthsonelie.ScoreActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/nevidno">
         </activity>
 
         <activity
-            android:name=".MpWifi"
+            android:name="slothstd.twotruthsonelie.MpWifi"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/nevidno">

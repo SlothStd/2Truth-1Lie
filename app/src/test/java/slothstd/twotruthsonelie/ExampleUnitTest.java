@@ -1,4 +1,4 @@
-package sloth.twotruthsonelie;
+package slothstd.twotruthsonelie;
 
 import org.junit.Test;
 
