@@ -13,7 +13,7 @@
         android:id="@+id/buttons"
         android:weightSum="5"
         android:background="@color/darker_bg"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -799,7 +799,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:orientation="vertical"
                 android:background="@color/darker_bg"
                 android:gravity="center"

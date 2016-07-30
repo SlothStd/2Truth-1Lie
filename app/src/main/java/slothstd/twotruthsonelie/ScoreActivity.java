@@ -20,6 +20,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+
 /**
  * Created by Daniel on 1/28/2016.
  */
@@ -31,12 +35,26 @@ public class ScoreActivity extends Activity {
     ImageView scoreboardBckg, circularBckg1, circularBckg2;
     ProgressBar player1Progress, player2Progress;
     ObjectAnimator animation;
+    InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.scoreboard_layout);
 
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                requestNewInterstitial();
+                Intent intent = new Intent(ScoreActivity.this, MainActivity.class);
+                ScoreActivity.this.finish();
+                startActivity(intent);
+            }
+        });
+
+        requestNewInterstitial();
 
         findViewById(R.id.scores_main).setPadding(0, 0, 0, 0);
 
@@ -195,21 +213,28 @@ public class ScoreActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        SharedPreferences points = getSharedPreferences("playerPoints", MODE_PRIVATE);
-        SharedPreferences.Editor pointsEditor = points.edit();
-        pointsEditor.clear().apply();
 
-        SharedPreferences currentR = getSharedPreferences("currentR", MODE_PRIVATE);
-        SharedPreferences.Editor currentEditor = currentR.edit();
-        currentEditor.clear().apply();
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        } else {
 
-        SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.clear().apply();
+            SharedPreferences points = getSharedPreferences("playerPoints", MODE_PRIVATE);
+            SharedPreferences.Editor pointsEditor = points.edit();
+            pointsEditor.clear().apply();
 
-        Intent toMenu = new Intent(ScoreActivity.this, MainActivity.class);
-        ScoreActivity.this.finish();
-        startActivity(toMenu);
+            SharedPreferences currentR = getSharedPreferences("currentR", MODE_PRIVATE);
+            SharedPreferences.Editor currentEditor = currentR.edit();
+            currentEditor.clear().apply();
+
+            SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.clear().apply();
+
+            Intent toMenu = new Intent(ScoreActivity.this, MainActivity.class);
+            ScoreActivity.this.finish();
+            startActivity(toMenu);
+
+        }
     }
 
     public boolean hasSoftKeys() {
@@ -237,5 +262,13 @@ public class ScoreActivity extends Activity {
             hasSoftwareKeys = !hasMenuKey && !hasBackKey;
         }
         return hasSoftwareKeys;
+    }
+
+    private void requestNewInterstitial() {
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("SEE_YOUR_LOGCAT_TO_GET_YOUR_DEVICE_ID")
+                .build();
+
+        mInterstitialAd.loadAd(adRequest);
     }
 }

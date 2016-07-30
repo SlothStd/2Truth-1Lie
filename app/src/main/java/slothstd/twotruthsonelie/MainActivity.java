@@ -15,6 +15,10 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 
 /**
  * Created by Daniel on 1/27/2016.
@@ -36,12 +40,15 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        MobileAds.initialize(getApplicationContext(), "ca-app-pub-3940256099942544~3347511713");
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
         if (getIntent().getFlags() == 0x14000000) {
             Intent multi = new Intent(MainActivity.this, MpWifi.class);
             startActivity(multi);
         }
-
-
 
         if (hasSoftKeys()){
 
