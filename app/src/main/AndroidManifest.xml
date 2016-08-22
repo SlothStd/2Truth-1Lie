@@ -5,12 +5,32 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
+    <compatible-screens>
+        <!-- all small size screens -->
+        <screen android:screenSize="small" android:screenDensity="ldpi" />
+        <screen android:screenSize="small" android:screenDensity="mdpi" />
+        <screen android:screenSize="small" android:screenDensity="hdpi" />
+        <screen android:screenSize="small" android:screenDensity="xhdpi" />
+        <screen android:screenSize="small" android:screenDensity="480" />
+        <screen android:screenSize="small" android:screenDensity="640" />
+
+        <!-- all normal size screens -->
+        <screen android:screenSize="normal" android:screenDensity="ldpi" />
+        <screen android:screenSize="normal" android:screenDensity="mdpi" />
+        <screen android:screenSize="normal" android:screenDensity="hdpi" />
+        <screen android:screenSize="normal" android:screenDensity="xhdpi" />
+        <screen android:screenSize="normal" android:screenDensity="480" />
+        <screen android:screenSize="normal" android:screenDensity="560" />
+        <screen android:screenSize="normal" android:screenDensity="640" />
+        <screen android:screenSize="normal" android:screenDensity="420" />
+    </compatible-screens>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:supportsRtl="true"
-        android:theme="@style/Base.ThemeOverlay.AppCompat.Dark">
+        android:supportsRtl="true">
+        
 
         <meta-data
             android:name="com.google.android.gms.games.APP_ID"
@@ -24,7 +44,8 @@
             android:name="slothstd.twotruthsonelie.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/nevidno">
+            android:theme="@style/FullScreen">
+            
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -35,35 +56,35 @@
             android:name="slothstd.twotruthsonelie.OnePhone"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/nevidno">
+            android:theme="@style/FullScreen">
 
         </activity>
         <activity
             android:name="slothstd.twotruthsonelie.NextPlayer"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/nevidno">
+            android:theme="@style/FullScreen">
 
         </activity>
         <activity
             android:name="slothstd.twotruthsonelie.Settings"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/nevidno">
+            android:theme="@style/FullScreen">
 
         </activity>
         <activity
             android:name="slothstd.twotruthsonelie.ScoreActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/nevidno">
+            android:theme="@style/FullScreen">
         </activity>
 
         <activity
             android:name="slothstd.twotruthsonelie.MpWifi"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/nevidno">
+            android:theme="@style/FullScreen">
         </activity>
 
     </application>

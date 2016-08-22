@@ -155,12 +155,7 @@ public class MpWifi extends Activity implements
         findViewById(R.id.sign_in_button).setOnClickListener(this);
         findViewById(R.id.sign_out_button).setOnClickListener(this);
 
-        params.setMargins(0, 60, 0, 0);
-        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-        if (currentapiVersion >= Build.VERSION_CODES.KITKAT) {
-            findViewById(R.id.correct_wrong).setLayoutParams(params);
-        } else {
-        }
+
 
         firstS = (EditText) findViewById(R.id.firstS);
         secondS = (EditText) findViewById(R.id.secondS);
@@ -207,7 +202,7 @@ public class MpWifi extends Activity implements
         }
 
         score = (ProgressBar) findViewById(R.id.fakeProgressJustBecauseIcan);
-        score.setRotation(-90);
+        score.setRotation(40);
         score.setMax(1000000); //100*10k ↓
         points = (int) perc *10000; //daj ten int *10k aby bola animacia smooth
 
@@ -217,12 +212,13 @@ public class MpWifi extends Activity implements
 
                 score.setProgress(0);
 
+
             }
 
             @Override
             public void onFinish() {
 
-                animation = new ObjectAnimator().ofInt(score, "progress", 0, points); //alebo nahrať "points" so svojim intom
+                animation = new ObjectAnimator().ofInt(score, "progress", 0, 800000); //alebo nahrať "points" so svojim intom
                 animation.setDuration(2000);
                 animation.setInterpolator(new AccelerateDecelerateInterpolator());
                 animation.start();

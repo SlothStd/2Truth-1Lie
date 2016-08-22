@@ -7,21 +7,21 @@
     <color name="black">#000</color>
     <color name="back_notTooMuchTransparent">#76000000</color>
     <color name="white">#ffffff</color>
-    <color name="greyText">#bcbcbc</color>
+    <color name="greyText">#7f8c8d</color>
 
-    <color name="purple_ish">#474f58</color>
-    <color name="truth">#9CCC65</color>
-    <color name="truthTransparent">#429CCC65</color>
+    <color name="purple_ish">#2c3e50</color>
+    <color name="truth">#2ecc71</color>
+    <color name="truthTransparent">#422ecc71</color>
     <color name="orange">#ff5722</color>
 
-    <color name="lie">#ef5350</color>
-    <color name="lieTransparent">#84DA5F6A</color>
+    <color name="lie">#e74c3c</color>
+    <color name="lieTransparent">#84e74c3c</color>
     <color name="coolRed">#DA5F6A</color>
 
-    <color name="blue">#56adf8</color>
-    <color name="materialPurple">#5c6bc0</color>
+    <color name="blue">#3498db</color>
+    <color name="materialPurple">#2980b9</color>
     <color name="blueTransparent">#8456adf8</color>
 
-    <color name="darker_bg">#313131</color>
-    <color name="lighter_bg">#393939</color>
+    <color name="darker_bg">#2c3e50</color>
+    <color name="lighter_bg">#34495e</color>
 </resources>

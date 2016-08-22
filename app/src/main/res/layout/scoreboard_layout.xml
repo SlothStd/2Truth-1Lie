@@ -8,9 +8,11 @@
     android:id="@+id/scores_main">
 
     <ImageView
+        android:id="@+id/score_board_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/score_board_bg"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
         android:src="@drawable/scoreboard_new"/>
 
     <LinearLayout
@@ -29,6 +31,7 @@
                 android:id="@+id/user_avatar1"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
+                android:padding="15dp"
                 android:src="@drawable/user1" />
 
             <ImageView
@@ -88,12 +91,30 @@
         android:orientation="horizontal"
         android:layout_centerInParent="true">
 
+        <TextView
+            android:id="@+id/midpoint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"/>
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
+            android:layout_toLeftOf="@+id/midpoint"
             android:layout_alignParentLeft="true"
-            android:paddingLeft="17dp">
+            android:gravity="center"
+            android:layout_centerHorizontal="true">
+
+
+            <TextView
+                android:id="@+id/points1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="points"
+                android:layout_marginBottom="-6dp"
+                android:textColor="@color/white"
+                android:textSize="15sp"/>
 
             <TextView
                 android:id="@+id/playerOnePoints"
@@ -103,14 +124,7 @@
                 android:textColor="@color/white"
                 android:textSize="50dp"/>
 
-            <TextView
-                android:id="@+id/points1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:text="points"
-                android:textColor="@color/white"
-                android:textSize="20dp"/>
+
 
         </LinearLayout>
 
@@ -126,16 +140,16 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal"
-            android:paddingRight="17dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_toRightOf="@+id/midpoint"
             android:layout_alignParentRight="true">
 
             <TextView
                 android:id="@+id/playerTwoPoints"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="19"
+                android:text="22"
                 android:textColor="@color/white"
                 android:textSize="50dp"/>
 
@@ -143,10 +157,10 @@
                 android:id="@+id/points2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
                 android:text="points"
+                android:layout_marginTop="-6dp"
                 android:textColor="@color/white"
-                android:textSize="20dp"/>
+                android:textSize="16sp"/>
 
 
 
@@ -171,6 +185,7 @@
                 android:id="@+id/user_avatar2"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
+                android:padding="15dp"
                 android:src="@drawable/user2" />
 
             <ImageView

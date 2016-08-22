@@ -214,10 +214,6 @@ public class ScoreActivity extends Activity {
     @Override
     public void onBackPressed() {
 
-        if (mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
-        } else {
-
             SharedPreferences points = getSharedPreferences("playerPoints", MODE_PRIVATE);
             SharedPreferences.Editor pointsEditor = points.edit();
             pointsEditor.clear().apply();
@@ -229,6 +225,12 @@ public class ScoreActivity extends Activity {
             SharedPreferences preferences = getSharedPreferences("TrueOrFalse", MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
             editor.clear().apply();
+
+
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        } else {
+
 
             Intent toMenu = new Intent(ScoreActivity.this, MainActivity.class);
             ScoreActivity.this.finish();

@@ -45,17 +45,9 @@ public class Settings extends PreferenceActivity {
         listView.setCacheColorHint(getResources().getColor(R.color.white));
         listView.setBackgroundColor(getResources().getColor(R.color.purple_ish));
 
-        PreferenceCategory margin = (PreferenceCategory) findPreference("margin");
         ListPreference rounds = (ListPreference) findPreference("setRounds");
         rounds.setValueIndex(0);
 
-
-        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-        if (currentapiVersion >= Build.VERSION_CODES.KITKAT){
-
-        } else {
-            screen.removePreference(margin);
-        }
 
 
         Preference share = (Preference) findPreference("share");

@@ -2,10 +2,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:windowBackground="@color/purple_ish" >
 
-    <PreferenceCategory
-        android:key="margin"
-        android:icon="@null"/>
-
     <ListPreference android:key="setRounds"
         android:title="Rounds"
         android:summary="Set rounds for singleplayer mode"
