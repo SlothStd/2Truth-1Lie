@@ -5,6 +5,12 @@
     android:id="@+id/MpWifi_main_layout"
     android:background="@color/darker_bg">
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Buy Premium"
+        android:onClick="onUpgradeButtonClicked"/>
+
     <!-- Buttons -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -735,7 +741,7 @@
                             android:progress="250" />
 
                         <ProgressBar
-                            android:id="@+id/progress2_guess_guess"
+                            android:id="@+id/progress2_guess"
                             style="?android:attr/progressBarStyleHorizontal"
                             android:layout_width="22dp"
                             android:layout_height="22dp"
@@ -808,174 +814,59 @@
             <!-- Guess Screen -->
 
             <!-- Not your turn Screen -->
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone"
-                android:orientation="vertical"
                 android:background="@color/darker_bg"
                 android:gravity="center"
                 android:id="@+id/notYourTurn">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:id="@+id/not_your_turn_info_mp"
-                    android:orientation="vertical"
-                    android:layout_weight="1"
-                    android:weightSum="2"
-                    android:background="@color/materialPurple">
+                <ProgressBar
+                    android:id="@+id/progress1_nyt"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="37dp"
+                    android:layout_height="37dp"
+                    android:layout_marginTop="10dp"
+                    android:padding="1dp"
+                    android:layout_centerInParent="true"
+                    android:progressDrawable="@drawable/green_progressbar"
+                    android:max="500"
+                    android:progress="250" />
 
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:paddingTop="10dp">
+                <ProgressBar
+                    android:id="@+id/progress2_nyt"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:progressDrawable="@drawable/red_progressbar"
+                    android:layout_centerInParent="true"
+                    android:padding="1dp"
+                    android:layout_marginBottom="8dp"
+                    android:max="500"
+                    android:progress="250" />
 
-                        <ImageView
-                            android:id="@+id/not_your_turn_avatar"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:src="@drawable/user1" /> <!-- tu budes nastavovat obrazok hraca -->
+                <TextView
+                    android:id="@+id/turnText"
+                    android:layout_width="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@id/progress1_nyt"
+                    android:layout_height="wrap_content"
+                    android:text="Not your turn fam!"
+                    android:textSize="16sp"
+                    android:layout_marginTop="16dp"/>
 
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:src="@drawable/guessing_circle_bckg" />
+                <Button
+                    android:id="@+id/checkOtherGames"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="Check Other Games"
+                    android:onClick="onCheckGamesClicked"
+                    android:layout_below="@id/turnText"
+                    android:layout_marginTop="10dp"/>
 
-                    </FrameLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1">
-
-                        <Button
-                            android:id="@+id/switch_player"
-                            android:layout_width="155dp"
-                            android:layout_height="50dp"
-                            android:textColor="@color/white"
-                            android:textSize="20dp"
-                            android:gravity="center"
-                            android:layout_centerHorizontal="true"
-                            android:layout_centerVertical="true"
-                            android:background="@drawable/custom_button_game"
-                            android:visibility="gone"
-                            android:text="switch players"/>
-
-                        <TextView
-                            android:id="@+id/IsGuessingTW"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:gravity="center_horizontal|center_vertical"
-                            android:textColor="@color/white"
-                            android:textSize="20dp"
-                            android:text="Is guessing..." />
-
-                        <ProgressBar
-                            android:id="@+id/progress1"
-                            style="?android:attr/progressBarStyleHorizontal"
-                            android:layout_width="37dp"
-                            android:layout_height="37dp"
-                            android:layout_marginTop="10dp"
-                            android:padding="1dp"
-                            android:layout_below="@id/IsGuessingTW"
-                            android:progressDrawable="@drawable/green_progressbar"
-                            android:layout_centerHorizontal="true"
-                            android:max="500"
-                            android:progress="250" />
-
-                        <ProgressBar
-                            android:id="@+id/progress2"
-                            style="?android:attr/progressBarStyleHorizontal"
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
-                            android:progressDrawable="@drawable/red_progressbar"
-                            android:layout_alignBottom="@+id/progress1"
-                            android:layout_centerHorizontal="true"
-                            android:padding="1dp"
-                            android:layout_marginBottom="8dp"
-                            android:max="500"
-                            android:progress="250" />
-
-                    </RelativeLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:orientation="vertical"
-                    android:layout_weight="2"
-                    android:padding="10dp"
-                    android:weightSum="3">
-
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="0dp"
-                        android:layout_alignParentStart="true"
-                        android:maxLines="200"
-                        android:scrollbars="vertical"
-                        android:background="@color/white"
-                        android:id="@+id/firstTW_wait_mp"
-                        android:padding="7dp"
-                        android:gravity="center_horizontal|center_vertical"
-                        android:layout_weight="1"
-                        android:textColor="#000"
-                        android:textSize="15sp"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:layout_above="@+id/secondTW"
-                        android:layout_alignParentLeft="true" />
-
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="0dp"
-                        android:layout_alignParentStart="true"
-                        android:maxLines="200"
-                        android:scrollbars="vertical"
-                        android:layout_weight="1"
-                        android:id="@+id/secondTW_wait_mp"
-                        android:paddingLeft="10dp"
-                        android:textColor="#000"
-                        android:textSize="15sp"
-                        android:background="@color/white"
-                        android:paddingRight="10dp"
-                        android:paddingTop="5dp"
-                        android:layout_above="@+id/thirdTW"
-                        android:layout_alignParentLeft="true"
-                        android:padding="7dp"
-                        android:gravity="center_horizontal|center_vertical"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginTop="20dp" />
-
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="0dp"
-                        android:id="@+id/thirdTW_wait_mp"
-                        android:paddingLeft="10dp"
-                        android:textColor="#000"
-                        android:textSize="15sp"
-                        android:maxLines="200"
-                        android:scrollbars="vertical"
-                        android:paddingRight="10dp"
-                        android:padding="7dp"
-                        android:gravity="center_horizontal|center_vertical"
-                        android:layout_weight="1"
-                        android:paddingTop="5dp"
-                        android:background="@color/white"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginTop="20dp" />
-
-                </LinearLayout>
-
-            </LinearLayout>
+            </RelativeLayout>
             <!-- Not your turn Screen -->
 
 

@@ -11,6 +11,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -56,6 +57,12 @@ import com.google.android.gms.games.multiplayer.Multiplayer;
 import com.google.android.gms.plus.Plus;
 import com.google.example.games.basegameutils.BaseGameUtils;
 
+import slothstd.twotruthsonelie.util.IabBroadcastReceiver;
+import slothstd.twotruthsonelie.util.IabHelper;
+import slothstd.twotruthsonelie.util.IabResult;
+import slothstd.twotruthsonelie.util.Inventory;
+import slothstd.twotruthsonelie.util.Purchase;
+
 /**
  * Created by Robo on 28-Jan-16.
  * E:\Program Files\Android Studio\SDK\platform-tools
@@ -66,6 +73,7 @@ public class MpWifi extends Activity implements
         GoogleApiClient.OnConnectionFailedListener,
         OnInvitationReceivedListener,
         OnTurnBasedMatchUpdateReceivedListener,
+        IabBroadcastReceiver.IabBroadcastListener,
         View.OnClickListener,
         View.OnKeyListener{
 
@@ -92,6 +100,7 @@ public class MpWifi extends Activity implements
     final static int RC_SIGN_IN = 9001;
     final static int RC_SELECT_PLAYERS = 10000;
     final static int RC_LOOK_AT_MATCHES = 10001;
+    final static int RC_BUY_REQUEST = 10001;
 
     // How long to show toasts.
     final static int TOAST_DELAY = Toast.LENGTH_SHORT;
@@ -103,6 +112,8 @@ public class MpWifi extends Activity implements
     public TurnBasedMatch mMatch;
     public MatchData matchData = new MatchData();
 
+    Tocenie tocenieGuess, tocenieNyt;
+
     private String myID, hisID;
     private ArrayList<String> IDs;
     private int player;
@@ -113,17 +124,18 @@ public class MpWifi extends Activity implements
 
     private int roundCount = 2;
 
-    public final int winPoint = 1;
-    public final int gameFinishedXp = 10;
-    public final int winBonus = 15;
-    public final int tieBonus = 5;
-    public final int roundWinBonus = 2;
+    public static final int winPoint = 1;
+    public static final int gameFinishedXp = 10;
+    public static final int winBonus = 15;
+    public static final int tieBonus = 5;
+    public static final int roundWinBonus = 2;
 
     private EditText firstS, secondS, thirdS;
 
     int totalWins, totalLoses;
 
-    CountDownTimer timer;
+    int gameTokens;
+
     ProgressBar score;
     ProgressDialog progress;
     ObjectAnimator animation;
@@ -137,6 +149,12 @@ public class MpWifi extends Activity implements
     LinearLayout layout;
     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT);
+
+    boolean isPremium = false;
+    static final String SKU_PREMIUM = "premium_account";
+
+    IabHelper mHelper;
+    IabBroadcastReceiver mBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,13 +198,20 @@ public class MpWifi extends Activity implements
 
         updateLevels(0);
 
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         try {
-            String roundsS = SP.getString("setRounds", "2");
+            String roundsS = sp.getString("setRounds", "2");
             roundCount = Integer.parseInt(roundsS) * 2;
+
+            gameTokens = sp.getInt("gameTokens", 3);
+
         } catch (NullPointerException e) {
             roundCount = 6;
+
+            gameTokens = 3;
         }
+
+        Log.d(TAG, "Game tokens" + String.valueOf(gameTokens));
 
         loadSP();
 
@@ -226,13 +251,19 @@ public class MpWifi extends Activity implements
             }
         }.start();
 
+        tocenieGuess = new Tocenie(findViewById(R.id.progress1_guess), findViewById(R.id.progress2_guess));
+        tocenieNyt = new Tocenie(findViewById(R.id.progress1_nyt), findViewById(R.id.progress2_nyt));
+
         Log.d(TAG, "onStart(): Connecting to Google APIs");
         mGoogleApiClient.connect();
+
+        createIabHelper();
 
         gameState = -1;
     }
 
     public void loadSP() {
+
         if (mMatch != null) {
             SharedPreferences prefs = getSharedPreferences(mMatch.getMatchId(), Context.MODE_PRIVATE);
             if (prefs.getBoolean("isSaved", false)) {
@@ -264,6 +295,11 @@ public class MpWifi extends Activity implements
     }
 
     public void saveSP() {
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        SharedPreferences.Editor editor1 = sp.edit();
+        editor1.putInt("gameTokens", gameTokens).apply();
+
         if (mMatch != null) {
             SharedPreferences prefs = getSharedPreferences(mMatch.getMatchId(), Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
@@ -345,6 +381,84 @@ public class MpWifi extends Activity implements
         setViewVisibility();
     }
 
+    public void createIabHelper(){
+        mHelper = new IabHelper(this, getString(R.string.base64));
+
+        // enable debug logging (for a production application, you should set this to false).
+        mHelper.enableDebugLogging(true);
+
+        // Start setup. This is asynchronous and the specified listener
+        // will be called once setup completes.
+        Log.d(TAG, "Starting setup.");
+        mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+            public void onIabSetupFinished(IabResult result) {
+                Log.d(TAG, "Setup finished.");
+
+                if (!result.isSuccess()) {
+                    // Oh noes, there was a problem.
+                    showWarning(null, "Problem setting up in-app billing: " + result);
+                    return;
+                }
+
+                // Have we been disposed of in the meantime? If so, quit.
+                if (mHelper == null) return;
+
+                // Important: Dynamically register for broadcast messages about updated purchases.
+                // We register the receiver here instead of as a <receiver> in the Manifest
+                // because we always call getPurchases() at startup, so therefore we can ignore
+                // any broadcasts sent while the app isn't running.
+                // Note: registering this listener in an Activity is a bad idea, but is done here
+                // because this is a SAMPLE. Regardless, the receiver must be registered after
+                // IabHelper is setup, but before first call to getPurchases().
+                mBroadcastReceiver = new IabBroadcastReceiver(MpWifi.this);
+                IntentFilter broadcastFilter = new IntentFilter(IabBroadcastReceiver.ACTION);
+                registerReceiver(mBroadcastReceiver, broadcastFilter);
+
+                // IAB is fully set up. Now, let's get an inventory of stuff we own.
+                Log.d(TAG, "Setup successful. Querying inventory.");
+                try {
+                    mHelper.queryInventoryAsync(mGotInventoryListener);
+                } catch (IabHelper.IabAsyncInProgressException e) {
+                    showWarning(null, "Error querying inventory. Another async operation in progress.");
+                }
+            }
+        });
+    }
+
+    IabHelper.QueryInventoryFinishedListener mGotInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
+        public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
+            Log.d(TAG, "Query inventory finished.");
+
+            // Have we been disposed of in the meantime? If so, quit.
+            if (mHelper == null) return;
+
+            // Is it a failure?
+            if (result.isFailure()) {
+                showWarning(null, "Failed to query inventory: " + result);
+                return;
+            }
+
+            Log.d(TAG, "Query inventory was successful.");
+
+            /*
+             * Check for items we own. Notice that for each purchase, we check
+             * the developer payload to see if it's correct! See
+             * verifyDeveloperPayload().
+             */
+
+            // Do we have the premium upgrade?
+            Purchase premiumPurchase = inventory.getPurchase(SKU_PREMIUM);
+            isPremium = (premiumPurchase != null && verifyDeveloperPayload(premiumPurchase));
+            Log.d(TAG, "User is " + (isPremium ? "PREMIUM" : "NOT PREMIUM"));
+
+            Log.d(TAG, "Initial inventory query finished; enabling main UI.");
+        }
+    };
+
+    private boolean verifyDeveloperPayload(Purchase premiumPurchase) {
+        return true;
+    }
+
     // Displays your inbox. You will get back onActivityResult where
     // you will need to figure out what you clicked on.
     public void onCheckGamesClicked(View view) {
@@ -362,6 +476,11 @@ public class MpWifi extends Activity implements
     public void onStartMatchClicked(View view) {
         if (!mGoogleApiClient.isConnected()){
             showWarning("Please sign in", "Sign in with your Google account to use this online feature");
+            return;
+        }
+
+        if (!isPremium && gameTokens == 0){
+            noGameTokensDialog();
             return;
         }
 
@@ -459,10 +578,6 @@ public class MpWifi extends Activity implements
                     }
                 });
 
-        ((TextView) findViewById(R.id.firstTW_wait_mp)).setText(sentences.get(0));
-        ((TextView) findViewById(R.id.secondTW_wait_mp)).setText(sentences.get(1));
-        ((TextView) findViewById(R.id.thirdTW_wait_mp)).setText(sentences.get(2));
-
         firstS.setText("");
         secondS.setText("");
         thirdS.setText("");
@@ -472,6 +587,59 @@ public class MpWifi extends Activity implements
         prefs.edit().clear().apply();
     }
 
+    // User clicked the "Upgrade to Premium" button.
+    public void onUpgradeButtonClicked(View arg0) {
+        Log.d(TAG, "Upgrade button clicked; launching purchase flow for upgrade.");
+
+        /* TODO: for security, generate your payload here for verification. See the comments on
+         *        verifyDeveloperPayload() for more info. Since this is a SAMPLE, we just use
+         *        an empty string, but on a production app you should carefully generate this. */
+        String payload = "";
+
+        try {
+            mHelper.launchPurchaseFlow(this, SKU_PREMIUM, RC_BUY_REQUEST,
+                    mPurchaseFinishedListener, payload);
+        } catch (IabHelper.IabAsyncInProgressException e) {
+            mHelper.flagEndAsync();
+            try {
+                mHelper.launchPurchaseFlow(this, SKU_PREMIUM, RC_BUY_REQUEST,
+                        mPurchaseFinishedListener, payload);
+            } catch (IabHelper.IabAsyncInProgressException e1) {
+                showWarning(null, "Error launching purchase flow. Another async operation in progress.");
+            }
+        }
+    }
+
+    IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
+        public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
+            Log.d(TAG, "Purchase finished: " + result + ", purchase: " + purchase);
+
+            // if we were disposed of in the meantime, quit.
+            if (mHelper == null) return;
+
+            if (result.isFailure()) {
+                showWarning(null, "Error purchasing: " + result);
+                return;
+            }
+            if (!verifyDeveloperPayload(purchase)) {
+                showWarning(null, "Error purchasing. Authenticity verification failed.");
+                return;
+            }
+
+            Log.d(TAG, "Purchase successful.");
+
+            if (purchase.getSku().equals(SKU_PREMIUM)) {
+                // bought the premium upgrade!
+                Log.d(TAG, "Purchase is premium upgrade. Congratulating user.");
+                showWarning(null, "Thank you for upgrading to premium!");
+                isPremium = true;
+            }
+            else {
+                Log.d(TAG, "onIabPurchaseFinished: Unknown SKU");
+            }
+        }
+    };
+
     // Sign-in, Sign out behavior
 
     // Update the visibility based on what state we're in.
@@ -479,6 +647,9 @@ public class MpWifi extends Activity implements
         boolean isSignedIn = (mGoogleApiClient != null) && (mGoogleApiClient.isConnected());
 
         findViewById(R.id.MpWifi_main_layout).setBackgroundResource(R.color.darker_bg);
+
+        tocenieGuess.stop();
+        tocenieNyt.stop();
 
         if (!isSignedIn) {
             findViewById(R.id.buttons).setVisibility(View.VISIBLE);
@@ -556,7 +727,7 @@ public class MpWifi extends Activity implements
 
                 Log.d(TAG, "Not your turn");
 
-                tocenie();
+                tocenieNyt.start();
 
                 break;
 
@@ -600,7 +771,7 @@ public class MpWifi extends Activity implements
 
                 Log.d(TAG, "Guessing");
 
-                tocenie();
+                tocenieGuess.start();
 
                 new Guessing().start();
 
@@ -683,6 +854,40 @@ public class MpWifi extends Activity implements
         mAlertDialog = alertDialogBuilder.create();
         // show it
         mAlertDialog.show();
+    }
+
+    public void noGameTokensDialog(){
+        AlertDialog dialog;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(R.string.no_more_game_tokens);
+
+        builder.setMessage(R.string.no_more_game_tokens_message);
+
+        builder.setPositiveButton(R.string.buy, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                onUpgradeButtonClicked(null);
+            }
+        });
+
+        builder.setNegativeButton(R.string.watch, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                videoAd();
+            }
+        });
+
+        dialog = builder.create();
+        dialog.show();
+    }
+
+    public void videoAd(){
+        Toast.makeText(this, "Watching", Toast.LENGTH_SHORT).show();
+
+        // TODO: sem daj reklamu
+
+        gameTokens += 3;
     }
 
     public void finishGame() {
@@ -920,6 +1125,9 @@ public class MpWifi extends Activity implements
 
         getPlayerIDs();
 
+        gameTokens--;
+        Log.d(TAG, "Game tokens" + String.valueOf(gameTokens));
+
         Games.TurnBasedMultiplayer.takeTurn(mGoogleApiClient, match.getMatchId(),
                 matchData.convertData(), myID).setResultCallback(
                 new ResultCallback<TurnBasedMultiplayer.UpdateMatchResult>() {
@@ -958,7 +1166,6 @@ public class MpWifi extends Activity implements
         new LoadProfileImage((ImageView) findViewById(R.id.avatar1_mp)).execute(myPhoto);
         new LoadProfileImage((ImageView) findViewById(R.id.avatar2_mp)).execute(hisPhoto);
 
-        new LoadProfileImage((ImageView) findViewById(R.id.not_your_turn_avatar)).execute(hisPhoto);
         new LoadProfileImage((ImageView) findViewById(R.id.user_avatar1_guess)).execute(myPhoto);
     }
 
@@ -1596,6 +1803,16 @@ public class MpWifi extends Activity implements
         return false;
     }
 
+    @Override
+    public void receivedBroadcast() {
+        Log.d(TAG, "Received broadcast notification. Querying inventory.");
+        try {
+            mHelper.queryInventoryAsync(mGotInventoryListener);
+        } catch (IabHelper.IabAsyncInProgressException e) {
+            showWarning(null, "Error querying inventory. Another async operation in progress.");
+        }
+    }
+
     private class Guessing{
 
         String firstS = "", secondS = "", thirdS = "";
@@ -1751,44 +1968,18 @@ public class MpWifi extends Activity implements
         return hasSoftwareKeys;
     }
 
-    public void tocenie() {
-
-        if (true) {
-
-            timer = new CountDownTimer(100, 10) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-
-                    ProgressBar loading1 = (ProgressBar) findViewById(R.id.progress1);
-                    ProgressBar loading2 = (ProgressBar) findViewById(R.id.progress2);
-
-                    float rotation = loading1.getRotation();
-                    loading1.setRotation(rotation + 3);
-
-                    float rotation2 = loading2.getRotation();
-                    loading2.setRotation(rotation2 - 3);
-                }
-
-                @Override
-                public void onFinish() {
-
-                    tocenie();
-
-                }
-            }.start();
-        }
-    }
-
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         if (gameState == -1) {
             Intent toMenu = new Intent(MpWifi.this, MainActivity.class);
+
             this.finish();
             startActivity(toMenu);
             return;
         }
 
+        gameState = -1;
+        setViewVisibility();
     }
 
     private class LoadProfileImage extends AsyncTask<String, Void, Bitmap> {
@@ -1813,6 +2004,65 @@ public class MpWifi extends Activity implements
 
         protected void onPostExecute(Bitmap result) {
             bmImage.setImageBitmap(result);
+        }
+    }
+
+    private class Tocenie{
+
+        private ProgressBar loading1;
+        private ProgressBar loading2;
+
+        private boolean tocenie = false;
+
+        private CountDownTimer timer;
+
+        public Tocenie(View progressBar1, View progressBar2){
+            loading1 = (ProgressBar) progressBar1;
+            loading2 = (ProgressBar) progressBar2;
+        }
+
+        public void start(){
+            if (timer != null){
+                timer.cancel();
+            }
+
+            tocenie = true;
+            tocenie();
+        }
+
+        private void tocenie(){
+
+            timer = new CountDownTimer(100, 10) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+
+                    if (tocenie){
+
+                        float rotation = loading1.getRotation();
+                        loading1.setRotation(rotation + 3);
+
+                        float rotation2 = loading2.getRotation();
+                        loading2.setRotation(rotation2 - 3);
+                    }
+                }
+
+                @Override
+                public void onFinish() {
+
+                    if (tocenie){
+                        tocenie();
+                    }
+
+                }
+            }.start();
+        }
+
+        public void stop(){
+            tocenie = false;
+
+            if (timer != null){
+                timer.cancel();
+            }
         }
     }
 }
