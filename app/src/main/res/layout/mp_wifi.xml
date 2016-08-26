@@ -5,12 +5,6 @@
     android:id="@+id/MpWifi_main_layout"
     android:background="@color/darker_bg">
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="Buy Premium"
-        android:onClick="onUpgradeButtonClicked"/>
-
     <!-- Buttons -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,6 +14,12 @@
         android:weightSum="5"
         android:background="@color/darker_bg"
         android:visibility="visible">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Buy Premium"
+            android:onClick="onUpgradeButtonClicked"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -340,7 +340,7 @@
                         android:gravity="center"
                         android:textColor="@color/white"
                         android:textSize="20sp"
-                        android:text="Click to continue"
+                        android:text="@string/click_to_continue"
                         android:visibility="gone"/>
 
                     <LinearLayout
@@ -725,7 +725,7 @@
                             android:gravity="center_horizontal|center_vertical"
                             android:textColor="@color/white"
                             android:textSize="20dp"
-                            android:text="Is guessing..." />
+                            android:text="@string/you_are_guessing"/>
 
                         <ProgressBar
                             android:id="@+id/progress1_guess"
@@ -733,7 +733,6 @@
                             android:layout_width="37dp"
                             android:layout_height="37dp"
                             android:layout_marginTop="10dp"
-                            android:padding="1dp"
                             android:layout_below="@id/IsGuessingTW_guess"
                             android:progressDrawable="@drawable/green_progressbar"
                             android:layout_centerHorizontal="true"
@@ -748,7 +747,7 @@
                             android:progressDrawable="@drawable/red_progressbar"
                             android:layout_alignBottom="@+id/progress1_guess"
                             android:layout_centerHorizontal="true"
-                            android:padding="1dp"
+                            android:padding="2dp"
                             android:layout_marginBottom="8dp"
                             android:max="500"
                             android:progress="250" />
@@ -828,9 +827,9 @@
                     android:layout_width="37dp"
                     android:layout_height="37dp"
                     android:layout_marginTop="10dp"
-                    android:padding="1dp"
-                    android:layout_centerInParent="true"
                     android:progressDrawable="@drawable/green_progressbar"
+                    android:layout_centerHorizontal="true"
+                    android:padding="2dp"
                     android:max="500"
                     android:progress="250" />
 
@@ -840,9 +839,10 @@
                     android:layout_width="22dp"
                     android:layout_height="22dp"
                     android:progressDrawable="@drawable/red_progressbar"
-                    android:layout_centerInParent="true"
-                    android:padding="1dp"
+                    android:layout_alignBottom="@+id/progress1_nyt"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginBottom="8dp"
+                    android:padding="2dp"
                     android:max="500"
                     android:progress="250" />
 

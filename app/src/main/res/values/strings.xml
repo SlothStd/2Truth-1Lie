@@ -125,5 +125,7 @@
     <string name="no_more_game_tokens_message">You have run out of game tokens. To start another game, watch a sponsored video or buy a premium account.</string>
     <string name="buy">Buy</string>
     <string name="watch">Watch</string>
+    <string name="you_are_guessing">You are guessing…</string>
+    <string name="click_to_continue">Click to continue</string>
 
 </resources>
