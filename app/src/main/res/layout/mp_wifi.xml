@@ -15,12 +15,14 @@
         android:id="@+id/buttons"
         android:weightSum="5"
         android:background="@color/darker_bg"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:background="#1abc9c"
             android:text="Buy Premium"
+            android:textColor="@color/white"
             android:onClick="onUpgradeButtonClicked"/>
 
         <LinearLayout
@@ -820,7 +822,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:background="@color/darker_bg"
                 android:orientation="vertical"
                 android:weightSum="3"
@@ -898,7 +900,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:id="@+id/gameFinished"
                 android:gravity="center">
 
@@ -914,7 +916,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:gravity="center"
-                    android:paddingTop="30dp">
+                    android:paddingTop="20dp">
 
                     <FrameLayout
                         android:id="@+id/celok"
@@ -964,6 +966,8 @@
                             android:background="@drawable/circle"/>
 
 
+
+
                     </FrameLayout>
 
 
@@ -1006,8 +1010,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="points"
+                            android:layout_marginBottom="-6dp"
                             android:textColor="@color/white"
-                            android:textSize="20dp"/>
+                            android:textSize="15sp"/>
 
                         <TextView
                             android:id="@+id/playerOnePoints_mp"
@@ -1042,7 +1047,7 @@
                             android:id="@+id/playerTwoPoints_mp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="19"
+                            android:text="22"
                             android:textColor="@color/white"
                             android:textSize="50dp"/>
 
@@ -1051,8 +1056,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="points"
+                            android:layout_marginTop="-6dp"
                             android:textColor="@color/white"
-                            android:textSize="20dp"/>
+                            android:textSize="16sp"/>
 
 
 
@@ -1066,7 +1072,7 @@
                     android:orientation="vertical"
                     android:layout_alignParentBottom="true"
                     android:gravity="center"
-                    android:paddingBottom="50dp">
+                    android:paddingBottom="20dp">
 
                     <FrameLayout
                         android:id="@+id/celok2"
