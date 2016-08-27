@@ -173,9 +173,13 @@ public class MpWifi extends Activity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mp_wifi);
 
+
         mAd = MobileAds.getRewardedVideoAdInstance(this);
         mAd.setRewardedVideoAdListener(this);
         loadRewardedVideoAd();
+
+        showSpinner();
+
 
         // Create the Google API Client with access to Plus and Games
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -284,7 +288,7 @@ public class MpWifi extends Activity implements
     protected void onStart() {
         super.onStart();
 
-        if (hasSoftKeys()) {
+        /*if (hasSoftKeys()) {
 
             final float scale = getResources().getDisplayMetrics().density;
             int top = (int) (24 * scale + 0.5f);
@@ -293,7 +297,7 @@ public class MpWifi extends Activity implements
             findViewById(R.id.MpWifi_main_layout).setPadding(0, top, 0, bottom);
         } else {
             findViewById(R.id.MpWifi_main_layout).setPadding(0, 0, 0, 0);
-        }
+        }*/
 
         updateLevels(0);
 
@@ -422,6 +426,8 @@ public class MpWifi extends Activity implements
 
         Log.d(TAG, "onConnected(): Connection successful");
 
+        dismissSpinner();
+
         // Retrieve the TurnBasedMatch from the connectionHint
         if (connectionHint != null) {
             mTurnBasedMatch = connectionHint.getParcelable(Multiplayer.EXTRA_TURN_BASED_MATCH);
@@ -468,6 +474,8 @@ public class MpWifi extends Activity implements
             Log.d(TAG, "onConnectionFailed(): ignoring connection failure, already resolving.");
             return;
         }
+
+        dismissSpinner();
 
         // Launch the sign-in flow if the button was clicked or if auto sign-in is enabled
         if (mSignInClicked || mAutoStartSignInFlow) {
@@ -793,16 +801,6 @@ public class MpWifi extends Activity implements
 
         getPlayerIDs();
 
-        int top = 0, bottom = 0;
-        if (hasSoftKeys()) {
-
-            final float scale = getResources().getDisplayMetrics().density;
-            top = (int) (24 * scale + 0.5f);
-            bottom = (int) (48 * scale + 0.5f);
-
-            findViewById(R.id.MpWifi_main_layout).setPadding(0, top, 0, bottom);
-        }
-
         switch (gameState) {
             case -1: //Buttons
 
@@ -811,13 +809,6 @@ public class MpWifi extends Activity implements
                 findViewById(R.id.chooseTexts).setVisibility(View.GONE);
                 findViewById(R.id.notYourTurn).setVisibility(View.GONE);
                 findViewById(R.id.gameFinished).setVisibility(View.GONE);
-
-                if (hasSoftKeys()) {
-
-                    findViewById(R.id.MpWifi_main_layout).setPadding(0, top, 0, bottom);
-                } else {
-                    findViewById(R.id.MpWifi_main_layout).setPadding(0, 0, 0, 0);
-                }
 
                 Log.d(TAG, "Buttons");
 
@@ -845,13 +836,6 @@ public class MpWifi extends Activity implements
 
                 }
 
-                if (hasSoftKeys()) {
-
-                    findViewById(R.id.MpWifi_main_layout).setPadding(0, 0, 0, bottom);
-                    findViewById(R.id.gameInfo_mp).setPadding(0, top, 0, 0);
-                } else {
-                    findViewById(R.id.MpWifi_main_layout).setPadding(0, 0, 0, 0);
-                }
 
                 Log.d(TAG, "Not your turn");
 
@@ -865,14 +849,6 @@ public class MpWifi extends Activity implements
                 findViewById(R.id.chooseTexts).setVisibility(View.GONE);
                 findViewById(R.id.notYourTurn).setVisibility(View.GONE);
                 findViewById(R.id.gameFinished).setVisibility(View.GONE);
-
-                if (hasSoftKeys()) {
-
-                    findViewById(R.id.MpWifi_main_layout).setPadding(0, 0, 0, bottom);
-                    findViewById(R.id.gameInfo_mp).setPadding(0, top, 0, 0);
-                } else {
-                    findViewById(R.id.MpWifi_main_layout).setPadding(0, 0, 0, 0);
-                }
 
                 findViewById(R.id.firstS).setOnKeyListener(this);
                 findViewById(R.id.secondS).setOnKeyListener(this);
@@ -889,14 +865,6 @@ public class MpWifi extends Activity implements
                 findViewById(R.id.notYourTurn).setVisibility(View.GONE);
                 findViewById(R.id.gameFinished).setVisibility(View.GONE);
 
-                if (hasSoftKeys()) {
-
-                    findViewById(R.id.MpWifi_main_layout).setPadding(0, 0, 0, bottom);
-                    findViewById(R.id.guess_info_mp).setPadding(0, top, 0, 0);
-                } else {
-                    findViewById(R.id.MpWifi_main_layout).setPadding(0, 0, 0, 0);
-                }
-
                 Log.d(TAG, "Guessing");
 
                 tocenieGuess.start();
@@ -911,8 +879,6 @@ public class MpWifi extends Activity implements
                 findViewById(R.id.chooseTexts).setVisibility(View.GONE);
                 findViewById(R.id.notYourTurn).setVisibility(View.GONE);
                 findViewById(R.id.gameFinished).setVisibility(View.VISIBLE);
-
-                findViewById(R.id.MpWifi_main_layout).setPadding(0, 0, 0, 0);
 
                 finishGame();
 
@@ -1620,10 +1586,10 @@ public class MpWifi extends Activity implements
             case GamesStatusCodes.STATUS_NETWORK_ERROR_OPERATION_DEFERRED:
                 // This is OK; the action is stored by Google Play Services and will
                 // be dealt with later.
-                Toast.makeText(
+                /*Toast.makeText(
                         this,
                         "Stored action for later.  (Please remove this toast before release.)",
-                        TOAST_DELAY).show();
+                        TOAST_DELAY).show();*/
                 // NOTE: This toast is for informative reasons only; please remove
                 // it from your final application.
                 return true;
@@ -1704,7 +1670,7 @@ public class MpWifi extends Activity implements
 
                 proceed.setVisibility(View.VISIBLE);
                 proceed.setAnimation(fade_in);
-
+                proceed.setText(R.string.click_to_continue);
 
                 secondLie.setChecked(false);
                 secondS.setBackgroundResource(R.drawable.custom_edittext_truth);
@@ -1766,6 +1732,7 @@ public class MpWifi extends Activity implements
 
                 proceed.setVisibility(View.VISIBLE);
                 proceed.setAnimation(fade_in);
+                proceed.setText(R.string.click_to_continue);
 
                 firstLie.setChecked(false);
                 firstS.setBackgroundResource(R.drawable.custom_edittext_truth);
@@ -1825,6 +1792,7 @@ public class MpWifi extends Activity implements
 
                 proceed.setVisibility(View.VISIBLE);
                 proceed.setAnimation(fade_in);
+                proceed.setText(R.string.click_to_continue);
 
                 firstLie.setChecked(false);
                 firstS.setBackgroundResource(R.drawable.custom_edittext_truth);
@@ -1895,6 +1863,7 @@ public class MpWifi extends Activity implements
                 thirdS.setTextColor(getResources().getColor(R.color.black));
 
                 proceed.setVisibility(View.GONE);
+                proceed.setText("");
             }
         });
     }
