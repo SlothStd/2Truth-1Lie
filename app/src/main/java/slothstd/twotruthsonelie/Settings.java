@@ -46,7 +46,7 @@ public class Settings extends PreferenceActivity {
         listView.setBackgroundColor(getResources().getColor(R.color.purple_ish));
 
         ListPreference rounds = (ListPreference) findPreference("setRounds");
-        rounds.setValueIndex(0);
+        rounds.setValueIndex(2);
 
 
 
@@ -57,7 +57,7 @@ public class Settings extends PreferenceActivity {
 
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_TEXT, "IT worky");
+                intent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=slothstd.twotruthsonelie");
                 intent.setType("text/plain");
                 intent.setPackage("com.facebook.orca");
                 try {

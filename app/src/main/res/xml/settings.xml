@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    android:windowBackground="@color/purple_ish" >
+    android:windowBackground="@color/purple_ish">
 
     <ListPreference android:key="setRounds"
         android:title="Rounds"
         android:summary="Set rounds for singleplayer mode"
-        android:textColor="@color/back_notTooMuchTransparent"
+        android:textColor="@color/greyText"
         android:dialogTitle="Set Rounds"
         android:entries="@array/rounds"
         android:entryValues="@array/rounds"
-        android:defaultValue="" />
+        android:defaultValue="3" />
 
     <PreferenceScreen android:key="names"
         android:title="Player names"
@@ -32,7 +32,7 @@
     <PreferenceScreen android:key="feedback"
         android:title="Feedback"
         android:textColor="@color/white"
-        android:summary="Let us know what you want to see in the upcomming update" >
+        android:summary="Let us know what you want to see in the upcoming update" >
         <intent android:action="android.intent.action.VIEW"
             android:data="mailto:slothstd@gmail.com">
         </intent>

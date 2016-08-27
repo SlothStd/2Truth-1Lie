@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.support.v7.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -41,6 +41,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
@@ -75,6 +83,7 @@ public class MpWifi extends Activity implements
         OnTurnBasedMatchUpdateReceivedListener,
         IabBroadcastReceiver.IabBroadcastListener,
         View.OnClickListener,
+        RewardedVideoAdListener,
         View.OnKeyListener{
 
     public static final String TAG = "2T1L MpWifi";
@@ -156,10 +165,17 @@ public class MpWifi extends Activity implements
     IabHelper mHelper;
     IabBroadcastReceiver mBroadcastReceiver;
 
+    private RewardedVideoAd mAd;
+    InterstitialAd mInterstitialAd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mp_wifi);
+
+        mAd = MobileAds.getRewardedVideoAdInstance(this);
+        mAd.setRewardedVideoAdListener(this);
+        loadRewardedVideoAd();
 
         // Create the Google API Client with access to Plus and Games
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -168,6 +184,20 @@ public class MpWifi extends Activity implements
                 .addApi(Plus.API).addScope(Plus.SCOPE_PLUS_LOGIN)
                 .addApi(Games.API).addScope(Games.SCOPE_GAMES)
                 .build();
+
+
+
+        //initialize and load bigBanner add for future call
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-4648715887566496/7671269765");
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                requestNewInterstitial();
+            }
+        });
+
+        requestNewInterstitial();
 
         // Setup signin and signout buttons
         findViewById(R.id.sign_in_button).setOnClickListener(this);
@@ -179,6 +209,75 @@ public class MpWifi extends Activity implements
         secondS = (EditText) findViewById(R.id.secondS);
         thirdS = (EditText) findViewById(R.id.thirdS);
         danyhoDivneCheckboxy();
+    }
+
+    private void requestNewInterstitial() {
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("SEE_YOUR_LOGCAT_TO_GET_YOUR_DEVICE_ID")
+                .build();
+
+        mInterstitialAd.loadAd(adRequest);
+    }
+
+    private void loadRewardedVideoAd() {
+        mAd.loadAd("ca-app-pub-4648715887566496/4299000966", new AdRequest.Builder().build());
+    }
+
+    @Override
+    public void onRewarded(RewardItem reward) {
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        SharedPreferences.Editor editor1 = sp.edit();
+        Toast.makeText(MpWifi.this, "3 Game Tokens were added", Toast.LENGTH_SHORT).show();
+        gameTokens = 3;
+        editor1.putInt("gameTokens", gameTokens).apply();
+    }
+
+    @Override
+    public void onRewardedVideoAdLeftApplication() {
+
+    }
+
+    @Override
+    public void onRewardedVideoAdClosed() {
+        loadRewardedVideoAd();
+    }
+
+    @Override
+    public void onRewardedVideoAdFailedToLoad(int errorCode) {
+        Toast.makeText(this, "Video failed to load.", Toast.LENGTH_SHORT).show();
+        loadRewardedVideoAd();
+    }
+
+    @Override
+    public void onRewardedVideoAdLoaded() {
+    }
+
+    @Override
+    public void onRewardedVideoAdOpened() {
+    }
+
+    @Override
+    public void onRewardedVideoStarted() {
+
+    }
+
+    @Override
+    public void onResume() {
+        mAd.resume(this);
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        mAd.pause(this);
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        mAd.destroy(this);
+        super.onDestroy();
     }
 
     @Override
@@ -202,7 +301,6 @@ public class MpWifi extends Activity implements
         try {
             String roundsS = sp.getString("setRounds", "2");
             roundCount = Integer.parseInt(roundsS) * 2;
-
             gameTokens = sp.getInt("gameTokens", 3);
 
         } catch (NullPointerException e) {
@@ -210,6 +308,7 @@ public class MpWifi extends Activity implements
 
             gameTokens = 3;
         }
+
 
         Log.d(TAG, "Game tokens" + String.valueOf(gameTokens));
 
@@ -243,7 +342,7 @@ public class MpWifi extends Activity implements
             @Override
             public void onFinish() {
 
-                animation = new ObjectAnimator().ofInt(score, "progress", 0, 800000); //alebo nahrať "points" so svojim intom
+                animation = new ObjectAnimator().ofInt(score, "progress", 0, points); //alebo nahrať "points" so svojim intom
                 animation.setDuration(2000);
                 animation.setInterpolator(new AccelerateDecelerateInterpolator());
                 animation.start();
@@ -319,6 +418,8 @@ public class MpWifi extends Activity implements
 
     @Override
     public void onConnected(Bundle connectionHint) {
+
+
         Log.d(TAG, "onConnected(): Connection successful");
 
         // Retrieve the TurnBasedMatch from the connectionHint
@@ -450,8 +551,14 @@ public class MpWifi extends Activity implements
             Purchase premiumPurchase = inventory.getPurchase(SKU_PREMIUM);
             isPremium = (premiumPurchase != null && verifyDeveloperPayload(premiumPurchase));
             Log.d(TAG, "User is " + (isPremium ? "PREMIUM" : "NOT PREMIUM"));
-
             Log.d(TAG, "Initial inventory query finished; enabling main UI.");
+
+            //Save isPremium state for when the internet is turned off
+            SharedPreferences isPremiumSP = getSharedPreferences("PREMIUM", MODE_PRIVATE);
+            SharedPreferences.Editor editor = isPremiumSP.edit();
+            editor.putBoolean("isPremium", isPremium).apply();
+
+
         }
     };
 
@@ -633,6 +740,12 @@ public class MpWifi extends Activity implements
                 Log.d(TAG, "Purchase is premium upgrade. Congratulating user.");
                 showWarning(null, "Thank you for upgrading to premium!");
                 isPremium = true;
+
+                //Save isPremium state for when the internet is turned off
+                SharedPreferences isPremiumSP = getSharedPreferences("PREMIUM", MODE_PRIVATE);
+                SharedPreferences.Editor editor = isPremiumSP.edit();
+                editor.putBoolean("isPremium", isPremium).apply();
+
             }
             else {
                 Log.d(TAG, "onIabPurchaseFinished: Unknown SKU");
@@ -716,6 +829,21 @@ public class MpWifi extends Activity implements
                 findViewById(R.id.chooseTexts).setVisibility(View.GONE);
                 findViewById(R.id.notYourTurn).setVisibility(View.VISIBLE);
                 findViewById(R.id.gameFinished).setVisibility(View.GONE);
+
+
+
+
+                SharedPreferences isPremiumSP = getSharedPreferences("PREMIUM", MODE_PRIVATE);
+                if (isPremiumSP.getBoolean("isPremium", false)) {
+
+                } else {
+                    if (mInterstitialAd.isLoaded()) {
+                        mInterstitialAd.show();
+                    } else {
+
+                    }
+
+                }
 
                 if (hasSoftKeys()) {
 
@@ -883,11 +1011,12 @@ public class MpWifi extends Activity implements
     }
 
     public void videoAd(){
-        Toast.makeText(this, "Watching", Toast.LENGTH_SHORT).show();
 
-        // TODO: sem daj reklamu
+        if (mAd.isLoaded()) {
+            mAd.show();
+        }
 
-        gameTokens += 3;
+
     }
 
     public void finishGame() {
@@ -1812,6 +1941,7 @@ public class MpWifi extends Activity implements
             showWarning(null, "Error querying inventory. Another async operation in progress.");
         }
     }
+
 
     private class Guessing{
 

@@ -43,7 +43,7 @@ public class ScoreActivity extends Activity {
         setContentView(R.layout.scoreboard_layout);
 
         mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mInterstitialAd.setAdUnitId("ca-app-pub-4648715887566496/7671269765");
         mInterstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdClosed() {
@@ -227,16 +227,24 @@ public class ScoreActivity extends Activity {
             editor.clear().apply();
 
 
-        if (mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
-        } else {
-
+        SharedPreferences isPremiumSP = getSharedPreferences("PREMIUM", MODE_PRIVATE);
+        if (isPremiumSP.getBoolean("isPremium", false)) {
 
             Intent toMenu = new Intent(ScoreActivity.this, MainActivity.class);
             ScoreActivity.this.finish();
             startActivity(toMenu);
 
+        } else {
+
+            if (mInterstitialAd.isLoaded()) {
+                mInterstitialAd.show();
+            } else {
+                Intent toMenu = new Intent(ScoreActivity.this, MainActivity.class);
+                ScoreActivity.this.finish();
+                startActivity(toMenu);
+            }
         }
+
     }
 
     public boolean hasSoftKeys() {

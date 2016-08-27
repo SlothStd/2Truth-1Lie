@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/darker_bg"
     android:orientation="vertical"
-    android:weightSum="3"
+    android:weightSum="2"
     android:id="@+id/mainMainLayout">
 
     <com.google.android.gms.ads.AdView
@@ -26,12 +26,12 @@
         android:layout_centerHorizontal="true"
         android:layout_weight="1"
         android:src="@drawable/title"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:layout_gravity="center"
         android:gravity="center_vertical|center_horizontal"
         android:orientation="horizontal"
@@ -73,7 +73,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="#3498db"
+        android:background="#1abc9c"
         android:gravity="center"
         android:text="SETTINGS"
         android:textColor="@color/white"
