@@ -52,8 +52,10 @@ import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.images.ImageManager;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.GamesStatusCodes;
+import com.google.android.gms.games.Player;
 import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.android.gms.games.multiplayer.OnInvitationReceivedListener;
 import com.google.android.gms.games.multiplayer.realtime.RoomConfig;
@@ -427,6 +429,15 @@ public class MpWifi extends Activity implements
         Log.d(TAG, "onConnected(): Connection successful");
 
         dismissSpinner();
+
+        ImageView image = (ImageView) findViewById(R.id.MpWifi_menu_avatar);
+
+        Player me = Games.Players.getCurrentPlayer(mGoogleApiClient);
+
+        ImageManager mgr = ImageManager.create(this);
+        mgr.loadImage(image, me.getHiResImageUri());
+        ImageView defaultImage = (ImageView) findViewById(R.id.defaultImage);
+        defaultImage.setVisibility(View.GONE);
 
         // Retrieve the TurnBasedMatch from the connectionHint
         if (connectionHint != null) {

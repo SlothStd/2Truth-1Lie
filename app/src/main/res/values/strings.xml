@@ -117,10 +117,10 @@
     <string name="its_a_tie">It\'s a tie!</string>
     <string name="you_win">You win!</string>
     <string name="you_lose">You lose!</string>
-    <string name="play_msg">Choose an opponent to start a game with</string>
-    <string name="check_games_msg">Look at your ongoing games</string>
+    <string name="play_msg">Choose an opponent and play</string>
+    <string name="check_games_msg">Check for ongoing games</string>
     <string name="play">Play</string>
-    <string name="sign_out_msg">Sign out of the app with your Google account</string>
+    <string name="sign_out_msg">Sign out of your Google account</string>
     <string name="no_more_game_tokens">No more Game Tokens!</string>
     <string name="no_more_game_tokens_message">You have run out of game tokens. To start another game, watch a sponsored video or buy a premium account.</string>
     <string name="buy">Buy</string>

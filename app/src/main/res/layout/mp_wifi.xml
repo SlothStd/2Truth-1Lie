@@ -47,12 +47,19 @@
                     android:layout_centerHorizontal="true" >
 
 
+                    <ImageView
+                        android:id="@+id/MpWifi_menu_avatar"
+                        android:layout_width="220dp"
+                        android:layout_height="220dp"
+                        android:background="#8e44ad"/>
+
 
                     <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="#8e44ad"
-                        android:padding="45dp"
+                        android:id="@+id/defaultImage"
+                        android:layout_width="220dp"
+                        android:layout_height="220dp"
+                        android:background="#2980b9"
+                        android:padding="65dp"
                         android:src="@drawable/user1"/>
 
                     <ImageView
@@ -739,6 +746,7 @@
                             android:layout_width="37dp"
                             android:layout_height="37dp"
                             android:layout_marginTop="10dp"
+                            android:padding="1dp"
                             android:layout_below="@id/IsGuessingTW_guess"
                             android:progressDrawable="@drawable/green_progressbar"
                             android:layout_centerHorizontal="true"
@@ -754,7 +762,7 @@
                             android:layout_alignBottom="@+id/progress1_guess"
                             android:layout_centerHorizontal="true"
                             android:padding="2dp"
-                            android:layout_marginBottom="8dp"
+                            android:layout_marginBottom="6dp"
                             android:max="500"
                             android:progress="250" />
 
