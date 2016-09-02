@@ -1,6 +1,8 @@
 package slothstd.twotruthsonelie;
 
+import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -8,6 +10,7 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +18,8 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -44,8 +49,10 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.images.ImageManager;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.GamesStatusCodes;
+import com.google.android.gms.games.Player;
 import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.android.gms.games.multiplayer.OnInvitationReceivedListener;
 import com.google.android.gms.games.multiplayer.realtime.RoomConfig;
@@ -118,7 +125,7 @@ public class MpWifi extends Activity implements
     private ArrayList<String> IDs;
     private int player;
     private String myDisplayName, hisDisplayName;
-    private String myPhoto, hisPhoto;
+    private String myPhoto, hisPhoto, myBigPhoto;
 
     private GraphHistory graphHistory;
 
@@ -217,41 +224,7 @@ public class MpWifi extends Activity implements
 
         loadSP();
 
-        double perc = 0;
-        try {
-            perc = totalWins;
-            perc /= (totalWins + totalLoses);
-            perc *= 100;
-
-            ((TextView) findViewById(R.id.winRatioTv)).setText(String.valueOf((int) perc) + "%");
-        } catch (ArithmeticException e) {
-            ((TextView) findViewById(R.id.winRatioTv)).setText("");
-        }
-
-        score = (ProgressBar) findViewById(R.id.fakeProgressJustBecauseIcan);
-        score.setRotation(40);
-        score.setMax(1000000); //100*10k ↓
-        points = (int) perc *10000; //daj ten int *10k aby bola animacia smooth
-
-        timer2 = new CountDownTimer(1000, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-
-                score.setProgress(0);
-
-
-            }
-
-            @Override
-            public void onFinish() {
-
-                animation = new ObjectAnimator().ofInt(score, "progress", 0, 800000); //alebo nahrať "points" so svojim intom
-                animation.setDuration(2000);
-                animation.setInterpolator(new AccelerateDecelerateInterpolator());
-                animation.start();
-
-            }
-        }.start();
+        updateMenu();
 
         tocenieGuess = new Tocenie(findViewById(R.id.progress1_guess), findViewById(R.id.progress2_guess));
         tocenieNyt = new Tocenie(findViewById(R.id.progress1_nyt), findViewById(R.id.progress2_nyt));
@@ -341,6 +314,14 @@ public class MpWifi extends Activity implements
 
         findViewById(R.id.sign_in_button).setVisibility(View.GONE);
         findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
+
+        ImageView image = (ImageView) findViewById(R.id.MpWifi_menu_avatar);
+
+        Player me = Games.Players.getCurrentPlayer(mGoogleApiClient);
+        Uri uri = me.getHiResImageUri();
+
+        ImageManager imageManager = ImageManager.create(this);
+        imageManager.loadImage(image, uri);
 
         // As a demonstration, we are registering this activity as a handler for
         // invitation and match events.
@@ -697,6 +678,8 @@ public class MpWifi extends Activity implements
 
                 Log.d(TAG, "Buttons");
 
+                updateMenu();
+
                 break;
 
             case 0: //Not your turn
@@ -819,6 +802,44 @@ public class MpWifi extends Activity implements
         mAlertDialog.show();
     }
 
+    public void updateMenu(){
+        double perc = 0;
+        try {
+            perc = totalWins;
+            perc /= (totalWins + totalLoses);
+            perc *= 100;
+
+            ((TextView) findViewById(R.id.winRatioTv)).setText(String.valueOf((int) perc) + "%");
+        } catch (ArithmeticException e) {
+            ((TextView) findViewById(R.id.winRatioTv)).setText("");
+        }
+
+        score = (ProgressBar) findViewById(R.id.fakeProgressJustBecauseIcan);
+        score.setRotation(40);
+        score.setMax(1000000); //100*10k ↓
+        points = (int) perc *10000; //daj ten int *10k aby bola animacia smooth
+
+        timer2 = new CountDownTimer(1000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+                score.setProgress(0);
+
+
+            }
+
+            @Override
+            public void onFinish() {
+
+                animation = new ObjectAnimator().ofInt(score, "progress", 0, points); //alebo nahrať "points" so svojim intom
+                animation.setDuration(2000);
+                animation.setInterpolator(new AccelerateDecelerateInterpolator());
+                animation.start();
+
+            }
+        }.start();
+    }
+
     public void noGameTokensDialog(){
         AlertDialog dialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -841,6 +862,13 @@ public class MpWifi extends Activity implements
             }
         });
 
+        builder.setNeutralButton(R.string.promo, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                promoCodeDialog();
+            }
+        });
+
         dialog = builder.create();
         dialog.show();
     }
@@ -851,6 +879,32 @@ public class MpWifi extends Activity implements
         // TODO: sem daj reklamu
 
         gameTokens += 3;
+    }
+
+    public void promoCodeDialog(){
+        AlertDialog dialog;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(R.string.promo_title);
+
+        final EditText editText = new EditText(this);
+
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        builder.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        dialog = builder.create();
+        dialog.show();
     }
 
     public void finishGame() {
@@ -942,13 +996,17 @@ public class MpWifi extends Activity implements
         if (player1 == player2) {
             scoreboardBckg.setImageResource(R.drawable.scoreboard_green);
             circularBckg2.setImageResource(R.drawable.green_circle_bckg);
+            circularBckg1.setImageResource(R.drawable.green_circle_bckg);
         }
-
-        if (player2 > player1) {
+        else if (player2 > player1) {
             float rotation = scoreboardBckg.getRotation();
             scoreboardBckg.setRotation(rotation + 180);
             circularBckg1.setImageResource(R.drawable.red_circle_bckg);
             circularBckg2.setImageResource(R.drawable.green_circle_bckg);
+        }
+        else {
+            circularBckg1.setImageResource(R.drawable.green_circle_bckg);
+            circularBckg2.setImageResource(R.drawable.red_circle_bckg);
         }
 
         try {
@@ -1227,6 +1285,7 @@ public class MpWifi extends Activity implements
                     }
                 });
         mMatch = null;
+        matchData = new MatchData();
         gameState = 0;
     }
 

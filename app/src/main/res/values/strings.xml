@@ -127,5 +127,9 @@
     <string name="watch">Watch</string>
     <string name="you_are_guessing">You are guessing…</string>
     <string name="click_to_continue">Click to continue</string>
+    <string name="promo">Promo Code</string>
+    <string name="promo_title">Enter your promo code</string>
+    <string name="back">Back</string>
+    <string name="ok">OK</string>
 
 </resources>
