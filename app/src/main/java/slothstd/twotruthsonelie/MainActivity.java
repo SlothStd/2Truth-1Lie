@@ -2,6 +2,7 @@ package slothstd.twotruthsonelie;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -41,10 +42,17 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        MobileAds.initialize(getApplicationContext(), "ca-app-pub-3940256099942544~3347511713");
+        MobileAds.initialize(getApplicationContext(), "ca-app-pub-4648715887566496/6194536560");
         AdView mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+
+        SharedPreferences isPremiumSP = getSharedPreferences("PREMIUM", MODE_PRIVATE);
+        if (isPremiumSP.getBoolean("isPremium", false)) {
+
+        } else {
+            mAdView.loadAd(adRequest);
+        }
+
 
         if (getIntent().getFlags() == 0x14000000) {
             Intent multi = new Intent(MainActivity.this, MpWifi.class);

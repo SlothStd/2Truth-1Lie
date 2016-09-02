@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/MpWifi_main_layout"
     android:background="@color/darker_bg">
+
 
     <!-- Buttons -->
     <LinearLayout
@@ -18,7 +20,9 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:background="#1abc9c"
             android:text="Buy Premium"
+            android:textColor="@color/white"
             android:onClick="onUpgradeButtonClicked"/>
 
         <LinearLayout
@@ -34,7 +38,7 @@
                 android:id="@+id/relative"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="8">
+                android:layout_weight="8.5">
 
                 <FrameLayout
                     android:layout_width="220dp"
@@ -43,12 +47,19 @@
                     android:layout_centerHorizontal="true" >
 
                     <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="#8e44ad"
-                        android:padding="45dp"
-                        android:scaleType="fitCenter"
-                        android:id="@+id/MpWifi_menu_avatar" />
+                        android:id="@+id/MpWifi_menu_avatar"
+                        android:layout_width="220dp"
+                        android:layout_height="220dp"
+                        android:background="#8e44ad"/>
+
+
+                    <ImageView
+                        android:id="@+id/defaultImage"
+                        android:layout_width="220dp"
+                        android:layout_height="220dp"
+                        android:background="#2980b9"
+                        android:padding="65dp"
+                        android:src="@drawable/user1"/>
 
                     <ImageView
                         android:layout_width="match_parent"
@@ -74,7 +85,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:max="1000000"
-                    android:progress="750000"
                     android:rotation="40"
                     android:progressDrawable="@drawable/multi_progressbar" />
 
@@ -111,22 +121,25 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:gravity="center"
+                android:gravity="bottom"
                 android:orientation="vertical"
-                android:layout_weight="1">
+                android:layout_weight="1.5">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/levelTextView"
+                    android:layout_gravity="center"
                     android:text="Level 12"
                     android:textColor="@color/white"/>
 
                 <ProgressBar
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="5dp"
                     android:max="100"
                     android:progress="50"
+                    android:background="#20000000"
+                    android:progressDrawable="@drawable/mpwifi_level_progress"
                     style="?android:attr/progressBarStyleHorizontal"
                     android:id="@+id/levelProgress"/>
 
@@ -732,6 +745,7 @@
                             android:layout_width="37dp"
                             android:layout_height="37dp"
                             android:layout_marginTop="10dp"
+                            android:padding="1dp"
                             android:layout_below="@id/IsGuessingTW_guess"
                             android:progressDrawable="@drawable/green_progressbar"
                             android:layout_centerHorizontal="true"
@@ -747,7 +761,7 @@
                             android:layout_alignBottom="@+id/progress1_guess"
                             android:layout_centerHorizontal="true"
                             android:padding="2dp"
-                            android:layout_marginBottom="8dp"
+                            android:layout_marginBottom="6dp"
                             android:max="500"
                             android:progress="250" />
 
@@ -812,60 +826,80 @@
             <!-- Guess Screen -->
 
             <!-- Not your turn Screen -->
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone"
                 android:background="@color/darker_bg"
-                android:gravity="center"
+                android:orientation="vertical"
+                android:weightSum="3"
                 android:id="@+id/notYourTurn">
 
-                <ProgressBar
-                    android:id="@+id/progress1_nyt"
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_weight="1.5"
+                    android:gravity="bottom"
+                    android:layout_height="0dp">
+
+                    <ProgressBar
+                        android:id="@+id/progress1_nyt"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="10dp"
+                        android:padding="1dp"
+                        android:layout_centerInParent="true"
+                        android:progressDrawable="@drawable/green_progressbar"
+                        android:max="500"
+                        android:progress="250" />
+
+                    <ProgressBar
+                    android:id="@+id/progress2_nyt"
                     style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="37dp"
-                    android:layout_height="37dp"
-                    android:layout_marginTop="10dp"
-                    android:progressDrawable="@drawable/green_progressbar"
+                    android:layout_width="27dp"
+                    android:layout_height="27dp"
+                    android:progressDrawable="@drawable/red_progressbar"
+                    android:layout_centerInParent="true"
+                    android:layout_alignBottom="@+id/progress1_nyt"
                     android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="6dp"
                     android:padding="2dp"
                     android:max="500"
                     android:progress="250" />
 
-                <ProgressBar
-                    android:id="@+id/progress2_nyt"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:progressDrawable="@drawable/red_progressbar"
-                    android:layout_alignBottom="@+id/progress1_nyt"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="8dp"
-                    android:padding="2dp"
-                    android:max="500"
-                    android:progress="250" />
+
+                </RelativeLayout>
 
                 <TextView
                     android:id="@+id/turnText"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_centerHorizontal="true"
                     android:layout_below="@id/progress1_nyt"
-                    android:layout_height="wrap_content"
-                    android:text="Not your turn fam!"
+                    android:layout_height="0dp"
+                    android:gravity="center"
+                    android:text="Wait for your turn"
+                    android:layout_weight="0.3"
+                    android:textColor="#ecf0f1"
                     android:textSize="16sp"
                     android:layout_marginTop="16dp"/>
 
                 <Button
                     android:id="@+id/checkOtherGames"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="180dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="45dp"
                     android:layout_centerHorizontal="true"
+                    android:background="#1abc9c"
+                    android:textColor="#ecf0f1"
                     android:text="Check Other Games"
                     android:onClick="onCheckGamesClicked"
                     android:layout_below="@id/turnText"
                     android:layout_marginTop="10dp"/>
 
-            </RelativeLayout>
+
+
+            </LinearLayout>
             <!-- Not your turn Screen -->
 
 
@@ -889,7 +923,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:gravity="center"
-                    android:paddingTop="30dp">
+                    android:paddingTop="20dp">
 
                     <FrameLayout
                         android:id="@+id/celok"
@@ -939,6 +973,8 @@
                             android:background="@drawable/circle"/>
 
 
+
+
                     </FrameLayout>
 
 
@@ -981,8 +1017,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="points"
+                            android:layout_marginBottom="-6dp"
                             android:textColor="@color/white"
-                            android:textSize="20dp"/>
+                            android:textSize="15sp"/>
 
                         <TextView
                             android:id="@+id/playerOnePoints_mp"
@@ -1017,7 +1054,7 @@
                             android:id="@+id/playerTwoPoints_mp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="19"
+                            android:text="22"
                             android:textColor="@color/white"
                             android:textSize="50dp"/>
 
@@ -1026,8 +1063,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="points"
+                            android:layout_marginTop="-6dp"
                             android:textColor="@color/white"
-                            android:textSize="20dp"/>
+                            android:textSize="16sp"/>
 
 
 
@@ -1041,7 +1079,7 @@
                     android:orientation="vertical"
                     android:layout_alignParentBottom="true"
                     android:gravity="center"
-                    android:paddingBottom="50dp">
+                    android:paddingBottom="20dp">
 
                     <FrameLayout
                         android:id="@+id/celok2"

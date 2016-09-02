@@ -5,7 +5,7 @@
     <string name="SHA1">11:BC:E9:16:34:F0:BE:2D:C1:B5:7E:37:BA:88:A6:42:A5:46:99:5D</string>
     <string name="clientID">94849507103-n69bq0egclobk7ovu1cashl9dslqinl2.apps.googleusercontent.com</string>
     <string name="base64">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAl1KbARoe/YtM5IlkAh60CCTpI8gUDZhB7GZUXX1CsDNeg5ns8zAXvM+O0cHEeKIk7HcUTuvLyTvhG0yluicwMtX5eNuRAfkp5fmbplrjF1ISxB6pVyAsw0f++G0cgMN9TGlV0sjhS2ZYj+WNLTC2EQcP7ZhW7bVwHDjX+FmYheDFv9DIS0Jj8fv6yPj8SswudFQXPnorkFYMST+XgB5P0XpQyx5IJFLq6quycmwEZAfVFDk9obWyHBeWDiG7O6MvtVK7tf/rv7U6tWpyP9W0HGWuA886rT9IkJrujzORZyI+CpZzCY/asvs9bAfT+oCKVveko6ZQP//N9mi9uKs9/wIDAQAB</string>
-    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_ad_unit_id">ca-app-pub-4648715887566496/6194536560</string>
 
     <string name="signin_failure">Unable to sign in.</string>
     <string name="signin_other_error">There was an issue with sign-in. Please try again later.</string>
@@ -117,10 +117,10 @@
     <string name="its_a_tie">It\'s a tie!</string>
     <string name="you_win">You win!</string>
     <string name="you_lose">You lose!</string>
-    <string name="play_msg">Choose an opponent to start a game with</string>
-    <string name="check_games_msg">Look at your ongoing games</string>
+    <string name="play_msg">Choose an opponent and play</string>
+    <string name="check_games_msg">Check for ongoing games</string>
     <string name="play">Play</string>
-    <string name="sign_out_msg">Sign out of the app with your Google account</string>
+    <string name="sign_out_msg">Sign out of your Google account</string>
     <string name="no_more_game_tokens">No more Game Tokens!</string>
     <string name="no_more_game_tokens_message">You have run out of game tokens. To start another game, watch a sponsored video or buy a premium account.</string>
     <string name="buy">Buy</string>

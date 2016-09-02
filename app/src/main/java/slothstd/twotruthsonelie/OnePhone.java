@@ -404,7 +404,7 @@ public class OnePhone extends Activity implements View.OnKeyListener {
 
 
         final CustomDialog custom_dialog = new CustomDialog();
-        custom_dialog.showDiaolg(OnePhone.this, "Exit", "Cancel", "Are you sure you want to exit? Your current game session will end.");
+        custom_dialog.showDiaolg(OnePhone.this, "EXIT", "CANCEL", "Are you sure you want to exit? Your current game session will end.");
         custom_dialog.positive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
