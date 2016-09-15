@@ -21,9 +21,10 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="#1abc9c"
-            android:text="Buy Premium"
+            android:text="@string/buy_premium"
             android:textColor="@color/white"
-            android:onClick="onUpgradeButtonClicked"/>
+            android:onClick="onUpgradeButtonClicked"
+            android:id="@+id/premiumButton"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -931,7 +932,7 @@
                         android:layout_height="120dp">
 
                         <ImageView
-                            android:id="@+id/user_avatar1"
+                            android:id="@+id/user_avatar1_finish"
                             android:layout_width="120dp"
                             android:layout_height="120dp"
                             android:src="@drawable/logo" />
@@ -1087,7 +1088,7 @@
                         android:layout_height="120dp">
 
                         <ImageView
-                            android:id="@+id/user_avatar2"
+                            android:id="@+id/user_avatar2_finish"
                             android:layout_width="120dp"
                             android:layout_height="120dp"
                             android:src="@drawable/logo" />

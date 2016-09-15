@@ -1,16 +1,14 @@
 package slothstd.twotruthsonelie;
 
-import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.hardware.camera2.params.LensShadingMap;
 import android.support.v7.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,8 +16,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,6 +30,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -48,7 +45,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.reward.RewardItem;
@@ -138,8 +134,6 @@ public class MpWifi extends Activity implements
 
     private GraphHistory graphHistory;
 
-    private int roundCount = 2;
-
     public static final int winPoint = 1;
     public static final int gameFinishedXp = 10;
     public static final int winBonus = 15;
@@ -167,6 +161,8 @@ public class MpWifi extends Activity implements
             ViewGroup.LayoutParams.WRAP_CONTENT);
 
     boolean isPremium = false;
+    boolean isDeveloper = false;
+    boolean isUnlimited = false;
     static final String SKU_PREMIUM = "premium_account";
 
     IabHelper mHelper;
@@ -214,12 +210,11 @@ public class MpWifi extends Activity implements
         findViewById(R.id.sign_in_button).setOnClickListener(this);
         findViewById(R.id.sign_out_button).setOnClickListener(this);
 
-
-
         firstS = (EditText) findViewById(R.id.firstS);
         secondS = (EditText) findViewById(R.id.secondS);
         thirdS = (EditText) findViewById(R.id.thirdS);
         danyhoDivneCheckboxy();
+
     }
 
     private void requestNewInterstitial() {
@@ -256,7 +251,6 @@ public class MpWifi extends Activity implements
 
     @Override
     public void onRewardedVideoAdFailedToLoad(int errorCode) {
-        Toast.makeText(this, "Video failed to load.", Toast.LENGTH_SHORT).show();
         loadRewardedVideoAd();
     }
 
@@ -310,13 +304,9 @@ public class MpWifi extends Activity implements
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         try {
-            String roundsS = sp.getString("setRounds", "2");
-            roundCount = Integer.parseInt(roundsS) * 2;
             gameTokens = sp.getInt("gameTokens", 3);
 
         } catch (NullPointerException e) {
-            roundCount = 6;
-
             gameTokens = 3;
         }
 
@@ -325,46 +315,7 @@ public class MpWifi extends Activity implements
 
         loadSP();
 
-
         updateMenu();
-
- /*  TODO: not sure about this     
-
-double perc = 0;
-        try {
-            perc = totalWins;
-            perc /= (totalWins + totalLoses);
-            perc *= 100;
-
-            ((TextView) findViewById(R.id.winRatioTv)).setText(String.valueOf((int) perc) + "%");
-        } catch (ArithmeticException e) {
-            ((TextView) findViewById(R.id.winRatioTv)).setText("");
-        }
-
-        score = (ProgressBar) findViewById(R.id.fakeProgressJustBecauseIcan);
-        score.setRotation(40);
-        score.setMax(1000000); //100*10k ↓
-        points = (int) perc *10000; //daj ten int *10k aby bola animacia smooth
-
-        timer2 = new CountDownTimer(1000, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-
-                score.setProgress(0);
-
-
-            }
-
-            @Override
-            public void onFinish() {
-
-                animation = new ObjectAnimator().ofInt(score, "progress", 0, points); //alebo nahrať "points" so svojim intom
-                animation.setDuration(2000);
-                animation.setInterpolator(new AccelerateDecelerateInterpolator());
-                animation.start();
-
-            }
-        }.start();*/
 
         tocenieGuess = new Tocenie(findViewById(R.id.progress1_guess), findViewById(R.id.progress2_guess));
         tocenieNyt = new Tocenie(findViewById(R.id.progress1_nyt), findViewById(R.id.progress2_nyt));
@@ -432,6 +383,14 @@ double perc = 0;
         editor.apply();
     }
 
+    public void clearSp(){
+        if (mMatch != null) {
+            SharedPreferences prefs = getSharedPreferences(mMatch.getMatchId(), Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.clear().apply();
+        }
+    }
+
     @Override
     public void onConnected(Bundle connectionHint) {
 
@@ -465,14 +424,6 @@ double perc = 0;
 
         findViewById(R.id.sign_in_button).setVisibility(View.GONE);
         findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
-
-        ImageView image = (ImageView) findViewById(R.id.MpWifi_menu_avatar);
-
-        Player me = Games.Players.getCurrentPlayer(mGoogleApiClient);
-        Uri uri = me.getHiResImageUri();
-
-        ImageManager imageManager = ImageManager.create(this);
-        imageManager.loadImage(image, uri);
 
         // As a demonstration, we are registering this activity as a handler for
         // invitation and match events.
@@ -590,12 +541,12 @@ double perc = 0;
             Log.d(TAG, "User is " + (isPremium ? "PREMIUM" : "NOT PREMIUM"));
             Log.d(TAG, "Initial inventory query finished; enabling main UI.");
 
+            findViewById(R.id.premiumButton).setVisibility(isPremium ? View.GONE : View.VISIBLE);
+
             //Save isPremium state for when the internet is turned off
             SharedPreferences isPremiumSP = getSharedPreferences("PREMIUM", MODE_PRIVATE);
             SharedPreferences.Editor editor = isPremiumSP.edit();
             editor.putBoolean("isPremium", isPremium).apply();
-
-
         }
     };
 
@@ -623,7 +574,7 @@ double perc = 0;
             return;
         }
 
-        if (!isPremium && gameTokens == 0){
+        if (!isPremium && !isDeveloper && !isUnlimited && gameTokens == 0){
             noGameTokensDialog();
             return;
         }
@@ -733,6 +684,38 @@ double perc = 0;
 
     // User clicked the "Upgrade to Premium" button.
     public void onUpgradeButtonClicked(View arg0) {
+        AlertDialog dialog;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(getString(R.string.upgrade_to_premium));
+
+        builder.setMessage(getString(R.string.upgrade_msg));
+
+        builder.setPositiveButton(R.string.buy, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                launchPurchase();
+            }
+        });
+
+        builder.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        builder.setNeutralButton(R.string.promo, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                promoCodeDialog();
+            }
+        });
+
+        dialog = builder.create();
+        dialog.show();
+    }
+
+    public void launchPurchase(){
         Log.d(TAG, "Upgrade button clicked; launching purchase flow for upgrade.");
 
         /* TODO: for security, generate your payload here for verification. See the comments on
@@ -777,6 +760,8 @@ double perc = 0;
                 Log.d(TAG, "Purchase is premium upgrade. Congratulating user.");
                 showWarning(null, "Thank you for upgrading to premium!");
                 isPremium = true;
+
+                findViewById(R.id.premiumButton).setVisibility(View.GONE);
 
                 //Save isPremium state for when the internet is turned off
                 SharedPreferences isPremiumSP = getSharedPreferences("PREMIUM", MODE_PRIVATE);
@@ -855,10 +840,7 @@ double perc = 0;
 
 
 
-                SharedPreferences isPremiumSP = getSharedPreferences("PREMIUM", MODE_PRIVATE);
-                if (isPremiumSP.getBoolean("isPremium", false)) {
-
-                } else {
+                if (!isPremium && !isDeveloper){
                     if (mInterstitialAd.isLoaded()) {
                         mInterstitialAd.show();
                     } else {
@@ -982,6 +964,7 @@ double perc = 0;
     }
 
     public void updateMenu(){
+
         double perc = 0;
         try {
             perc = totalWins;
@@ -1062,12 +1045,14 @@ double perc = 0;
     }
 
     public void promoCodeDialog(){
-        AlertDialog dialog;
+        final AlertDialog dialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setTitle(R.string.promo_title);
 
         final EditText editText = new EditText(this);
+        editText.setSingleLine(true);
+        builder.setView(editText, 40, 0, 40, 0);
 
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
@@ -1085,6 +1070,42 @@ double perc = 0;
 
         dialog = builder.create();
         dialog.show();
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (validatePromoCode(editText.getText().toString())){
+                    dialog.dismiss();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), R.string.code_invalid, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    public boolean validatePromoCode(String code){
+        SharedPreferences isPremiumSP = getSharedPreferences("PREMIUM", MODE_PRIVATE);
+        SharedPreferences.Editor editor = isPremiumSP.edit();
+
+        switch (code){
+            case "developersky kodik":
+
+                isDeveloper = true;
+                editor.putBoolean("isDeveloper", isDeveloper);
+
+                editor.apply();
+                return true;
+            case "nieco vymysliet":
+
+                isUnlimited = true;
+                editor.putBoolean("isUnlimited", isUnlimited);
+
+                editor.apply();
+                return true;
+            default:
+                return false;
+        }
     }
 
     public void finishGame() {
@@ -1113,6 +1134,8 @@ double perc = 0;
                     });
         }
 
+        clearSp();
+
         SharedPreferences prefs = getSharedPreferences("Levels", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
@@ -1137,7 +1160,7 @@ double perc = 0;
         editor.putInt("xp", xp).apply();
 
         totalWins += graphHistory.myWinCount();
-        totalLoses += (roundCount / 2) - graphHistory.myWinCount();
+        totalLoses += (matchData.getMatchLength() / 2) - graphHistory.myWinCount();
 
         Log.d(TAG, String.valueOf(xp));
 
@@ -1155,18 +1178,19 @@ double perc = 0;
 
         player1Progress = (ProgressBar) findViewById(R.id.player1_progress_mp);
         player1Progress.setProgress(0);
-        player1Progress.setMax(100000);
+        player1Progress.setMax(1000000);
         player2Progress = (ProgressBar) findViewById(R.id.player2_progress_mp);
         player2Progress.setProgress(0);
-        player2Progress.setMax(100000);
+        player2Progress.setMax(1000000);
+
+        new LoadProfileImage((ImageView) findViewById(R.id.user_avatar1_finish)).execute(myPhoto);
+        new LoadProfileImage((ImageView) findViewById(R.id.user_avatar2_finish)).execute(hisPhoto);
 
         playerOnePoints = (TextView) findViewById(R.id.playerOnePoints_mp);
         playerTwoPoints = (TextView) findViewById(R.id.playerTwoPoints_mp);
 
-        float rotation1 = player1Progress.getRotation();
-        player1Progress.setRotation(rotation1 + 40);
-        float rotation2 = player2Progress.getRotation();
-        player2Progress.setRotation(rotation2 + 40);
+        player1Progress.setRotation(40);
+        player2Progress.setRotation(40);
 
         player1 = matchData.getScores(0);
         player2 = matchData.getScores(1);
@@ -1179,12 +1203,14 @@ double perc = 0;
             circularBckg1.setImageResource(R.drawable.green_circle_bckg);
         }
         else if (player2 > player1) {
-            float rotation = scoreboardBckg.getRotation();
-            scoreboardBckg.setRotation(rotation + 180);
+            scoreboardBckg.setRotation(180);
+
             circularBckg1.setImageResource(R.drawable.red_circle_bckg);
             circularBckg2.setImageResource(R.drawable.green_circle_bckg);
         }
         else {
+            scoreboardBckg.setRotation(0);
+
             circularBckg1.setImageResource(R.drawable.green_circle_bckg);
             circularBckg2.setImageResource(R.drawable.red_circle_bckg);
         }
@@ -1193,7 +1219,7 @@ double perc = 0;
             playerOnePoints.setText(String.valueOf(player1));
             if (player1 == 1) {
                 TextView textView1 = (TextView)findViewById(R.id.points1);
-                textView1.setText("point");
+                textView1.setText(R.string.point);
             }
         } catch (NullPointerException e) {
             playerOnePoints.setText("0");
@@ -1202,13 +1228,13 @@ double perc = 0;
             playerTwoPoints.setText(String.valueOf(player2));
             if (player2 == 1) {
                 TextView textView2 = (TextView)findViewById(R.id.points2);
-                textView2.setText("point");
+                textView2.setText(R.string.point);
             }
         } catch (NullPointerException e) {
             playerTwoPoints.setText("0");
         }
 
-
+        matchData = new MatchData();
     }
 
     // Rematch dialog
@@ -1318,7 +1344,7 @@ double perc = 0;
     // game, saving our initial state. Calling takeTurn() will
     // callback to OnTurnBasedMatchUpdated(), which will show the game
     // UI.
-    public void startMatch(TurnBasedMatch match) {
+    public void startMatch(TurnBasedMatch match, int length) {
 
         mMatch = match;
 
@@ -1327,7 +1353,8 @@ double perc = 0;
         getPlayerIDs();
 
         gameTokens--;
-        Log.d(TAG, "Game tokens" + String.valueOf(gameTokens));
+
+        matchData.setMatchLength(length * 2);
 
         Games.TurnBasedMultiplayer.takeTurn(mGoogleApiClient, match.getMatchId(),
                 matchData.convertData(), myID).setResultCallback(
@@ -1403,7 +1430,7 @@ double perc = 0;
                 previous = 0;
 
                 while (a <= xp) {
-                    level++;
+                    hisLevel++;
 
                     previous = a;
 
@@ -1415,10 +1442,11 @@ double perc = 0;
 
                 TextView player2Level = (TextView) findViewById(R.id.player2_level_mp);
                 player2Level.setText(String.valueOf(hisLevel));
+                Toast.makeText(this, level + ", " + hisLevel, Toast.LENGTH_SHORT).show();
 
                 //tu si dopln int na levelprogress do progressbarov (to uz mas nastavene iba tieto inty si uprav)
-                final int player1LevelProgress = ((xp / a) * 10) * 10000; // krat 10k kvoli smooth animacii
-                final int player2LevelProgress = ((hisXp / hisA) * 10) * 10000;
+                final int player1LevelProgress = 50 * 10000; //((xp / a) * 10) * 10000; // krat 10k kvoli smooth animacii
+                final int player2LevelProgress = 80 * 10000; //((hisXp / hisA) * 10) * 10000;
 
                 CountDownTimer timer = new CountDownTimer(1300, 1000) {
                     @Override
@@ -1491,6 +1519,38 @@ double perc = 0;
         } else {
             return null;
         }
+    }
+
+    public void roundLengthDialog(final TurnBasedMatch match){
+        AlertDialog dialog;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(getString(R.string.select_rounds));
+
+        builder.setSingleChoiceItems(R.array.roundsList, 2, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                if ((isPremium || isDeveloper || isUnlimited) || which == 2) {
+                    startMatch(match, which + 1);
+
+                    dialog.dismiss();
+                }
+                else {
+                    onUpgradeButtonClicked(null);
+                }
+            }
+        });
+
+        builder.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog = builder.create();
+        dialog.show();
     }
 
     // This is the main function that gets called when players choose a match
@@ -1580,9 +1640,8 @@ double perc = 0;
             return;
         }
 
-        startMatch(match);
+        roundLengthDialog(match);
     }
-
 
     private void processResult(TurnBasedMultiplayer.LeaveMatchResult result) {
         TurnBasedMatch match = result.getMatch();
@@ -1642,8 +1701,6 @@ double perc = 0;
 
     @Override
     public void onTurnBasedMatchReceived(final TurnBasedMatch match) {
-        Toast.makeText(this, "A match was updated.", TOAST_DELAY).show();
-
         if (mMatch.getMatchId().equals(match.getMatchId())) {
             updateMatch(match);
         } else {
@@ -2102,16 +2159,13 @@ double perc = 0;
 
                         graphHistory.addMyHistory(true);
 
-                        Toast.makeText(getApplicationContext(), "You\'re a fuckin g! " + matchData.getScores().get(0) + " - " + matchData.getScores().get(1) + " " + matchData.getCurrentRound() + "/" + roundCount, Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(getApplicationContext(), "You dumb idiot " + matchData.getScores().get(0) + " - " + matchData.getScores().get(1) + " " + matchData.getCurrentRound() + "/" + roundCount, Toast.LENGTH_SHORT).show();
-
                         graphHistory.addMyHistory(false);
                     }
 
                     graphHistory.setLastScore(matchData.getScores());
 
-                    if (matchData.getCurrentRound() == roundCount) {
+                    if (matchData.getCurrentRound() >= matchData.getMatchLength()) {
                         gameState = 3;
                     } else {
                         gameState = 1;

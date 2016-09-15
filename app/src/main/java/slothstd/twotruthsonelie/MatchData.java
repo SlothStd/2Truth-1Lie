@@ -18,6 +18,7 @@ public class MatchData {
     private ArrayList<Integer> scores;
     private int currentRound;
     private int hisXp;
+    private int matchLength;
 
     public MatchData(String sentenceAuthor, ArrayList<String> sentences, int liePos, ArrayList<Integer> scores, int currentRound) {
         this.sentenceAuthor = sentenceAuthor;
@@ -100,14 +101,23 @@ public class MatchData {
         this.hisXp = hisXp;
     }
 
+    public int getMatchLength() {
+        return matchLength;
+    }
+
+    public void setMatchLength(int matchLength) {
+        this.matchLength = matchLength;
+    }
+
     /**
      * 0. ID of the sentence author.
      * 1,2,3. 3 sentences.
      * 4. Position of the lie.
      * 5,6. p_1 score, p_2 score.
      * 7. current round
+     * 8. match matchLength
      *
-     * ID~1|2|3~pos~score|score~round
+     * ID~1|2|3~pos~score|score~round~matchLength
      **/
     private void getData(byte[] data){
         String string = new String(data, Charset.forName("UTF-16"));
@@ -197,6 +207,15 @@ public class MatchData {
         setHisXp(Integer.parseInt(temp));
         temp = "";
 
+        for (; i < chars.length; i++) {
+            if (chars[i] == '~') {
+                i++;
+                break;
+            }
+            temp = temp + String.valueOf(chars[i]);
+        }
+        setMatchLength(Integer.parseInt(temp));
+
         Log.d(TAG, "Received: " + string);
     }
 
@@ -238,6 +257,8 @@ public class MatchData {
         data = data + "~" + currentRound;
 
         data = data + "~" + hisXp;
+
+        data = data + "~" + matchLength;
 
         Log.d(TAG, "Sent: " + data);
 

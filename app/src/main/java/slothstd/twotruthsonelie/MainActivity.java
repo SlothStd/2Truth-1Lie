@@ -59,7 +59,7 @@ public class MainActivity extends Activity {
             startActivity(multi);
         }
 
-        if (hasSoftKeys()){
+        /*if (hasSoftKeys()){
 
             final float scale = getResources().getDisplayMetrics().density;
             int top = (int) (24 * scale + 0.5f);
@@ -68,7 +68,7 @@ public class MainActivity extends Activity {
             findViewById(R.id.mainMainLayout).setPadding(0, top, 0, bottom);
         }else {
             findViewById(R.id.mainMainLayout).setPadding(0, 0, 0, 0);
-        }
+        }*/
 
         onePhone = (Button) findViewById(R.id.Onephone);
         twoPhones = (Button) findViewById(R.id.Twophones);

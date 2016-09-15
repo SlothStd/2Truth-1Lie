@@ -75,6 +75,19 @@
         <item>10</item>
     </string-array>
 
+    <string-array name="roundsList">
+        <item>1 (Locked)</item>
+        <item>2 (Locked)</item>
+        <item>3 (Free)</item>
+        <item>4 (Locked)</item>
+        <item>5 (Locked)</item>
+        <item>6 (Locked)</item>
+        <item>7 (Locked)</item>
+        <item>8 (Locked)</item>
+        <item>9 (Locked)</item>
+        <item>10 (Locked)</item>
+    </string-array>
+
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
     <!-- Example settings for Notifications -->
@@ -131,5 +144,11 @@
     <string name="promo_title">Enter your promo code</string>
     <string name="back">Back</string>
     <string name="ok">OK</string>
+    <string name="buy_premium">Buy Premium</string>
+    <string name="point">point</string>
+    <string name="code_invalid">Code invalid</string>
+    <string name="upgrade_to_premium">Upgrade to Premium</string>
+    <string name="upgrade_msg">After upgrading to a premium account you will receive:</string>
+    <string name="select_rounds">Select rounds</string>
 
 </resources>
