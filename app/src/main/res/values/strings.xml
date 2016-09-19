@@ -164,5 +164,6 @@
     <string name="upgrade_msg">After upgrading to a premium account you will receive a full Ad-Free version with no restrictions</string>
     <string name="select_rounds">Select rounds</string>
     <string name="success_rate_msg">This is the success rate of your guesses</string>
+    <string name="game_tokens">"Game Tokens: "</string>
 
 </resources>

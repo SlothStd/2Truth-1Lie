@@ -242,7 +242,10 @@ public class MpWifi extends Activity implements
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         SharedPreferences.Editor editor1 = sp.edit();
         Toast.makeText(MpWifi.this, "3 Game Tokens were added", Toast.LENGTH_SHORT).show();
-        gameTokens = 3;
+
+        gameTokens += 3;
+        ((TextView) findViewById(R.id.gameTokensTv)).setText(getString(R.string.game_tokens) + String.valueOf(gameTokens));
+
         editor1.putInt("gameTokens", gameTokens).apply();
     }
 
@@ -320,8 +323,9 @@ public class MpWifi extends Activity implements
             gameTokens = 3;
         }
 
-
         Log.d(TAG, "Game tokens" + String.valueOf(gameTokens));
+
+        ((TextView) findViewById(R.id.gameTokensTv)).setText(getString(R.string.game_tokens) + String.valueOf(gameTokens));
 
         loadSP();
 
@@ -578,6 +582,11 @@ public class MpWifi extends Activity implements
             return;
         }
 
+        if (!isPremium && !isDeveloper && !isUnlimited && gameTokens <= 0){
+            noGameTokensDialog();
+            return;
+        }
+
         Intent intent = Games.TurnBasedMultiplayer.getInboxIntent(mGoogleApiClient);
         startActivityForResult(intent, RC_LOOK_AT_MATCHES);
     }
@@ -752,6 +761,10 @@ public class MpWifi extends Activity implements
                 showWarning(null, "Error launching purchase flow. Another async operation in progress.");
             }
         }
+    }
+
+    public void onFarmGameTokens(View view) {
+        videoAd();
     }
 
     IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
@@ -1335,6 +1348,8 @@ public class MpWifi extends Activity implements
 
                 if (match != null) {
                     updateMatch(match);
+
+                    gameTokens--;
                 }
 
                 Log.d(TAG, "Match = " + match);
@@ -2141,7 +2156,6 @@ public class MpWifi extends Activity implements
             showWarning(null, "Error querying inventory. Another async operation in progress.");
         }
     }
-
 
     private class Guessing{
 

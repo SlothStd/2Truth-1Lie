@@ -114,9 +114,6 @@
 
                 </FrameLayout>
 
-
-
-
             </RelativeLayout>
 
             <LinearLayout
@@ -175,7 +172,7 @@
                     android:layout_marginRight="16dp"/>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:gravity="center_vertical">
@@ -196,6 +193,35 @@
                         android:textSize="12sp"/>
 
                 </LinearLayout>
+
+<!-- TODO: tento layout daj kam len chces -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/game_tokens"
+                        android:id="@+id/gameTokensTv"
+                        android:textStyle="bold"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"/>
+
+                    <Button
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:text="+"
+                        android:textSize="18dp"
+                        android:gravity="center"
+                        android:textAlignment="center"
+                        android:background="@android:color/transparent"
+                        android:onClick="onFarmGameTokens"
+                        android:textColor="@color/white"/>
+
+                </LinearLayout>
+<!-- Potialto -->
 
             </LinearLayout>
 
@@ -830,7 +856,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:background="@color/darker_bg"
                 android:orientation="vertical"
                 android:weightSum="3"
