@@ -244,9 +244,11 @@ public class MpWifi extends Activity implements
         Toast.makeText(MpWifi.this, "3 Game Tokens were added", Toast.LENGTH_SHORT).show();
 
         gameTokens += 3;
-        ((TextView) findViewById(R.id.gameTokensTv)).setText(getString(R.string.game_tokens) + String.valueOf(gameTokens));
+//        ((TextView) findViewById(R.id.gameTokensTv)).setText(getString(R.string.game_tokens) + String.valueOf(gameTokens));
 
         editor1.putInt("gameTokens", gameTokens).apply();
+
+        loadRewardedVideoAd();
     }
 
     @Override
@@ -325,7 +327,7 @@ public class MpWifi extends Activity implements
 
         Log.d(TAG, "Game tokens" + String.valueOf(gameTokens));
 
-        ((TextView) findViewById(R.id.gameTokensTv)).setText(getString(R.string.game_tokens) + String.valueOf(gameTokens));
+//        ((TextView) findViewById(R.id.gameTokensTv)).setText(getString(R.string.game_tokens) + String.valueOf(gameTokens));
 
         loadSP();
 
@@ -561,6 +563,7 @@ public class MpWifi extends Activity implements
             Log.d(TAG, "User is " + (isPremium ? "PREMIUM" : "NOT PREMIUM"));
             Log.d(TAG, "Initial inventory query finished; enabling main UI.");
 
+            findViewById(R.id.tokenFarm).setVisibility(isPremium ? View.GONE : View.VISIBLE);
             findViewById(R.id.premiumButton).setVisibility(isPremium ? View.GONE : View.VISIBLE);
 
             //Save isPremium state for when the internet is turned off
@@ -792,6 +795,7 @@ public class MpWifi extends Activity implements
                 isPremium = true;
 
                 findViewById(R.id.premiumButton).setVisibility(View.GONE);
+                findViewById(R.id.tokenFarm).setVisibility(isPremium ? View.GONE : View.VISIBLE);
 
                 //Save isPremium state for when the internet is turned off
                 SharedPreferences isPremiumSP = getSharedPreferences("PREMIUM", MODE_PRIVATE);

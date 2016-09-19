@@ -15,16 +15,37 @@
         android:id="@+id/buttons"
         android:weightSum="5"
         android:background="@color/darker_bg"
-        android:visibility="gone">
+        android:visibility="visible">
 
-        <Button
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="#1abc9c"
-            android:text="@string/buy_premium"
-            android:textColor="@color/white"
-            android:onClick="onUpgradeButtonClicked"
-            android:id="@+id/premiumButton"/>
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="#1abc9c"
+                android:text="@string/buy_premium"
+                android:textColor="@color/white"
+                android:onClick="onUpgradeButtonClicked"
+                android:id="@+id/premiumButton"/>
+
+            <Button
+                android:id="@+id/tokenFarm"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="1dp"
+                android:background="#1abc9c"
+                android:text="@string/game_tokens"
+                android:textColor="@color/white"
+                android:onClick="onFarmGameTokens" />
+
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,25 +60,25 @@
                 android:id="@+id/menu_avatar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="8.5">
+                android:layout_weight="7.3">
 
                 <FrameLayout
-                    android:layout_width="220dp"
-                    android:layout_height="220dp"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true" >
 
                     <ImageView
                         android:id="@+id/MpWifi_menu_avatar"
-                        android:layout_width="220dp"
-                        android:layout_height="220dp"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
                         android:background="#8e44ad"/>
 
 
                     <ImageView
                         android:id="@+id/defaultImage"
-                        android:layout_width="220dp"
-                        android:layout_height="220dp"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
                         android:background="#2980b9"
                         android:padding="65dp"
                         android:src="@drawable/user1"/>
@@ -116,18 +137,38 @@
 
             </RelativeLayout>
 
+            <!--TODO: to mas 2 textview na GAMETOKENY ↓-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:layout_weight="0.5"
+                android:textColor="@color/white"
+                android:text="Game Tokens"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:textColor="@color/white"
+                android:gravity="top"
+                android:text="5"
+                android:textSize="30sp"/>
+
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:gravity="bottom"
                 android:orientation="vertical"
-                android:layout_weight="1.5">
+                android:layout_weight="1.2">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/levelTextView"
-                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginRight="10dp"
                     android:text="Level 12"
                     android:textColor="@color/white"/>
 
@@ -195,32 +236,7 @@
                 </LinearLayout>
 
 <!-- TODO: tento layout daj kam len chces -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/game_tokens"
-                        android:id="@+id/gameTokensTv"
-                        android:textStyle="bold"
-                        android:textSize="12sp"
-                        android:textColor="@color/white"/>
-
-                    <Button
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:text="+"
-                        android:textSize="18dp"
-                        android:gravity="center"
-                        android:textAlignment="center"
-                        android:background="@android:color/transparent"
-                        android:onClick="onFarmGameTokens"
-                        android:textColor="@color/white"/>
-
-                </LinearLayout>
 <!-- Potialto -->
 
             </LinearLayout>
