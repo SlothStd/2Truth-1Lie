@@ -42,7 +42,7 @@ public class MatchData {
         this.liePos = -1;
         this.scores = new ArrayList<>(Arrays.asList(new Integer[]{0, 0}));
         this.currentRound = 0;
-        this.hisXp = 0;
+        this.hisXp = -1;
     }
 
     public String getSentenceAuthor() {

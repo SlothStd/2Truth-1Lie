@@ -6,7 +6,6 @@ import java.util.Arrays;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.hardware.camera2.params.LensShadingMap;
 import android.support.v7.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -30,7 +29,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -215,6 +213,15 @@ public class MpWifi extends Activity implements
         thirdS = (EditText) findViewById(R.id.thirdS);
         danyhoDivneCheckboxy();
 
+        findViewById(R.id.menu_avatar_layout).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                Toast.makeText(getApplicationContext(), R.string.success_rate_msg, Toast.LENGTH_LONG).show();
+
+                return false;
+            }
+        });
     }
 
     private void requestNewInterstitial() {
@@ -282,6 +289,9 @@ public class MpWifi extends Activity implements
     @Override
     public void onDestroy() {
         mAd.destroy(this);
+
+        unregisterReceiver(mBroadcastReceiver);
+
         super.onDestroy();
     }
 
@@ -385,6 +395,9 @@ public class MpWifi extends Activity implements
 
     public void clearSp(){
         if (mMatch != null) {
+
+            Log.d(TAG, "clearing SP");
+
             SharedPreferences prefs = getSharedPreferences(mMatch.getMatchId(), Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
             editor.clear().apply();
@@ -393,7 +406,6 @@ public class MpWifi extends Activity implements
 
     @Override
     public void onConnected(Bundle connectionHint) {
-
 
         Log.d(TAG, "onConnected(): Connection successful");
 
@@ -421,6 +433,10 @@ public class MpWifi extends Activity implements
                 return;
             }
         }
+
+        SharedPreferences isPremiumSP = getSharedPreferences("PREMIUM", MODE_PRIVATE);
+        isDeveloper = isPremiumSP.getBoolean("isDeveloper", false);
+        isUnlimited = isPremiumSP.getBoolean("isUnlimited", false);
 
         findViewById(R.id.sign_in_button).setVisibility(View.GONE);
         findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
@@ -574,7 +590,7 @@ public class MpWifi extends Activity implements
             return;
         }
 
-        if (!isPremium && !isDeveloper && !isUnlimited && gameTokens == 0){
+        if (!isPremium && !isDeveloper && !isUnlimited && gameTokens <= 0){
             noGameTokensDialog();
             return;
         }
@@ -679,7 +695,8 @@ public class MpWifi extends Activity implements
         matchData.setLiePos(-1);
 
         SharedPreferences prefs = getSharedPreferences(mMatch.getMatchId(), Context.MODE_PRIVATE);
-        prefs.edit().clear().apply();
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("isSaved", false).apply();
     }
 
     // User clicked the "Upgrade to Premium" button.
@@ -837,9 +854,6 @@ public class MpWifi extends Activity implements
                 findViewById(R.id.notYourTurn).setVisibility(View.VISIBLE);
                 findViewById(R.id.gameFinished).setVisibility(View.GONE);
 
-
-
-
                 if (!isPremium && !isDeveloper){
                     if (mInterstitialAd.isLoaded()) {
                         mInterstitialAd.show();
@@ -869,6 +883,9 @@ public class MpWifi extends Activity implements
 
                 Log.d(TAG, "Setting");
 
+                matchData.setHisXp(getSharedPreferences("Levels", Context.MODE_PRIVATE).getInt("xp", 0));
+                Log.d(TAG, "Sending xp: " + String.valueOf(getSharedPreferences("Levels", Context.MODE_PRIVATE).getInt("xp", 0)));
+
                 break;
 
             case 2: //Guessing
@@ -883,6 +900,20 @@ public class MpWifi extends Activity implements
                 tocenieGuess.start();
 
                 new Guessing().start();
+
+
+                SharedPreferences prefs = getSharedPreferences(mMatch.getMatchId(), Context.MODE_PRIVATE);
+                if(prefs.getInt("hisXp", -1) == -1){
+
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putInt("hisXp", matchData.getHisXp()).apply();
+
+                    Log.d(TAG, "receiving: " + String.valueOf(matchData.getHisXp()) + " / " + prefs.getInt("hisXp", -1) + " | " + mMatch.getMatchId());
+                }
+                else {
+                    Log.d(TAG, "not receiving anything");
+                }
+
 
                 break;
 
@@ -1089,14 +1120,14 @@ public class MpWifi extends Activity implements
         SharedPreferences.Editor editor = isPremiumSP.edit();
 
         switch (code){
-            case "developersky kodik":
+            case "dev":
 
                 isDeveloper = true;
                 editor.putBoolean("isDeveloper", isDeveloper);
 
                 editor.apply();
                 return true;
-            case "nieco vymysliet":
+            case "unlimited":
 
                 isUnlimited = true;
                 editor.putBoolean("isUnlimited", isUnlimited);
@@ -1134,30 +1165,38 @@ public class MpWifi extends Activity implements
                     });
         }
 
-        clearSp();
-
         SharedPreferences prefs = getSharedPreferences("Levels", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
+        SharedPreferences matchPrefs = getSharedPreferences(mMatch.getMatchId(), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor2 = matchPrefs.edit();
 
         int xp = prefs.getInt("xp", 0);
+        int hisXp = matchPrefs.getInt("hisXp", -1);
+
+        Log.d(TAG, "found xp: " + xp + ", " + hisXp + " | " + mMatch.getMatchId());
+
+        xp += gameFinishedXp;
+        hisXp += gameFinishedXp;
+
+        xp += (matchData.getScores(player) * roundWinBonus);
+        hisXp += (matchData.getScores(Math.abs(player - 1)) * roundWinBonus);
 
         if (matchData.didIWin(player) == null) {
 
-            xp += gameFinishedXp;
             xp += tieBonus;
-            xp += (matchData.getScores(player) * roundWinBonus);
-        } else if (matchData.didIWin(player)) {
+            hisXp += tieBonus;
+        }
+        else if (matchData.didIWin(player)) {
 
-            xp += gameFinishedXp;
             xp += winBonus;
-            xp += (matchData.getScores(player) * roundWinBonus);
-        } else {
+        }
+        else {
 
-            xp += gameFinishedXp;
-            xp += (matchData.getScores(player) * roundWinBonus);
+            hisXp += winBonus;
         }
 
         editor.putInt("xp", xp).apply();
+        editor2.putInt("hisXp", hisXp).apply();
 
         totalWins += graphHistory.myWinCount();
         totalLoses += (matchData.getMatchLength() / 2) - graphHistory.myWinCount();
@@ -1192,24 +1231,29 @@ public class MpWifi extends Activity implements
         player1Progress.setRotation(40);
         player2Progress.setRotation(40);
 
-        player1 = matchData.getScores(0);
-        player2 = matchData.getScores(1);
+        player1 = matchData.getScores(player);
+        player2 = matchData.getScores(Math.abs(player - 1));
 
         updateLevels(1);
 
         if (player1 == player2) {
             scoreboardBckg.setImageResource(R.drawable.scoreboard_green);
+
             circularBckg2.setImageResource(R.drawable.green_circle_bckg);
             circularBckg1.setImageResource(R.drawable.green_circle_bckg);
         }
         else if (player2 > player1) {
             scoreboardBckg.setRotation(180);
 
+            scoreboardBckg.setImageResource(R.drawable.scoreboard_new);
+
             circularBckg1.setImageResource(R.drawable.red_circle_bckg);
             circularBckg2.setImageResource(R.drawable.green_circle_bckg);
         }
         else {
             scoreboardBckg.setRotation(0);
+
+            scoreboardBckg.setImageResource(R.drawable.scoreboard_new);
 
             circularBckg1.setImageResource(R.drawable.green_circle_bckg);
             circularBckg2.setImageResource(R.drawable.red_circle_bckg);
@@ -1235,6 +1279,7 @@ public class MpWifi extends Activity implements
         }
 
         matchData = new MatchData();
+        clearSp();
     }
 
     // Rematch dialog
@@ -1399,7 +1444,7 @@ public class MpWifi extends Activity implements
 
     public void updateLevels(int ktore) {
         SharedPreferences preferences = getSharedPreferences("Levels", Context.MODE_PRIVATE);
-        int xp = preferences.getInt("xp", 0),
+        float xp = preferences.getInt("xp", 0),
                 a = 50,
                 level = 1,
                 previous = 0;
@@ -1414,39 +1459,52 @@ public class MpWifi extends Activity implements
 
         switch (ktore){
             case 0: // V maine MpWifi
-                ((TextView) findViewById(R.id.levelTextView)).setText("Level " + String.valueOf(level));
+                ((TextView) findViewById(R.id.levelTextView)).setText("Level " + String.valueOf((int) level));
 
                 ProgressBar progressBar = (ProgressBar) findViewById(R.id.levelProgress);
 
-                progressBar.setMax(a);
-                progressBar.setProgress(xp - previous);
+                progressBar.setMax(100);
+
+                float myTemp = ((float) (xp - previous) / (a - previous)) * 100;
+                progressBar.setProgress((int) myTemp);
+
+                Log.d(TAG, String.valueOf(progressBar.getProgress()));
+
                 break;
 
             case 1: // Na konci hry
 
-                int hisXp = matchData.getHisXp();
-                int hisLevel = 1;
-                int hisA = 50;
-                previous = 0;
+                SharedPreferences matchPrefs = getSharedPreferences(mMatch.getMatchId(), Context.MODE_PRIVATE);
 
-                while (a <= xp) {
+                float hisXp = matchPrefs.getInt("hisXp", 0);
+                float hisLevel = 1;
+                float hisA = 50;
+                float hisPrevious = 0;
+
+                while (hisA <= hisXp) {
                     hisLevel++;
 
-                    previous = a;
+                    hisPrevious = hisA;
 
-                    a += a + (Math.round(0.1 * a));
+                    hisA += hisA + (Math.round(0.1 * hisA));
                 }
 
                 TextView player1Level = (TextView) findViewById(R.id.player1_level_mp);
-                player1Level.setText(String.valueOf(level));
+                player1Level.setText(String.valueOf((int) level));
 
                 TextView player2Level = (TextView) findViewById(R.id.player2_level_mp);
-                player2Level.setText(String.valueOf(hisLevel));
-                Toast.makeText(this, level + ", " + hisLevel, Toast.LENGTH_SHORT).show();
+                player2Level.setText(String.valueOf((int) hisLevel));
+
 
                 //tu si dopln int na levelprogress do progressbarov (to uz mas nastavene iba tieto inty si uprav)
-                final int player1LevelProgress = 50 * 10000; //((xp / a) * 10) * 10000; // krat 10k kvoli smooth animacii
-                final int player2LevelProgress = 80 * 10000; //((hisXp / hisA) * 10) * 10000;
+                myTemp = ((float) (xp - previous) / (a - previous)) * 100;
+                float hisTemp = ((float) (hisXp - hisPrevious) / (hisA - hisPrevious)) * 100;
+
+                Log.d(TAG, "Me: " + xp + ", " + level + ", " + previous + ", " + a + ", " + myTemp);
+                Log.d(TAG, "Him: " + hisXp + ", " + hisLevel + ", " + hisPrevious + ", " + hisA + ", " + hisTemp);
+
+                final int player1LevelProgress = (int) myTemp * 10000; // krat 10k kvoli smooth animacii
+                final int player2LevelProgress = (int) hisTemp * 10000;
 
                 CountDownTimer timer = new CountDownTimer(1300, 1000) {
                     @Override
@@ -1527,7 +1585,16 @@ public class MpWifi extends Activity implements
 
         builder.setTitle(getString(R.string.select_rounds));
 
-        builder.setSingleChoiceItems(R.array.roundsList, 2, new DialogInterface.OnClickListener() {
+        int array;
+
+        if (isPremium || isDeveloper){
+            array = R.array.roundsList_premium;
+        }
+        else {
+            array = R.array.roundsList;
+        }
+
+        builder.setSingleChoiceItems(array, 2, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
@@ -2107,6 +2174,10 @@ public class MpWifi extends Activity implements
             secondTW.setText(secondS);
             thirdTW.setText(thirdS);
 
+            firstTW.setTextColor(getResources().getColor(R.color.black));
+            secondTW.setTextColor(getResources().getColor(R.color.black));
+            thirdTW.setTextColor(getResources().getColor(R.color.black));
+
             firstTW.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -2172,8 +2243,12 @@ public class MpWifi extends Activity implements
                     }
 
                     final View[] tvs = {findViewById(R.id.firstTW), findViewById(R.id.secondTW), findViewById(R.id.thirdTW)};
+
                     tvs[pos].setBackgroundResource(R.drawable.custom_edittext_clicked);
+                    ((TextView) tvs[pos]).setTextColor(getResources().getColor(R.color.white));
+
                     tvs[liePos].setBackgroundResource(R.drawable.custom_edittex_lie);
+                    ((TextView) tvs[liePos]).setTextColor(getResources().getColor(R.color.white));
 
                     new CountDownTimer(5000, 5000) {
                         public void onTick(long millisUntilFinished) {
@@ -2237,6 +2312,8 @@ public class MpWifi extends Activity implements
             startActivity(toMenu);
             return;
         }
+
+        saveSP();
 
         gameState = -1;
         setViewVisibility();

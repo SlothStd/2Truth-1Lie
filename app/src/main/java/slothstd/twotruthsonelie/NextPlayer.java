@@ -61,7 +61,7 @@ public class NextPlayer extends Activity {
             playerGuessing.setImageResource(R.drawable.user1);
         }
 
-        if (hasSoftKeys()) {
+        /*if (hasSoftKeys()) {
 
             final float scale = getResources().getDisplayMetrics().density;
             int top = (int) (24 * scale + 0.5f);
@@ -69,7 +69,7 @@ public class NextPlayer extends Activity {
 
             findViewById(R.id.linearLayout).setPadding(0, 0, 0, bottom);
             findViewById(R.id.gameInfo).setPadding(0, top, 0, 0);
-        }
+        }*/
 
         isGuessing = (TextView) findViewById(R.id.IsGuessingTW);
 

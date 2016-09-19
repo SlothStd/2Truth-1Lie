@@ -36,7 +36,7 @@
 
 
             <RelativeLayout
-                android:id="@+id/relative"
+                android:id="@+id/menu_avatar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="8.5">
@@ -430,8 +430,8 @@
 
                         <ProgressBar
                             android:id="@+id/vsProgress"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
                             style="?android:attr/progressBarStyleHorizontal"
                             android:progressDrawable="@drawable/vs_progress"
                             android:layout_centerVertical="true"
@@ -442,7 +442,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:textSize="13sp"
+                            android:textSize="18sp"
                             android:textColor="@color/white"
                             android:text="VS"
                             android:gravity="center"
@@ -680,7 +680,7 @@
                 android:id="@+id/chooseTexts"
                 android:orientation="vertical"
                 android:weightSum="3"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -743,8 +743,8 @@
                         <ProgressBar
                             android:id="@+id/progress1_guess"
                             style="?android:attr/progressBarStyleHorizontal"
-                            android:layout_width="37dp"
-                            android:layout_height="37dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
                             android:layout_marginTop="10dp"
                             android:padding="1dp"
                             android:layout_below="@id/IsGuessingTW_guess"
@@ -756,8 +756,8 @@
                         <ProgressBar
                             android:id="@+id/progress2_guess"
                             style="?android:attr/progressBarStyleHorizontal"
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
+                            android:layout_width="27dp"
+                            android:layout_height="27dp"
                             android:progressDrawable="@drawable/red_progressbar"
                             android:layout_alignBottom="@+id/progress1_guess"
                             android:layout_centerHorizontal="true"
@@ -830,7 +830,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:background="@color/darker_bg"
                 android:orientation="vertical"
                 android:weightSum="3"
@@ -856,18 +856,18 @@
                         android:progress="250" />
 
                     <ProgressBar
-                    android:id="@+id/progress2_nyt"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="27dp"
-                    android:layout_height="27dp"
-                    android:progressDrawable="@drawable/red_progressbar"
-                    android:layout_centerInParent="true"
-                    android:layout_alignBottom="@+id/progress1_nyt"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="6dp"
-                    android:padding="2dp"
-                    android:max="500"
-                    android:progress="250" />
+                        android:id="@+id/progress2_nyt"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:progressDrawable="@drawable/red_progressbar"
+                        android:layout_centerInParent="true"
+                        android:layout_alignBottom="@+id/progress1_nyt"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="6dp"
+                        android:padding="2dp"
+                        android:max="500"
+                        android:progress="250" />
 
 
                 </RelativeLayout>

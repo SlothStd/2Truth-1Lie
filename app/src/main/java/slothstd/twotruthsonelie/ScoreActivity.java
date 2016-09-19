@@ -93,7 +93,7 @@ public class ScoreActivity extends Activity {
         float rotation2 = player2Progress.getRotation();
         player2Progress.setRotation(rotation2 + 40);
 
-        if (hasSoftKeys()) {
+        /*if (hasSoftKeys()) {
 
             final float scale = getResources().getDisplayMetrics().density;
             int top = (int) (24 * scale + 0.5f);
@@ -102,7 +102,7 @@ public class ScoreActivity extends Activity {
             findViewById(R.id.scores_main).setPadding(0, top, 0, bottom);
         } else {
             findViewById(R.id.scores_main).setPadding(0, 0, 0, 0);
-        }
+        }*/
 
 
         ///////////////////////////////////TOTOOOOOOOO a DOLE////////////////////////////////

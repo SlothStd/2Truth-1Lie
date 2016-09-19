@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TwoTruthsOneLie</string>
+    <string name="app_name">2 Truths, 1 Lie</string>
     <string name="app_id">94849507103</string>
     <string name="old_SHA1">BD:F7:0A:CF:3C:97:64:4C:EC:EB:83:62:34:0C:9B:14:53:7B:80:61</string>
     <string name="SHA1">11:BC:E9:16:34:F0:BE:2D:C1:B5:7E:37:BA:88:A6:42:A5:46:99:5D</string>
@@ -88,6 +88,19 @@
         <item>10 (Locked)</item>
     </string-array>
 
+    <string-array name="roundsList_premium">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+    </string-array>
+
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
     <!-- Example settings for Notifications -->
@@ -148,7 +161,8 @@
     <string name="point">point</string>
     <string name="code_invalid">Code invalid</string>
     <string name="upgrade_to_premium">Upgrade to Premium</string>
-    <string name="upgrade_msg">After upgrading to a premium account you will receive:</string>
+    <string name="upgrade_msg">After upgrading to a premium account you will receive a full Ad-Free version with no restrictions</string>
     <string name="select_rounds">Select rounds</string>
+    <string name="success_rate_msg">This is the success rate of your guesses</string>
 
 </resources>

@@ -92,8 +92,8 @@
 
             <ProgressBar
                 android:id="@+id/vsProgress"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:progressDrawable="@drawable/vs_progress"
                 android:layout_centerVertical="true"
@@ -104,7 +104,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textSize="13sp"
+                android:textSize="18sp"
                 android:textColor="@color/white"
                 android:text="VS"
                 android:gravity="center"
