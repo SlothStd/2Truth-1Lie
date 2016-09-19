@@ -112,7 +112,7 @@ public class ScoreActivity extends Activity {
         player2 = points.getInt("player2", 0);
 
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        String roundsPrefs = SP.getString("setRounds", "0");
+        String roundsPrefs = SP.getString("setRounds", "1");
         int rounds = Integer.parseInt(roundsPrefs);
 
         double playerOne = (double) player1 / rounds;

@@ -15,7 +15,7 @@
         android:id="@+id/buttons"
         android:weightSum="5"
         android:background="@color/darker_bg"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <Button
             android:layout_width="match_parent"
@@ -680,7 +680,7 @@
                 android:id="@+id/chooseTexts"
                 android:orientation="vertical"
                 android:weightSum="3"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -751,7 +751,7 @@
                             android:progressDrawable="@drawable/green_progressbar"
                             android:layout_centerHorizontal="true"
                             android:max="500"
-                            android:progress="250" />
+                            android:progress="500" />
 
                         <ProgressBar
                             android:id="@+id/progress2_guess"
@@ -762,9 +762,9 @@
                             android:layout_alignBottom="@+id/progress1_guess"
                             android:layout_centerHorizontal="true"
                             android:padding="2dp"
-                            android:layout_marginBottom="6dp"
+                            android:layout_marginBottom="6.5dp"
                             android:max="500"
-                            android:progress="250" />
+                            android:progress="500" />
 
                     </RelativeLayout>
 
@@ -864,7 +864,7 @@
                         android:layout_centerInParent="true"
                         android:layout_alignBottom="@+id/progress1_nyt"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="6dp"
+                        android:layout_marginBottom="6.5dp"
                         android:padding="2dp"
                         android:max="500"
                         android:progress="250" />

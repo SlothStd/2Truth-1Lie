@@ -8,8 +8,7 @@
         android:textColor="@color/greyText"
         android:dialogTitle="Set Rounds"
         android:entries="@array/rounds"
-        android:entryValues="@array/rounds"
-        android:defaultValue="3" />
+        android:entryValues="@array/rounds" />
 
     <PreferenceScreen android:key="names"
         android:title="Player names"

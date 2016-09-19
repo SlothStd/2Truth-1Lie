@@ -167,7 +167,7 @@ public class NextPlayer extends Activity {
 
 
                 try {
-                    roundsS = SP.getString("setRounds", "0");
+                    roundsS = SP.getString("setRounds", "1");
                     round = Integer.parseInt(roundsS) * 2 - 1;
                 } catch (NullPointerException e) {
                     round = 2;

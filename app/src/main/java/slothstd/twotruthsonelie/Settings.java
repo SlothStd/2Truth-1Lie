@@ -11,6 +11,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
+import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.view.View;
 import android.view.Window;
@@ -46,9 +47,14 @@ public class Settings extends PreferenceActivity {
         listView.setBackgroundColor(getResources().getColor(R.color.purple_ish));
 
         ListPreference rounds = (ListPreference) findPreference("setRounds");
-        rounds.setValueIndex(2);
 
-
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String roundsPrefs = SP.getString("setRounds", "0");
+        try {
+            rounds.setValueIndex(Integer.parseInt(roundsPrefs) - 1);
+        } catch (Exception e) {
+            rounds.setValueIndex(0);
+        }
 
         Preference share = (Preference) findPreference("share");
         share.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

@@ -102,15 +102,6 @@ public class OnePhone extends Activity implements View.OnKeyListener {
             player2points.setText("0");
         }
 
-        /*if (hasSoftKeys()) {
-
-            final float scale = getResources().getDisplayMetrics().density;
-            int top = (int) (24 * scale + 0.5f);
-            int bottom = (int) (48 * scale + 0.5f);
-
-            findViewById(R.id.linearLayout).setPadding(0, 0, 0, bottom);
-            findViewById(R.id.gameInfo).setPadding(0, top, 0, 0);
-        }*/
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
