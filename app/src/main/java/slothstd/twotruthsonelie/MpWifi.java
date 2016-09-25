@@ -37,6 +37,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -244,7 +245,7 @@ public class MpWifi extends Activity implements
         Toast.makeText(MpWifi.this, "3 Game Tokens were added", Toast.LENGTH_SHORT).show();
 
         gameTokens += 3;
-//        ((TextView) findViewById(R.id.gameTokensTv)).setText(getString(R.string.game_tokens) + String.valueOf(gameTokens));
+        ((TextView) findViewById(R.id.gameTokensTv)).setText(String.valueOf(gameTokens));
 
         editor1.putInt("gameTokens", gameTokens).apply();
 
@@ -327,7 +328,7 @@ public class MpWifi extends Activity implements
 
         Log.d(TAG, "Game tokens" + String.valueOf(gameTokens));
 
-//        ((TextView) findViewById(R.id.gameTokensTv)).setText(getString(R.string.game_tokens) + String.valueOf(gameTokens));
+        ((TextView) findViewById(R.id.gameTokensTv)).setText(String.valueOf(gameTokens));
 
         loadSP();
 
@@ -566,6 +567,9 @@ public class MpWifi extends Activity implements
             findViewById(R.id.tokenFarm).setVisibility(isPremium ? View.GONE : View.VISIBLE);
             findViewById(R.id.premiumButton).setVisibility(isPremium ? View.GONE : View.VISIBLE);
 
+            findViewById(R.id.gameTokensTv).setVisibility(isPremium ? View.GONE : View.VISIBLE);
+            findViewById(R.id.gameTokensTv1).setVisibility(isPremium ? View.GONE : View.VISIBLE);
+
             //Save isPremium state for when the internet is turned off
             SharedPreferences isPremiumSP = getSharedPreferences("PREMIUM", MODE_PRIVATE);
             SharedPreferences.Editor editor = isPremiumSP.edit();
@@ -607,9 +611,19 @@ public class MpWifi extends Activity implements
             return;
         }
 
-        Intent intent =
-                Games.TurnBasedMultiplayer.getSelectOpponentsIntent(mGoogleApiClient, 1, 1, true);
-        startActivityForResult(intent, RC_SELECT_PLAYERS);
+        if (isDeveloper) {//len pre developerov na potencionalne testovanie automatchu
+
+            Toast.makeText(this, "Automatch feature is experimental, you may experience some bugs", Toast.LENGTH_LONG).show();
+
+            Intent intent =
+                    Games.TurnBasedMultiplayer.getSelectOpponentsIntent(mGoogleApiClient, 1, 1, true);
+            startActivityForResult(intent, RC_SELECT_PLAYERS);
+        }
+        else {
+            Intent intent =
+                    Games.TurnBasedMultiplayer.getSelectOpponentsIntent(mGoogleApiClient, 1, 1, false);
+            startActivityForResult(intent, RC_SELECT_PLAYERS);
+        }
     }
 
     // Create a one-on-one automatch game.
@@ -795,7 +809,10 @@ public class MpWifi extends Activity implements
                 isPremium = true;
 
                 findViewById(R.id.premiumButton).setVisibility(View.GONE);
-                findViewById(R.id.tokenFarm).setVisibility(isPremium ? View.GONE : View.VISIBLE);
+                findViewById(R.id.tokenFarm).setVisibility(View.GONE);
+
+                findViewById(R.id.gameTokensTv).setVisibility(View.GONE);
+                findViewById(R.id.gameTokensTv1).setVisibility(View.GONE);
 
                 //Save isPremium state for when the internet is turned off
                 SharedPreferences isPremiumSP = getSharedPreferences("PREMIUM", MODE_PRIVATE);
@@ -1144,7 +1161,7 @@ public class MpWifi extends Activity implements
 
                 editor.apply();
                 return true;
-            case "unlimited":
+            case "unlmtd":
 
                 isUnlimited = true;
                 editor.putBoolean("isUnlimited", isUnlimited);
@@ -1353,7 +1370,9 @@ public class MpWifi extends Activity implements
                 if (match != null) {
                     updateMatch(match);
 
-                    gameTokens--;
+                    if (!isPremium && !isDeveloper && !isUnlimited) {
+                        gameTokens--;
+                    }
                 }
 
                 Log.d(TAG, "Match = " + match);
@@ -1416,7 +1435,9 @@ public class MpWifi extends Activity implements
 
         getPlayerIDs();
 
-        gameTokens--;
+        if (!isPremium && !isDeveloper && !isUnlimited) {
+            gameTokens--;
+        }
 
         matchData.setMatchLength(length * 2);
 
@@ -1598,7 +1619,7 @@ public class MpWifi extends Activity implements
         }
     }
 
-    public void roundLengthDialog(final TurnBasedMatch match){
+    public void matchLengthDialog(final TurnBasedMatch match){
         AlertDialog dialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -1616,9 +1637,17 @@ public class MpWifi extends Activity implements
         builder.setSingleChoiceItems(array, 2, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+            }
+        });
 
-                if ((isPremium || isDeveloper || isUnlimited) || which == 2) {
-                    startMatch(match, which + 1);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ListView lw = ((AlertDialog)dialog).getListView();
+                int checkedItem = lw.getCheckedItemPosition();
+
+                if ((isPremium || isDeveloper || isUnlimited) || checkedItem == 2) {
+                    startMatch(match, checkedItem + 1);
 
                     dialog.dismiss();
                 }
@@ -1726,7 +1755,7 @@ public class MpWifi extends Activity implements
             return;
         }
 
-        roundLengthDialog(match);
+        matchLengthDialog(match);
     }
 
     private void processResult(TurnBasedMultiplayer.LeaveMatchResult result) {
@@ -2192,10 +2221,6 @@ public class MpWifi extends Activity implements
             secondTW.setText(secondS);
             thirdTW.setText(thirdS);
 
-            firstTW.setTextColor(getResources().getColor(R.color.black));
-            secondTW.setTextColor(getResources().getColor(R.color.black));
-            thirdTW.setTextColor(getResources().getColor(R.color.black));
-
             firstTW.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -2262,8 +2287,14 @@ public class MpWifi extends Activity implements
 
                     final View[] tvs = {findViewById(R.id.firstTW), findViewById(R.id.secondTW), findViewById(R.id.thirdTW)};
 
-                    tvs[pos].setBackgroundResource(R.drawable.custom_edittext_clicked);
-                    ((TextView) tvs[pos]).setTextColor(getResources().getColor(R.color.white));
+                    tvs[0].setBackgroundResource(R.drawable.custom_edittext_clicked);
+                    ((TextView) tvs[0]).setTextColor(getResources().getColor(R.color.white));
+
+                    tvs[1].setBackgroundResource(R.drawable.custom_edittext_clicked);
+                    ((TextView) tvs[1]).setTextColor(getResources().getColor(R.color.white));
+
+                    tvs[2].setBackgroundResource(R.drawable.custom_edittext_clicked);
+                    ((TextView) tvs[2]).setTextColor(getResources().getColor(R.color.white));
 
                     tvs[liePos].setBackgroundResource(R.drawable.custom_edittex_lie);
                     ((TextView) tvs[liePos]).setTextColor(getResources().getColor(R.color.white));
@@ -2276,8 +2307,13 @@ public class MpWifi extends Activity implements
                             setViewVisibility();
                             clicked = false;
 
-                            tvs[pos].setBackgroundResource(R.drawable.custom_edittext_truth);
-                            tvs[liePos].setBackgroundResource(R.drawable.custom_edittext_truth);
+                            tvs[0].setBackgroundResource(R.drawable.custom_edittext_truth);
+                            tvs[1].setBackgroundResource(R.drawable.custom_edittext_truth);
+                            tvs[2].setBackgroundResource(R.drawable.custom_edittext_truth);
+
+                            ((TextView) tvs[1]).setTextColor(getResources().getColor(R.color.black));
+                            ((TextView) tvs[2]).setTextColor(getResources().getColor(R.color.black));
+                            ((TextView) tvs[3]).setTextColor(getResources().getColor(R.color.black));
                         }
                     }.start();
                 }
