@@ -30,6 +30,7 @@
                 android:background="#1abc9c"
                 android:text="@string/buy_premium"
                 android:textColor="@color/white"
+                android:textSize="13sp"
                 android:onClick="onUpgradeButtonClicked"
                 android:id="@+id/premiumButton"/>
 
@@ -41,6 +42,7 @@
                 android:layout_marginLeft="1dp"
                 android:background="#1abc9c"
                 android:text="@string/add_game_tokens"
+                android:textSize="13sp"
                 android:textColor="@color/white"
                 android:onClick="onFarmGameTokens" />
 
@@ -114,7 +116,7 @@
                         android:layout_width="45dp"
                         android:layout_height="45dp"
                         android:layout_gravity="bottom|end"
-                        android:layout_margin="15dp">
+                        android:layout_margin="11dp">
 
 
                     <ImageView
@@ -170,6 +172,7 @@
                     android:id="@+id/levelTextView"
                     android:gravity="center"
                     android:layout_marginRight="10dp"
+                    android:textSize="9sp"
                     android:text="Level 12"
                     android:textColor="@color/white"/>
 

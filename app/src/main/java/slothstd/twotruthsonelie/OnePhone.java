@@ -60,11 +60,11 @@ public class OnePhone extends Activity implements View.OnKeyListener {
 
         if (!pressedPrefs.getBoolean("pressed", false)) {
             snackInfo = Snackbar.make(findViewById(android.R.id.content), "To choose a lie long click a sentence", Snackbar.LENGTH_INDEFINITE);
-            snackInfo.getView().setBackgroundColor(getResources().getColor(R.color.lie));
+            snackInfo.getView().setBackgroundColor(getResources().getColor(R.color.blue));
             View view = snackInfo.getView();
             TextView textView = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
             textView.setTextColor(getResources().getColor(R.color.white));
-            snackInfo.setDuration(Snackbar.LENGTH_LONG);
+            snackInfo.setDuration(Snackbar.LENGTH_INDEFINITE);
             snackInfo.setActionTextColor(getResources().getColor(R.color.white));
             snackInfo.setAction("GOT IT", new View.OnClickListener() {
                 @Override
